@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiltu Kara Secondary School — Registration</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Student Registration &middot; ካቲት ምዝገባ</p>
+    <h1>Kiltu Kara<br>Secondary School</h1>
+    <p class="sub">Register a new student, assign their class and section, and issue an official registration slip — 400 Birr per student, Sections A through K.</p>
+    <div class="hero-stats">
+      <div class="stat"><b id="statTotal">0</b><span>Registered</span></div>
+      <div class="stat"><b id="statPaid">0</b><span>Fees Paid</span></div>
+      <div class="stat"><b>400 ETB</b><span>Registration Fee</span></div>
+      <div class="stat"><b>A – K</b><span>Sections / Class</span></div>
+    </div>
+    <div style="margin-top:22px; font-size:13px; color:rgba(243,236,216,0.75);">
+      Logged in as <b id="whoami" style="color:var(--ochre-light);"></b>
+      &middot; <a href="#" id="logoutLink" style="color:var(--ochre-light);">Log out</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head">
+        <h2>New Registration</h2>
+        <span class="tag">FORM / KKSS-REG</span>
+      </div>
+      <form id="regForm">
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" id="fname" placeholder="e.g. Chaltu Bekele Fayisa" required>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Gender</label>
+            <select id="gender" required>
+              <option value="">Select</option>
+              <option value="Female">Female</option>
+              <option value="Male">Male</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Guardian Phone</label>
+            <input type="tel" id="phone" placeholder="09xx xxx xxx" required>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Class</label>
+            <select id="klass" required>
+              <option value="">Select class</option>
+              <option>Grade 9</option>
+              <option>Grade 10</option>
+              <option>Grade 11</option>
+              <option>Grade 12</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Section</label>
+            <select id="section" required>
+              <option value="">Select section</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fee-box">
+          <div>
+            <div class="lbl">Registration Fee</div>
+            <div class="amt">400 Birr</div>
+          </div>
+          <label class="paid-toggle">
+            <input type="checkbox" id="paidCheck" checked>
+            Paid at registration
+          </label>
+        </div>
+
+        <button type="submit" class="submit">Register Student &amp; Generate Slip</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Registration Slip</h2>
+        <span class="tag" id="slipTag">AWAITING ENTRY</span>
+      </div>
+      <div class="receipt" id="receiptArea">
+        <div class="receipt-empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#8a8064" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18M8 4v16"/></svg>
+          <div>Fill the form to generate a printable registration slip with a paid stamp and student ID.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="roster-wrap">
+    <div class="roster-head">
+      <h2>Student Roster</h2>
+      <input type="text" class="roster-search" id="searchBox" placeholder="Search by name or ID…">
+    </div>
+    <div class="sections-strip" id="sectionsStrip"></div>
+    <div id="rosterHolder"><div class="roster-empty">Loading…</div></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
