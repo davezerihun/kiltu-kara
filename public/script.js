@@ -263,3 +263,50 @@ document.getElementById('searchBox').addEventListener('input', renderRoster);
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadStudents();
+// Check Admin Authentication & Handle Secure CSV Download
+document.addEventListener("DOMContentLoaded", () => {
+  const token = localStorage.getItem("token");
+  const rosterSection = document.getElementById("adminOnlyRoster");
+
+  // 1. Hide roster for regular students, show only for logged-in admin
+  if (token && rosterSection) {
+    rosterSection.style.display = "block";
+  } else if (rosterSection) {
+    rosterSection.style.display = "none";
+  }
+
+  // 2. Handle CSV download with JWT authentication header
+  const downloadBtn = document.getElementById("downloadCsvBtn");
+  if (downloadBtn) {
+    downloadBtn.addEventListener("click", async () => {
+      const authToken = localStorage.getItem("token");
+      if (!authToken) {
+        alert("Admin authorization required.");
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/students/download", {
+          headers: {
+            "Authorization": `Bearer ${authToken}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to download roster file");
+        }
+
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = "Kiltu_Kara_Student_Roster.csv";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (err) {
+        alert("Error downloading file: " + err.message);
+      }
+    });
+  }
+});

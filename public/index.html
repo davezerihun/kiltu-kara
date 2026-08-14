@@ -104,13 +104,18 @@
 
   <div class="roster-wrap">
     <div class="roster-head">
-      <h2>Student Roster</h2>
-      <input type="text" class="roster-search" id="searchBox" placeholder="Search by name or ID…">
-    </div>
-    <div class="sections-strip" id="sectionsStrip"></div>
-    <div id="rosterHolder"><div class="roster-empty">Loading…</div></div>
+  <!-- 🔒 ADMIN-ONLY ROSTER SECTION -->
+<div id="adminOnlyRoster" style="display: none; margin-top: 30px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <h2 style="margin: 0;">Student Roster</h2>
+    <button id="downloadCsvBtn" style="padding: 10px 18px; background-color: #2b5e3b; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+      📥 Download Roster (CSV)
+    </button>
   </div>
-</div>
+  <input type="text" class="roster-search" id="searchBox" placeholder="Search by name or ID…">
+  <div class="sections-strip" id="sectionsStrip"></div>
+  <div id="rosterHolder"><div class="roster-empty">Loading…</div></div>
+</div>    
 
 <script src="script.js"></script>
 </body>

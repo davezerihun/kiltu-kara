@@ -3,10 +3,35 @@ const router = express.Router();
 const Student = require('../models/student');
 const requireAuth = require('../middleware/auth');
 
-// All student routes require a valid JWT
+// 🔒 Require JWT authentication for ALL routes below
 router.use(requireAuth);
 
-// GET /api/students  — return all students, newest first
+// 📥 Admin-only CSV Download Route
+router.get('/download', async (req, res) => {
+  try {
+    const students = await Student.find().sort({ createdAt: -1 });
+
+    let csv = "Student ID,Full Name,Class,Section,Guardian Phone,Paid Status,Date\n";
+
+    students.forEach((student) => {
+      const paidStatus = student.paid ? 'Paid' : 'Unpaid';
+      csv += `"${student.studentId || ''}","${student.name || ''}","${student.klass || ''}","${student.section || ''}","${student.phone || ''}","${paidStatus}","${student.date || ''}"\n`;
+    });
+
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="Kiltu_Kara_Student_Roster.csv"'
+    );
+
+    res.status(200).send(csv);
+  } catch (error) {
+    console.error("Error exporting roster:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/students — return all students
 router.get('/', async (req, res) => {
   try {
     const students = await Student.find().sort({ createdAt: -1 });
@@ -16,7 +41,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/students  — register a new student
+// POST /api/students — register a new student
 router.post('/', async (req, res) => {
   try {
     const { studentId, name, gender, klass, section, phone, paid, date } = req.body;
@@ -25,7 +50,6 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'All fields are required.' });
     }
 
-    // Reject duplicate IDs
     const exists = await Student.findOne({ studentId });
     if (exists) {
       return res.status(409).json({ error: 'Student ID already exists.' });
@@ -38,7 +62,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// DELETE /api/students/:id  — remove a student by MongoDB _id
+// DELETE /api/students/:id — remove a student by MongoDB _id
 router.delete('/:id', async (req, res) => {
   try {
     const deleted = await Student.findByIdAndDelete(req.params.id);
