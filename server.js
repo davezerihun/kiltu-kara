@@ -11,6 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/kiltukarareg';
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -21,16 +22,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
 
-// Root route: redirect main address to your entry page (login.html or index.html)
+// Root route: serves index.html at main address
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  // Note: If your main page is index.html, change 'login.html' to 'index.html' above
 });
 
+// Database Connection
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+// Start Server
 app.listen(PORT, () => {
   console.log(`Kiltu Kara Secondary School server running on port ${PORT}`);
 });
