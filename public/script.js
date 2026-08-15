@@ -1,4 +1,3 @@
-// ── Auth guard ───────────────────────────────────────────────────────────────
 const token = localStorage.getItem('kkss_token');
 if (!token) {
   window.location.replace('login.html');
@@ -36,24 +35,48 @@ async function apiFetch(url, options = {}) {
   return res;
 }
 
+// ── Pass / Fail Rule Verification Function ────────────────────────────────────
+function checkEligibility(failedCount, averageScore) {
+  // Rule 1: 4 or more failed subjects -> Automatic FAIL
+  if (failedCount >= 4) {
+    return { 
+      canRegister: false, 
+      message: "Registration Blocked: Student failed 4 or more subjects." 
+    };
+  }
+
+  // Rule 2: Exactly 3 failed subjects AND average below 54 -> FAIL
+  if (failedCount === 3 && averageScore < 54) {
+    return { 
+      canRegister: false, 
+      message: "Registration Blocked: Student failed 3 subjects with an average score below 54." 
+    };
+  }
+
+  // Otherwise -> PASS (Including 3 failed subjects with average >= 54)
+  return { canRegister: true, message: "Eligible for registration." };
+}
+
 // ── Section selector ─────────────────────────────────────────────────────────
 const SECTIONS = "ABCDEFGHIJK".split("");
 const sectionSel = document.getElementById('section');
-SECTIONS.forEach(s => {
-  const o = document.createElement('option');
-  o.value = s;
-  o.textContent = "Section " + s;
-  sectionSel.appendChild(o);
-});
+if (sectionSel) {
+  SECTIONS.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s;
+    o.textContent = "Section " + s;
+    sectionSel.appendChild(o);
+  });
+}
 
 // ── State ─────────────────────────────────────────────────────────────────────
-let students    = [];   // loaded from server
-let idCounter   = 1;    // will be recalculated after load
+let students     = [];   // loaded from server
+let idCounter    = 1;    // will be recalculated after load
 let activeFilter = 'ALL';
 
-const form       = document.getElementById('regForm');
+const form        = document.getElementById('regForm');
 const receiptArea = document.getElementById('receiptArea');
-const slipTag    = document.getElementById('slipTag');
+const slipTag     = document.getElementById('slipTag');
 
 // ── ID generation ─────────────────────────────────────────────────────────────
 function genId() {
@@ -63,10 +86,9 @@ function genId() {
 }
 
 function recalcCounter() {
-  // Find the highest existing numeric suffix and resume from there
   let max = 0;
   students.forEach(s => {
-    const m = s.studentId.match(/KKSS-2026-(\d+)/);
+    const m = s.studentId ? s.studentId.match(/KKSS-2026-(\d+)/) : null;
     if (m) max = Math.max(max, parseInt(m[1], 10));
   });
   idCounter = max + 1;
@@ -81,6 +103,8 @@ function renderStats() {
 // ── Slip ──────────────────────────────────────────────────────────────────────
 function renderSlip(st) {
   slipTag.textContent = st.studentId;
+  const streamText = st.stream && st.stream !== 'None' ? ` (${st.stream})` : '';
+
   receiptArea.innerHTML = `
     <div class="slip">
       <div class="slip-head">
@@ -91,7 +115,7 @@ function renderSlip(st) {
       </div>
       <div class="slip-row"><span>Student Name</span><span>${st.name}</span></div>
       <div class="slip-row"><span>Gender</span><span>${st.gender}</span></div>
-      <div class="slip-row"><span>Class</span><span>${st.klass}</span></div>
+      <div class="slip-row"><span>Class</span><span>${st.klass}${streamText}</span></div>
       <div class="slip-row"><span>Section</span><span>Section ${st.section}</span></div>
       <div class="slip-row"><span>Guardian Phone</span><span>${st.phone}</span></div>
       <div class="slip-row"><span>Registration Fee</span><span>400 Birr</span></div>
@@ -107,6 +131,8 @@ function renderSlip(st) {
 // ── Section strip ─────────────────────────────────────────────────────────────
 function renderSectionsStrip() {
   const strip = document.getElementById('sectionsStrip');
+  if (!strip) return;
+
   const counts = {};
   students.forEach(s => counts[s.section] = (counts[s.section] || 0) + 1);
 
@@ -127,13 +153,15 @@ window.setFilter = function(f) {
 // ── Roster ────────────────────────────────────────────────────────────────────
 function renderRoster() {
   const holder = document.getElementById('rosterHolder');
-  const q = document.getElementById('searchBox').value.trim().toLowerCase();
+  if (!holder) return;
+
+  const q = document.getElementById('searchBox') ? document.getElementById('searchBox').value.trim().toLowerCase() : '';
 
   let list = students;
   if (activeFilter !== 'ALL') list = list.filter(s => s.section === activeFilter);
   if (q) list = list.filter(s =>
-    s.name.toLowerCase().includes(q) ||
-    s.studentId.toLowerCase().includes(q)
+    (s.name && s.name.toLowerCase().includes(q)) ||
+    (s.studentId && s.studentId.toLowerCase().includes(q))
   );
 
   if (list.length === 0) {
@@ -141,11 +169,13 @@ function renderRoster() {
     return;
   }
 
-  const rows = list.map(s => `
+  const rows = list.map(s => {
+    const streamText = s.stream && s.stream !== 'None' ? ` - ${s.stream}` : '';
+    return `
     <tr>
       <td><span class="badge">${s.studentId}</span></td>
       <td>${s.name}</td>
-      <td>${s.klass}</td>
+      <td>${s.klass}${streamText}</td>
       <td>Section ${s.section}</td>
       <td>${s.phone}</td>
       <td><span class="badge ${s.paid ? 'paid' : 'unpaid'}">${s.paid ? 'Paid · 400 ETB' : 'Unpaid'}</span></td>
@@ -153,13 +183,14 @@ function renderRoster() {
         <button class="del-btn" data-id="${s._id}" title="Delete student">✕</button>
       </td>
     </tr>
-  `).join('');
+  `;
+  }).join('');
 
   holder.innerHTML = `
     <table>
       <thead>
         <tr>
-          <th>Student ID</th><th>Name</th><th>Class</th>
+          <th>Student ID</th><th>Name</th><th>Class / Stream</th>
           <th>Section</th><th>Guardian Phone</th><th>Fee Status</th><th></th>
         </tr>
       </thead>
@@ -179,8 +210,8 @@ async function loadStudents() {
   if (!res) return;
 
   if (!res.ok) {
-    document.getElementById('rosterHolder').innerHTML =
-      `<div class="roster-empty">Failed to load students.</div>`;
+    const holder = document.getElementById('rosterHolder');
+    if (holder) holder.innerHTML = `<div class="roster-empty">Failed to load students.</div>`;
     return;
   }
 
@@ -192,52 +223,75 @@ async function loadStudents() {
 }
 
 // ── Register a new student ────────────────────────────────────────────────────
-form.addEventListener('submit', async function(e) {
-  e.preventDefault();
+if (form) {
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-  const submitBtn = form.querySelector('button[type="submit"]');
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Saving…';
+    const submitBtn = form.querySelector('button[type="submit"]');
+    
+    const isPaid = document.getElementById('paidCheck').checked;
+    const failedCount = parseInt(document.getElementById('failedCount').value, 10) || 0;
+    const averageScore = parseFloat(document.getElementById('averageScore').value) || 0;
 
-  const st = {
-    studentId: genId(),
-    name:    document.getElementById('fname').value.trim(),
-    gender:  document.getElementById('gender').value,
-    klass:   document.getElementById('klass').value,
-    section: document.getElementById('section').value,
-    phone:   document.getElementById('phone').value.trim(),
-    paid:    document.getElementById('paidCheck').checked,
-    date:    new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-  };
-
-  try {
-    const res = await apiFetch('/api/students', {
-      method: 'POST',
-      body: JSON.stringify(st)
-    });
-    if (!res) return;
-
-    if (!res.ok) {
-      const err = await res.json();
-      alert('Error: ' + (err.error || 'Could not save student.'));
-      idCounter--; // roll back the ID we already incremented
+    // 1. Check Fee Payment
+    if (!isPaid) {
+      alert("Registration Blocked: Registration fee must be paid!");
       return;
     }
 
-    const saved = await res.json();
-    students.unshift(saved); // add to top of local list
-    renderSlip(saved);
-    renderStats();
-    renderSectionsStrip();
-    renderRoster();
-    form.reset();
-    document.getElementById('paidCheck').checked = true;
+    // 2. Check Pass / Fail Rules
+    const eligibility = checkEligibility(failedCount, averageScore);
+    if (!eligibility.canRegister) {
+      alert(eligibility.message);
+      return; // Stops registration completely!
+    }
 
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Register Student & Generate Slip';
-  }
-});
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Saving…';
+
+    const st = {
+      studentId: genId(),
+      name:         document.getElementById('fname').value.trim(),
+      gender:       document.getElementById('gender').value,
+      klass:        document.getElementById('klass').value,
+      section:      document.getElementById('section').value,
+      phone:        document.getElementById('phone').value.trim(),
+      stream:       document.getElementById('stream') ? document.getElementById('stream').value : 'None',
+      failedCount:  failedCount,
+      averageScore: averageScore,
+      paid:         isPaid,
+      date:         new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+    };
+
+    try {
+      const res = await apiFetch('/api/students', {
+        method: 'POST',
+        body: JSON.stringify(st)
+      });
+      if (!res) return;
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert('Error: ' + (err.error || err.message || 'Could not save student.'));
+        idCounter--; // Roll back generated ID on error
+        return;
+      }
+
+      const saved = await res.json();
+      students.unshift(saved); // Add to local array
+      renderSlip(saved);
+      renderStats();
+      renderSectionsStrip();
+      renderRoster();
+      form.reset();
+      document.getElementById('paidCheck').checked = true;
+
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Register Student & Generate Slip';
+    }
+  });
+}
 
 // ── Delete a student ──────────────────────────────────────────────────────────
 async function deleteStudent(id) {
@@ -258,28 +312,31 @@ async function deleteStudent(id) {
   renderRoster();
 }
 
-// ── Search ────────────────────────────────────────────────────────────────────
-document.getElementById('searchBox').addEventListener('input', renderRoster);
+// ── Search Listener ───────────────────────────────────────────────────────────
+const searchBox = document.getElementById('searchBox');
+if (searchBox) {
+  searchBox.addEventListener('input', renderRoster);
+}
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadStudents();
+
 // Check Admin Authentication & Handle Secure CSV Download
 document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("token");
+  const authToken = localStorage.getItem("kkss_token");
   const rosterSection = document.getElementById("adminOnlyRoster");
 
-  // 1. Hide roster for regular students, show only for logged-in admin
-  if (token && rosterSection) {
+  // Show roster section when logged in
+  if (authToken && rosterSection) {
     rosterSection.style.display = "block";
   } else if (rosterSection) {
     rosterSection.style.display = "none";
   }
 
-  // 2. Handle CSV download with JWT authentication header
+  // Handle CSV download
   const downloadBtn = document.getElementById("downloadCsvBtn");
   if (downloadBtn) {
     downloadBtn.addEventListener("click", async () => {
-      const authToken = localStorage.getItem("token");
       if (!authToken) {
         alert("Admin authorization required.");
         return;
