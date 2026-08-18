@@ -1,147 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kiltu Kara Secondary School — Registration</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiltu Kara Secondary School - Student Registration</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="hero">
-  <div class="hero-inner">
-    <p class="eyebrow">Student Registration &middot; ካቲት ምዝገባ</p>
-    <h1>Kiltu Kara<br>Secondary School</h1>
-    <p class="sub">Register a new student, assign their class and section, and issue an official registration slip — 400 Birr per student, Sections A through K.</p>
-    <div class="hero-stats">
-      <div class="stat"><b id="statTotal">0</b><span>Registered</span></div>
-      <div class="stat"><b id="statPaid">0</b><span>Fees Paid</span></div>
-      <div class="stat"><b>400 ETB</b><span>Registration Fee</span></div>
-      <div class="stat"><b>A – K</b><span>Sections / Class</span></div>
-    </div>
-    <div style="margin-top:22px; font-size:13px; color:rgba(243,236,216,0.75);">
-      Logged in as <b id="whoami" style="color:var(--ochre-light);"></b>
-      &middot; <a href="#" id="logoutLink" style="color:var(--ochre-light);">Log out</a>
-    </div>
-  </div>
-</div>
+    <div class="container">
+        <h2>Student Registration Form</h2>
+        <form id="registrationForm">
+            
+            <!-- Personal Details -->
+            <div class="form-group">
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" name="fullName" placeholder="Enter full name" required>
+            </div>
 
-<div class="wrap">
-  <div class="grid">
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" placeholder="Enter age" min="10" required>
+            </div>
 
-    <div class="card">
-      <div class="card-head">
-        <h2>New Registration</h2>
-        <span class="tag">FORM / KKSS-REG</span>
-      </div>
-      <form id="regForm">
-        <div class="field">
-          <label>Full Name</label>
-          <input type="text" id="fname" placeholder="e.g. Chaltu Bekele Fayisa" required>
-        </div>
-        
-        <div class="row2">
-          <div class="field">
-            <label>Gender</label>
-            <select id="gender" required>
-              <option value="">Select</option>
-              <option value="Female">Female</option>
-              <option value="Male">Male</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Guardian Phone</label>
-            <input type="tel" id="phone" placeholder="09xx xxx xxx" required>
-          </div>
-        </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
 
-        <div class="row2">
-          <div class="field">
-            <label>Class</label>
-            <select id="klass" required>
-              <option value="">Select class</option>
-              <option>Grade 9</option>
-              <option>Grade 10</option>
-              <option>Grade 11</option>
-              <option>Grade 12</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Section</label>
-            <select id="section" required>
-              <option value="">Select section</option>
-            </select>
-          </div>
-        </div>
+            <!-- Grade Level -->
+            <div class="form-group">
+                <label for="grade">Grade Level:</label>
+                <select id="grade" name="grade" required>
+                    <option value="">Select Grade</option>
+                    <option value="9">Grade 9</option>
+                    <option value="10">Grade 10</option>
+                    <option value="11">Grade 11</option>
+                    <option value="12">Grade 12</option>
+                </select>
+            </div>
 
-        <!-- 🌟 NEW: Stream & Academic Performance Inputs -->
-        <div class="row2">
-          <div class="field">
-            <label>Stream (Grades 11 & 12)</label>
-            <select id="stream">
-              <option value="None">None (Grade 9 & 10)</option>
-              <option value="Natural Science">Natural Science</option>
-              <option value="Social Science">Social Science</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Failed Subjects (< 50)</label>
-            <input type="number" id="failedCount" min="0" max="10" placeholder="e.g. 0, 1, 2" required>
-          </div>
-        </div>
+            <!-- Dynamic Academic Stream Field -->
+            <div class="form-group">
+                <label for="stream">Academic Stream:</label>
+                <select id="stream" name="stream" required>
+                    <option value="">Select Grade First</option>
+                </select>
+            </div>
 
-        <div class="field">
-          <label>Overall Average Score (%)</label>
-          <input type="number" id="averageScore" step="0.1" min="0" max="100" placeholder="e.g. 65.5" required>
-        </div>
+            <!-- Academic Performance Fields -->
+            <div class="form-group">
+                <label for="average">Academic Average (%):</label>
+                <input type="number" id="average" name="average" step="0.1" min="0" max="100" placeholder="e.g. 68.5" required>
+            </div>
 
-        <!-- Registration Fee Box -->
-        <div class="fee-box">
-          <div>
-            <div class="lbl">Registration Fee</div>
-            <div class="amt">400 Birr</div>
-          </div>
-          <label class="paid-toggle">
-            <input type="checkbox" id="paidCheck" checked>
-            Paid at registration
-          </label>
-        </div>
+            <div class="form-group">
+                <label for="failedSubjects">Number of Failed Subjects:</label>
+                <input type="number" id="failedSubjects" name="failedSubjects" min="0" value="0" required>
+            </div>
 
-        <button type="submit" class="submit">Register Student &amp; Generate Slip</button>
-      </form>
+            <!-- Payment Information -->
+            <div class="form-group">
+                <label for="paymentStatus">Payment Status:</label>
+                <select id="paymentStatus" name="paymentStatus">
+                    <option value="Completed" selected>Completed (Testing Default)</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Waived">Waived</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="paymentReference">Transaction / Receipt Ref (Optional):</label>
+                <input type="text" id="paymentReference" name="paymentReference" placeholder="e.g. TXN-123456">
+            </div>
+
+            <button type="submit">Register Student</button>
+        </form>
+
+        <div id="responseMessage"></div>
     </div>
 
-    <div class="card">
-      <div class="card-head">
-        <h2>Registration Slip</h2>
-        <span class="tag" id="slipTag">AWAITING ENTRY</span>
-      </div>
-      <div class="receipt" id="receiptArea">
-        <div class="receipt-empty">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#8a8064" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18M8 4v16"/></svg>
-          <div>Fill the form to generate a printable registration slip with a paid stamp and student ID.</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="roster-wrap">
-    <!-- 🔒 ADMIN-ONLY ROSTER SECTION -->
-    <div id="adminOnlyRoster" style="display: none; margin-top: 30px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h2 style="margin: 0;">Student Roster</h2>
-        <button id="downloadCsvBtn" style="padding: 10px 18px; background-color: #2b5e3b; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-          📥 Download Roster (CSV)
-        </button>
-      </div>
-      <input type="text" class="roster-search" id="searchBox" placeholder="Search by name or ID…">
-      <div class="sections-strip" id="sectionsStrip"></div>
-      <div id="rosterHolder"><div class="roster-empty">Loading…</div></div>
-    </div>
-  </div>
-</div>
-
-<script src="script.js"></script>
+    <!-- External Script Handlers -->
+    <script src="script.js"></script>
 </body>
 </html>
