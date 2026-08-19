@@ -1,90 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiltu Kara Secondary School - Student Registration</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Kiltu Kara Secondary School - Registration</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <h2>Student Registration Form</h2>
+  <form id="registrationForm">
+    <input type="text" id="fullName" placeholder="Full Name" required>
+    <input type="text" id="nationalId" placeholder="National ID / Student ID" required>
+    <input type="number" id="age" placeholder="Age" required>
 
-    <div class="container">
-        <h2>Student Registration Form</h2>
-        <form id="registrationForm">
-            
-            <!-- Personal Details -->
-            <div class="form-group">
-                <label for="fullName">Full Name:</label>
-                <input type="text" id="fullName" name="fullName" placeholder="Enter full name" required>
-            </div>
+    <select id="gender" required>
+      <option value="" disabled selected>Select Gender</option>
+      <option value="M">M</option>
+      <option value="F">F</option>
+    </select>
 
-            <div class="form-group">
-                <label for="age">Age:</label>
-                <input type="number" id="age" name="age" placeholder="Enter age" min="10" required>
-            </div>
+    <select id="grade" required>
+      <option value="" disabled selected>Select Grade</option>
+      <option value="Grade 9">Grade 9</option>
+      <option value="Grade 10">Grade 10</option>
+      <option value="Grade 11">Grade 11</option>
+      <option value="Grade 12">Grade 12</option>
+    </select>
 
-            <div class="form-group">
-                <label for="gender">Gender:</label>
-                <select id="gender" name="gender" required>
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
-            </div>
+    <select id="stream" required>
+      <option value="" disabled selected>Select Academic Stream</option>
+      <option value="General">General</option>
+      <option value="NS">NS</option>
+      <option value="SS">SS</option>
+    </select>
 
-            <!-- Grade Level -->
-            <div class="form-group">
-                <label for="grade">Grade Level:</label>
-                <select id="grade" name="grade" required>
-                    <option value="">Select Grade</option>
-                    <option value="9">Grade 9</option>
-                    <option value="10">Grade 10</option>
-                    <option value="11">Grade 11</option>
-                    <option value="12">Grade 12</option>
-                </select>
-            </div>
+    <input type="number" id="average" placeholder="Academic Average (%)" min="0" max="100" required>
+    <input type="text" id="previousSchool" placeholder="Previous School" required>
+    <input type="text" id="guardianName" placeholder="Guardian Name" required>
+    <input type="tel" id="guardianPhone" placeholder="Guardian Phone Number" required>
 
-            <!-- Dynamic Academic Stream Field -->
-            <div class="form-group">
-                <label for="stream">Academic Stream:</label>
-                <select id="stream" name="stream" required>
-                    <option value="">Select Grade First</option>
-                </select>
-            </div>
+    <button type="submit">Submit Registration</button>
+  </form>
 
-            <!-- Academic Performance Fields -->
-            <div class="form-group">
-                <label for="average">Academic Average (%):</label>
-                <input type="number" id="average" name="average" step="0.1" min="0" max="100" placeholder="e.g. 68.5" required>
-            </div>
+  <script>
+    document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        fullName: document.getElementById('fullName').value,
+        nationalId: document.getElementById('nationalId').value,
+        age: document.getElementById('age').value,
+        gender: document.getElementById('gender').value,
+        grade: document.getElementById('grade').value,
+        stream: document.getElementById('stream').value,
+        average: document.getElementById('average').value,
+        previousSchool: document.getElementById('previousSchool').value,
+        guardianName: document.getElementById('guardianName').value,
+        guardianPhone: document.getElementById('guardianPhone').value
+      };
 
-            <div class="form-group">
-                <label for="failedSubjects">Number of Failed Subjects:</label>
-                <input type="number" id="failedSubjects" name="failedSubjects" min="0" value="0" required>
-            </div>
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-            <!-- Payment Information -->
-            <div class="form-group">
-                <label for="paymentStatus">Payment Status:</label>
-                <select id="paymentStatus" name="paymentStatus">
-                    <option value="Completed" selected>Completed (Testing Default)</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Waived">Waived</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="paymentReference">Transaction / Receipt Ref (Optional):</label>
-                <input type="text" id="paymentReference" name="paymentReference" placeholder="e.g. TXN-123456">
-            </div>
-
-            <button type="submit">Register Student</button>
-        </form>
-
-        <div id="responseMessage"></div>
-    </div>
-
-    <!-- External Script Handlers -->
-    <script src="script.js"></script>
+      if (res.ok) {
+        alert('Student registered successfully!');
+        document.getElementById('registrationForm').reset();
+      } else {
+        alert('Error submitting registration.');
+      }
+    });
+  </script>
 </body>
 </html>
