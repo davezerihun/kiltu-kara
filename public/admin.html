@@ -2,45 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Registration Dashboard</title>
   <link rel="stylesheet" href="admin.css">
 </head>
 <body>
+
   <div class="header">
     <h2>Student Registration Dashboard</h2>
     <button id="exportBtn" class="btn-export">Export to CSV</button>
   </div>
 
-  <p><a href="/">← Registration Form</a></p>
+  <a href="/" class="nav-link">← Registration Form</a>
 
   <div class="filters">
-    <input type="text" id="searchInput" placeholder="Search by name or national ID...">
+    <input type="text" id="searchInput" placeholder="Search by student name or national ID...">
   </div>
 
   <h3 id="recordCount">Showing 0 student record(s)</h3>
 
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>FULL NAME</th>
-        <th>NAT ID</th>
-        <th>AGE</th>
-        <th>GENDER</th>
-        <th>GRADE</th>
-        <th>STREAM</th>
-        <th>AVG</th>
-        <th>STATUS</th>
-        <th>PREVIOUS SCHOOL</th>
-        <th>GUARDIAN NAME</th>
-        <th>GUARDIAN PHONE</th>
-        <th>ACTION</th>
-      </tr>
-    </thead>
-    <tbody id="studentTableBody">
-      <!-- Rows rendered dynamically -->
-    </tbody>
-  </table>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>FULL NAME</th>
+          <th>NAT ID</th>
+          <th>AGE</th>
+          <th>GENDER</th>
+          <th>GRADE</th>
+          <th>STREAM</th>
+          <th>AVG</th>
+          <th>STATUS</th>
+          <th>PREVIOUS SCHOOL</th>
+          <th>GUARDIAN NAME</th>
+          <th>GUARDIAN PHONE</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody id="studentTableBody">
+        <!-- Dynamic Rows Rendered Here -->
+      </tbody>
+    </table>
+  </div>
 
   <script src="admin.js"></script>
 </body>

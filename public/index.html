@@ -2,48 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kiltu Kara Secondary School - Registration</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>Student Registration Form</h2>
-  <form id="registrationForm">
-    <input type="text" id="fullName" placeholder="Full Name" required>
-    <input type="text" id="nationalId" placeholder="National ID / Student ID" required>
-    <input type="number" id="age" placeholder="Age" required>
 
-    <select id="gender" required>
-      <option value="" disabled selected>Select Gender</option>
-      <option value="M">M</option>
-      <option value="F">F</option>
-    </select>
+  <div class="form-card">
+    <div class="header-container">
+      <h1 class="welcome-title">WELCOME TO KILTU KARA SECONDARY SCHOOL REGISTRATION</h1>
+      <p class="welcome-subtitle">Please complete the student registration form below</p>
+    </div>
 
-    <select id="grade" required>
-      <option value="" disabled selected>Select Grade</option>
-      <option value="Grade 9">Grade 9</option>
-      <option value="Grade 10">Grade 10</option>
-      <option value="Grade 11">Grade 11</option>
-      <option value="Grade 12">Grade 12</option>
-    </select>
+    <form id="registrationForm">
+      <div class="input-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" placeholder="e.g. Dawit Zarihun" required>
+      </div>
 
-    <select id="stream" required>
-      <option value="" disabled selected>Select Academic Stream</option>
-      <option value="General">General</option>
-      <option value="NS">NS</option>
-      <option value="SS">SS</option>
-    </select>
+      <div class="input-group">
+        <label for="nationalId">National ID / Student ID</label>
+        <input type="text" id="nationalId" placeholder="e.g. 7106316487932437" required>
+      </div>
 
-    <input type="number" id="average" placeholder="Academic Average (%)" min="0" max="100" required>
-    <input type="text" id="previousSchool" placeholder="Previous School" required>
-    <input type="text" id="guardianName" placeholder="Guardian Name" required>
-    <input type="tel" id="guardianPhone" placeholder="Guardian Phone Number" required>
+      <div class="form-row">
+        <div class="input-group">
+          <label for="age">Age</label>
+          <input type="number" id="age" placeholder="Age" min="10" max="30" required>
+        </div>
 
-    <button type="submit">Submit Registration</button>
-  </form>
+        <div class="input-group">
+          <label for="gender">Gender</label>
+          <select id="gender" required>
+            <option value="" disabled selected>Select Gender</option>
+            <option value="M">M</option>
+            <option value="F">F</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label for="grade">Grade</label>
+          <select id="grade" required>
+            <option value="" disabled selected>Select Grade</option>
+            <option value="Grade 9">Grade 9</option>
+            <option value="Grade 10">Grade 10</option>
+            <option value="Grade 11">Grade 11</option>
+            <option value="Grade 12">Grade 12</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="stream">Academic Stream</label>
+          <select id="stream" required>
+            <option value="" disabled selected>Select Stream</option>
+            <option value="General">General</option>
+            <option value="NS">NS</option>
+            <option value="SS">SS</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="average">Academic Average (%)</label>
+        <input type="number" id="average" placeholder="e.g. 85" min="0" max="100" required>
+      </div>
+
+      <div class="input-group">
+        <label for="previousSchool">Previous School</label>
+        <input type="text" id="previousSchool" placeholder="Previous school name" required>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label for="guardianName">Guardian Name</label>
+          <input type="text" id="guardianName" placeholder="Guardian Full Name" required>
+        </div>
+
+        <div class="input-group">
+          <label for="guardianPhone">Guardian Phone</label>
+          <input type="tel" id="guardianPhone" placeholder="09xxxxxxxx" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">Submit Registration</button>
+    </form>
+
+    <div class="nav-footer">
+      <a href="/admin.html">Go to Admin Dashboard →</a>
+    </div>
+  </div>
 
   <script>
     document.getElementById('registrationForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      
       const payload = {
         fullName: document.getElementById('fullName').value,
         nationalId: document.getElementById('nationalId').value,
@@ -57,17 +111,21 @@
         guardianPhone: document.getElementById('guardianPhone').value
       };
 
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
 
-      if (res.ok) {
-        alert('Student registered successfully!');
-        document.getElementById('registrationForm').reset();
-      } else {
-        alert('Error submitting registration.');
+        if (res.ok) {
+          alert('Student registered successfully!');
+          document.getElementById('registrationForm').reset();
+        } else {
+          alert('Error submitting registration.');
+        }
+      } catch (err) {
+        alert('Server connection failed. Please try again.');
       }
     });
   </script>

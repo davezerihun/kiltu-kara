@@ -2,9 +2,13 @@ let allStudents = [];
 
 // Fetch and display students
 async function loadStudents() {
-  const res = await fetch('/api/students');
-  allStudents = await res.json();
-  renderTable(allStudents);
+  try {
+    const res = await fetch('/api/students');
+    allStudents = await res.json();
+    renderTable(allStudents);
+  } catch (err) {
+    console.error('Error fetching students:', err);
+  }
 }
 
 function renderTable(students) {
@@ -13,21 +17,30 @@ function renderTable(students) {
   document.getElementById('recordCount').innerText = `Showing ${students.length} student record(s)`;
 
   students.forEach((student, index) => {
+    // Dynamic status fallback for older database entries
+    let statusText = student.academicStatus;
+    if (!statusText || statusText === 'undefined') {
+      const avgNum = Number(student.average) || 0;
+      if (avgNum < 50) statusText = 'FAILED';
+      else if (avgNum < 60) statusText = 'WARNING';
+      else statusText = 'PASSED';
+    }
+
     let badgeClass = 'status-passed';
-    if (student.academicStatus === 'FAILED') badgeClass = 'status-failed';
-    if (student.academicStatus === 'WARNING') badgeClass = 'status-warning';
+    if (statusText === 'FAILED') badgeClass = 'status-failed';
+    if (statusText === 'WARNING') badgeClass = 'status-warning';
 
     const row = `
       <tr>
         <td>${index + 1}</td>
         <td><b>${student.fullName}</b></td>
         <td>${student.nationalId || 'N/A'}</td>
-        <td>${student.age}</td>
-        <td>${student.gender}</td>
-        <td>${student.grade}</td>
-        <td>${student.stream}</td>
-        <td>${student.average}%</td>
-        <td><span class="${badgeClass}">${student.academicStatus}</span></td>
+        <td>${student.age || 'N/A'}</td>
+        <td>${student.gender || 'N/A'}</td>
+        <td>${student.grade || 'N/A'}</td>
+        <td>${student.stream || 'N/A'}</td>
+        <td>${student.average !== undefined ? student.average + '%' : 'N/A'}</td>
+        <td><span class="status-badge ${badgeClass}">${statusText}</span></td>
         <td>${student.previousSchool || 'N/A'}</td>
         <td>${student.guardianName || 'N/A'}</td>
         <td>${student.guardianPhone || 'N/A'}</td>
@@ -54,7 +67,7 @@ async function deleteStudent(id) {
 document.getElementById('searchInput').addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase();
   const filtered = allStudents.filter(s => 
-    s.fullName.toLowerCase().includes(query) || 
+    (s.fullName && s.fullName.toLowerCase().includes(query)) || 
     (s.nationalId && s.nationalId.toLowerCase().includes(query))
   );
   renderTable(filtered);
@@ -72,15 +85,23 @@ document.getElementById('exportBtn').addEventListener('click', () => {
   const csvRows = [headers.join(',')];
 
   allStudents.forEach(s => {
+    let statusText = s.academicStatus;
+    if (!statusText || statusText === 'undefined') {
+      const avgNum = Number(s.average) || 0;
+      if (avgNum < 50) statusText = 'FAILED';
+      else if (avgNum < 60) statusText = 'WARNING';
+      else statusText = 'PASSED';
+    }
+
     const row = [
-      `"${s.fullName}"`,
+      `"${s.fullName || ''}"`,
       `"${s.nationalId || ''}"`,
-      s.age,
-      s.gender,
-      `"${s.grade}"`,
-      s.stream,
-      s.average,
-      s.academicStatus,
+      s.age || '',
+      s.gender || '',
+      `"${s.grade || ''}"`,
+      s.stream || '',
+      s.average || '',
+      statusText,
       `"${s.previousSchool || ''}"`,
       `"${s.guardianName || ''}"`,
       `"${s.guardianPhone || ''}"`
@@ -98,5 +119,5 @@ document.getElementById('exportBtn').addEventListener('click', () => {
   document.body.removeChild(link);
 });
 
-// Load table on page start
+// Load table on startup
 loadStudents();
