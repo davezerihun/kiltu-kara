@@ -1,87 +1,119 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+
 const app = express();
-
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'))); // Adjust if static files are in root
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('Connected to MongoDB successfully'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// 1. MONGODB CONNECTION
+const mongoURI = process.env.MONGO_URI || 'YOUR_MONGODB_URI_HERE';
+mongoose.connect(mongoURI)
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error('MongoDB Connection Error:', err));
 
-// Student Schema
+// 2. SCHEMAS & MODELS
 const studentSchema = new mongoose.Schema({
-  fullName: { type: String, required: true },
-  nationalId: { type: String, required: true },
-  age: { type: Number, required: true },
-  gender: { type: String, enum: ['M', 'F'], required: true },
-  grade: { type: String, required: true },
-  stream: { type: String, enum: ['NS', 'SS', 'General'], required: true },
-  average: { type: Number, required: true },
+  fullName: String,
+  nationalId: String,
+  age: Number,
+  gender: String,
+  grade: String,
+  stream: String,
+  average: Number,
   academicStatus: String,
-  previousSchool: { type: String, required: true },
-  guardianName: { type: String, required: true },
-  guardianPhone: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
+  previousSchool: String,
+  guardianName: String,
+  guardianPhone: String
 });
-
 const Student = mongoose.model('Student', studentSchema);
 
-// CREATE: Register Student
+const adminSchema = new mongoose.Schema({
+  password: { type: String, default: 'admin123' }
+});
+const Admin = mongoose.model('Admin', adminSchema);
+
+// Ensure default admin password exists in DB
+async function initAdmin() {
+  try {
+    const count = await Admin.countDocuments();
+    if (count === 0) {
+      await Admin.create({ password: 'admin123' });
+    }
+  } catch (err) {
+    console.error('Admin initialization error:', err);
+  }
+}
+initAdmin();
+
+// 3. STUDENT ROUTES
 app.post('/api/register', async (req, res) => {
   try {
-    const { fullName, nationalId, age, gender, grade, stream, average, previousSchool, guardianName, guardianPhone } = req.body;
-    
-    const avgNum = Number(average);
-    let academicStatus = 'PASSED';
-    if (avgNum < 50) {
-      academicStatus = 'FAILED';
-    } else if (avgNum >= 50 && avgNum < 60) {
-      academicStatus = 'WARNING';
-    }
+    const avg = Number(req.body.average) || 0;
+    let status = 'PASSED';
+    if (avg < 50) status = 'FAILED';
+    else if (avg < 60) status = 'WARNING';
 
     const newStudent = new Student({
-      fullName,
-      nationalId,
-      age,
-      gender,
-      grade,
-      stream,
-      average: avgNum,
-      academicStatus,
-      previousSchool,
-      guardianName,
-      guardianPhone
+      ...req.body,
+      academicStatus: status
     });
-
     await newStudent.save();
-    res.status(201).json({ message: 'Student registered successfully!' });
+    res.status(201).json({ message: 'Registered successfully' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
-// READ: Get All Students
 app.get('/api/students', async (req, res) => {
   try {
-    const students = await Student.find().sort({ createdAt: -1 });
+    const students = await Student.find();
     res.json(students);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
-// DELETE: Delete Student Record
 app.delete('/api/students/:id', async (req, res) => {
   try {
     await Student.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Student deleted successfully' });
+    res.json({ message: 'Student deleted' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
+// 4. ADMIN AUTHENTICATION ROUTES
+app.post('/api/admin/login', async (req, res) => {
+  try {
+    const { password } = req.body;
+    const admin = await Admin.findOne();
+    if (admin && admin.password === password) {
+      return res.status(200).json({ success: true });
+    }
+    return res.status(401).json({ success: false, message: 'Invalid password' });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.post('/api/admin/change-password', async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const admin = await Admin.findOne();
+
+    if (!admin || admin.password !== currentPassword) {
+      return res.status(400).json({ success: false, message: 'Current password is incorrect' });
+    }
+
+    admin.password = newPassword;
+    await admin.save();
+    return res.status(200).json({ success: true, message: 'Password updated successfully!' });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// 5. START SERVER
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -1,5 +1,4 @@
 let allStudents = [];
-const ADMIN_PASSWORD = "admin123"; // You can change this password anytime
 
 // AUTHENTICATION CHECK
 function checkAuth() {
@@ -13,21 +12,68 @@ function checkAuth() {
   }
 }
 
-function login(e) {
+// LOGIN VIA BACKEND
+async function login(e) {
   e.preventDefault();
-  const enteredPass = document.getElementById('adminPassword').value;
-  if (enteredPass === ADMIN_PASSWORD) {
-    sessionStorage.setItem('isAdminLoggedIn', 'true');
-    document.getElementById('loginError').innerText = '';
-    checkAuth();
-  } else {
-    document.getElementById('loginError').innerText = 'Incorrect admin password!';
+  const password = document.getElementById('adminPassword').value;
+
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+
+    if (res.ok) {
+      sessionStorage.setItem('isAdminLoggedIn', 'true');
+      document.getElementById('loginError').innerText = '';
+      checkAuth();
+    } else {
+      document.getElementById('loginError').innerText = 'Incorrect password!';
+    }
+  } catch (err) {
+    document.getElementById('loginError').innerText = 'Server connection error.';
   }
 }
 
+// LOGOUT
 function logout() {
   sessionStorage.removeItem('isAdminLoggedIn');
   location.reload();
+}
+
+// CHANGE PASSWORD MODAL CONTROLS
+function togglePasswordModal(show) {
+  document.getElementById('passwordModal').style.display = show ? 'flex' : 'none';
+  document.getElementById('passMsg').innerText = '';
+}
+
+// CHANGE PASSWORD API CALL
+async function changePassword(e) {
+  e.preventDefault();
+  const currentPassword = document.getElementById('currPass').value;
+  const newPassword = document.getElementById('newPass').value;
+
+  try {
+    const res = await fetch('/api/admin/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword, newPassword })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert('Password updated successfully!');
+      togglePasswordModal(false);
+      document.getElementById('currPass').value = '';
+      document.getElementById('newPass').value = '';
+    } else {
+      document.getElementById('passMsg').innerText = data.message || 'Failed to update password.';
+    }
+  } catch (err) {
+    document.getElementById('passMsg').innerText = 'Server error.';
+  }
 }
 
 // FETCH DATA
@@ -81,7 +127,7 @@ function renderTable(students) {
   });
 }
 
-// MULTI-FILTER LOGIC (SEARCH + GRADE + STREAM)
+// MULTI-FILTER LOGIC
 function applyFilters() {
   const query = document.getElementById('searchInput').value.toLowerCase();
   const selectedGrade = document.getElementById('gradeFilter').value;
@@ -100,7 +146,7 @@ function applyFilters() {
   renderTable(filtered);
 }
 
-// EVENT LISTENERS FOR FILTERS
+// EVENT LISTENERS
 document.getElementById('searchInput').addEventListener('input', applyFilters);
 document.getElementById('gradeFilter').addEventListener('change', applyFilters);
 document.getElementById('streamFilter').addEventListener('change', applyFilters);
@@ -162,5 +208,4 @@ document.getElementById('exportBtn').addEventListener('click', () => {
   document.body.removeChild(link);
 });
 
-// INITIALIZE LOGIN CHECK
 checkAuth();

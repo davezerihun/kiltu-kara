@@ -8,7 +8,7 @@
 </head>
 <body>
 
-  <!-- ADMIN LOGIN SECTION -->
+  <!-- LOGIN SECTION -->
   <div id="loginSection" class="login-container">
     <div class="login-card">
       <h2>Admin Login</h2>
@@ -22,11 +22,12 @@
     </div>
   </div>
 
-  <!-- DASHBOARD SECTION (PROTECTED) -->
+  <!-- DASHBOARD SECTION -->
   <div id="dashboardSection" class="dashboard-container" style="display: none;">
     <div class="header">
       <h2>Student Registration Dashboard</h2>
       <div>
+        <button onclick="togglePasswordModal(true)" class="btn-export" style="background-color: #3b82f6;">Change Password</button>
         <button id="exportBtn" class="btn-export">Export to CSV</button>
         <button onclick="logout()" class="btn-logout">Logout</button>
       </div>
@@ -34,7 +35,7 @@
 
     <a href="/" class="nav-link">← Registration Form</a>
 
-    <!-- SEARCH AND CLASS/STREAM FILTERS -->
+    <!-- FILTERS -->
     <div class="filters">
       <input type="text" id="searchInput" placeholder="Search by name or national ID...">
       
@@ -75,10 +76,22 @@
             <th>ACTION</th>
           </tr>
         </thead>
-        <tbody id="studentTableBody">
-          <!-- Dynamic Rows Rendered Here -->
-        </tbody>
+        <tbody id="studentTableBody"></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- CHANGE PASSWORD MODAL -->
+  <div id="passwordModal" class="login-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div class="login-card" style="margin: auto;">
+      <h2>Change Admin Password</h2>
+      <form onsubmit="changePassword(event)">
+        <input type="password" id="currPass" placeholder="Current Password" required>
+        <input type="password" id="newPass" placeholder="New Password" required>
+        <button type="submit" class="btn-login" style="margin-bottom: 10px;">Save New Password</button>
+        <button type="button" onclick="togglePasswordModal(false)" class="btn-logout" style="width: 100%; margin: 0;">Cancel</button>
+      </form>
+      <p id="passMsg" class="error-msg"></p>
     </div>
   </div>
 
