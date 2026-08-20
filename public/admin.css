@@ -11,7 +11,84 @@ body {
   padding: 30px;
 }
 
-/* Header & Controls */
+/* LOGIN OVERLAY CARD */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.login-card {
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-card h2 {
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.login-card p {
+  color: #64748b;
+  font-size: 0.88rem;
+  margin-bottom: 20px;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+  outline: none;
+}
+
+.btn-login {
+  width: 100%;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 11px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-login:hover {
+  background-color: #1d4ed8;
+}
+
+.error-msg {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-top: 10px;
+}
+
+.btn-logout {
+  background-color: #64748b;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background 0.2s ease;
+}
+
+.btn-logout:hover {
+  background-color: #475569;
+}
+
+/* HEADER & CONTROLS */
 .header {
   display: flex;
   justify-content: space-between;
@@ -43,7 +120,6 @@ body {
   background-color: #059669;
 }
 
-/* Nav & Search Filter */
 .nav-link {
   display: inline-block;
   margin-bottom: 15px;
@@ -56,24 +132,31 @@ body {
   text-decoration: underline;
 }
 
+/* FILTER CONTROLS */
 .filters {
-  margin-bottom: 15px;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filters input, .filters select {
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  background-color: #ffffff;
 }
 
 #searchInput {
-  width: 100%;
-  max-width: 400px;
-  padding: 11px 16px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s ease;
+  flex: 2;
+  min-width: 240px;
 }
 
-#searchInput:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+#gradeFilter, #streamFilter {
+  flex: 1;
+  min-width: 150px;
 }
 
 #recordCount {
@@ -82,7 +165,7 @@ body {
   margin-bottom: 15px;
 }
 
-/* Main Table Layout */
+/* MAIN TABLE LAYOUT */
 .table-container {
   overflow-x: auto;
   background: white;
@@ -124,7 +207,7 @@ tbody tr:hover {
   background-color: #f1f5f9;
 }
 
-/* Status Pill Badges */
+/* STATUS BADGES */
 .status-badge {
   display: inline-block;
   padding: 4px 10px;
@@ -134,22 +217,10 @@ tbody tr:hover {
   text-transform: uppercase;
 }
 
-.status-passed {
-  background-color: #d1fae5;
-  color: #065f46;
-}
+.status-passed { background-color: #d1fae5; color: #065f46; }
+.status-warning { background-color: #fef3c7; color: #92400e; }
+.status-failed  { background-color: #fee2e2; color: #991b1b; }
 
-.status-warning {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-
-.status-failed {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
-
-/* Delete Button */
 .btn-delete {
   background-color: #ef4444;
   color: white;
@@ -159,9 +230,6 @@ tbody tr:hover {
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: 600;
-  transition: background 0.2s ease;
 }
 
-.btn-delete:hover {
-  background-color: #dc2626;
-}
+.btn-delete:hover { background-color: #dc2626; }

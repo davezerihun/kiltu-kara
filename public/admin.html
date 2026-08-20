@@ -8,42 +8,78 @@
 </head>
 <body>
 
-  <div class="header">
-    <h2>Student Registration Dashboard</h2>
-    <button id="exportBtn" class="btn-export">Export to CSV</button>
+  <!-- ADMIN LOGIN SECTION -->
+  <div id="loginSection" class="login-container">
+    <div class="login-card">
+      <h2>Admin Login</h2>
+      <p>Enter password to access student records</p>
+      <form onsubmit="login(event)">
+        <input type="password" id="adminPassword" placeholder="Enter Password..." required>
+        <button type="submit" class="btn-login">Login</button>
+      </form>
+      <p id="loginError" class="error-msg"></p>
+      <a href="/" class="nav-link" style="margin-top: 15px; display: inline-block;">← Back to Registration Form</a>
+    </div>
   </div>
 
-  <a href="/" class="nav-link">← Registration Form</a>
+  <!-- DASHBOARD SECTION (PROTECTED) -->
+  <div id="dashboardSection" class="dashboard-container" style="display: none;">
+    <div class="header">
+      <h2>Student Registration Dashboard</h2>
+      <div>
+        <button id="exportBtn" class="btn-export">Export to CSV</button>
+        <button onclick="logout()" class="btn-logout">Logout</button>
+      </div>
+    </div>
 
-  <div class="filters">
-    <input type="text" id="searchInput" placeholder="Search by student name or national ID...">
-  </div>
+    <a href="/" class="nav-link">← Registration Form</a>
 
-  <h3 id="recordCount">Showing 0 student record(s)</h3>
+    <!-- SEARCH AND CLASS/STREAM FILTERS -->
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="Search by name or national ID...">
+      
+      <select id="gradeFilter">
+        <option value="ALL">All Grades</option>
+        <option value="Grade 9">Grade 9</option>
+        <option value="Grade 10">Grade 10</option>
+        <option value="Grade 11">Grade 11</option>
+        <option value="Grade 12">Grade 12</option>
+      </select>
 
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>FULL NAME</th>
-          <th>NAT ID</th>
-          <th>AGE</th>
-          <th>GENDER</th>
-          <th>GRADE</th>
-          <th>STREAM</th>
-          <th>AVG</th>
-          <th>STATUS</th>
-          <th>PREVIOUS SCHOOL</th>
-          <th>GUARDIAN NAME</th>
-          <th>GUARDIAN PHONE</th>
-          <th>ACTION</th>
-        </tr>
-      </thead>
-      <tbody id="studentTableBody">
-        <!-- Dynamic Rows Rendered Here -->
-      </tbody>
-    </table>
+      <select id="streamFilter">
+        <option value="ALL">All Streams</option>
+        <option value="General">General</option>
+        <option value="NS">Natural Science (NS)</option>
+        <option value="SS">Social Science (SS)</option>
+      </select>
+    </div>
+
+    <h3 id="recordCount">Showing 0 student record(s)</h3>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>FULL NAME</th>
+            <th>NAT ID</th>
+            <th>AGE</th>
+            <th>GENDER</th>
+            <th>GRADE</th>
+            <th>STREAM</th>
+            <th>AVG</th>
+            <th>STATUS</th>
+            <th>PREVIOUS SCHOOL</th>
+            <th>GUARDIAN NAME</th>
+            <th>GUARDIAN PHONE</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody">
+          <!-- Dynamic Rows Rendered Here -->
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <script src="admin.js"></script>
