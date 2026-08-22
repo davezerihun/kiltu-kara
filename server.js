@@ -5,7 +5,6 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 
-// SERVE STATIC FILES (CSS, JS, IMAGES) FROM CURRENT DIRECTORY
 app.use(express.static(__dirname));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -30,7 +29,8 @@ const studentSchema = new mongoose.Schema({
   kebele: String,      
   receiptNo: String,   
   guardianName: String,
-  guardianPhone: String
+  guardianPhone: String,
+  isDeleted: { type: Boolean, default: false } // TRASH SYSTEM
 });
 const Student = mongoose.model('Student', studentSchema);
 
@@ -39,7 +39,6 @@ const adminSchema = new mongoose.Schema({
 });
 const Admin = mongoose.model('Admin', adminSchema);
 
-// Ensure default admin password exists in DB
 async function initAdmin() {
   try {
     const count = await Admin.countDocuments();
@@ -52,20 +51,16 @@ async function initAdmin() {
 }
 initAdmin();
 
-// 3. PAGE ROUTES (SAFE FALLBACK FOR LINUX ENVIRONMENT)
+// 3. PAGE ROUTES
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'index.html'), (err) => {
-    if (err) {
-      res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
-    }
+    if (err) res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
   });
 });
 
 app.get('/admin.html', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'admin.html'), (err) => {
-    if (err) {
-      res.sendFile(path.resolve(__dirname, 'public', 'admin.html'));
-    }
+    if (err) res.sendFile(path.resolve(__dirname, 'public', 'admin.html'));
   });
 });
 
@@ -97,16 +92,56 @@ app.get('/api/students', async (req, res) => {
   }
 });
 
-app.delete('/api/students/:id', async (req, res) => {
+// UPDATE / EDIT STUDENT
+app.put('/api/students/:id', async (req, res) => {
   try {
-    await Student.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Student deleted' });
+    const avg = Number(req.body.average) || 0;
+    let status = 'PASSED';
+    if (avg < 50) status = 'FAILED';
+    else if (avg < 60) status = 'WARNING';
+
+    const updated = await Student.findByIdAndUpdate(
+      req.params.id, 
+      { ...req.body, academicStatus: status }, 
+      { new: true }
+    );
+    res.json(updated);
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// 5. ADMIN AUTHENTICATION ROUTES
+// MOVE TO TRASH (SOFT DELETE)
+app.put('/api/students/:id/trash', async (req, res) => {
+  try {
+    await Student.findByIdAndUpdate(req.params.id, { isDeleted: true });
+    res.json({ message: 'Moved to trash' });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// RESTORE FROM TRASH
+app.put('/api/students/:id/restore', async (req, res) => {
+  try {
+    await Student.findByIdAndUpdate(req.params.id, { isDeleted: false });
+    res.json({ message: 'Restored from trash' });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// PERMANENT DELETE FROM TRASH
+app.delete('/api/students/:id/permanent', async (req, res) => {
+  try {
+    await Student.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Permanently deleted' });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// 5. ADMIN AUTHENTICATION
 app.post('/api/admin/login', async (req, res) => {
   try {
     const { password } = req.body;
@@ -137,6 +172,5 @@ app.post('/api/admin/change-password', async (req, res) => {
   }
 });
 
-// 6. START SERVER
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

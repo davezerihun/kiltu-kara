@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Registration Dashboard</title>
   <link rel="stylesheet" href="admin.css">
+  <style>
+    .tab-btn { padding: 8px 16px; margin-right: 8px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; background: #e2e8f0; }
+    .tab-btn.active { background: #2563eb; color: white; }
+    .btn-edit { background: #f59e0b; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-right: 4px; }
+    .btn-restore { background: #10b981; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-right: 4px; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+    .modal-card { background: white; padding: 25px; border-radius: 8px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+  </style>
 </head>
 <body>
 
@@ -34,6 +42,12 @@
     </div>
 
     <a href="/" class="nav-link">← Registration Form</a>
+
+    <!-- VIEW TABS -->
+    <div style="margin: 15px 0;">
+      <button id="activeTab" class="tab-btn active" onclick="switchView('active')">Active Students</button>
+      <button id="trashTab" class="tab-btn" onclick="switchView('trash')">🗑️ Trash Bin</button>
+    </div>
 
     <!-- FILTERS -->
     <div class="filters">
@@ -74,7 +88,7 @@
             <th>PREVIOUS SCHOOL</th>
             <th>GUARDIAN NAME</th>
             <th>GUARDIAN PHONE</th>
-            <th>ACTION</th>
+            <th>ACTIONS</th>
           </tr>
         </thead>
         <tbody id="studentTableBody"></tbody>
@@ -82,15 +96,58 @@
     </div>
   </div>
 
+  <!-- EDIT STUDENT MODAL -->
+  <div id="editModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <h2>Edit Student Record</h2>
+      <form onsubmit="saveEdit(event)" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+        <input type="hidden" id="editId">
+        <label>Full Name: <input type="text" id="editFullName" required></label>
+        <label>Receipt No: <input type="text" id="editReceiptNo" required></label>
+        <label>Age: <input type="number" id="editAge" required></label>
+        <label>Gender: 
+          <select id="editGender" required>
+            <option value="M">M</option>
+            <option value="F">F</option>
+          </select>
+        </label>
+        <label>Grade: 
+          <select id="editGrade" required>
+            <option value="Grade 9">Grade 9</option>
+            <option value="Grade 10">Grade 10</option>
+            <option value="Grade 11">Grade 11</option>
+            <option value="Grade 12">Grade 12</option>
+          </select>
+        </label>
+        <label>Stream: 
+          <select id="editStream" required>
+            <option value="General">General</option>
+            <option value="NS">Natural Science (NS)</option>
+            <option value="SS">Social Science (SS)</option>
+          </select>
+        </label>
+        <label>Average (%): <input type="number" id="editAverage" required></label>
+        <label>Woreda: <input type="text" id="editWoreda" required></label>
+        <label>Kebele: <input type="text" id="editKebele" required></label>
+        <label>Previous School: <input type="text" id="editPreviousSchool" required></label>
+        <label>Guardian Name: <input type="text" id="editGuardianName" required></label>
+        <label>Guardian Phone: <input type="text" id="editGuardianPhone" required></label>
+        
+        <button type="submit" class="btn-login" style="margin-top: 10px;">Update Student</button>
+        <button type="button" onclick="closeEditModal()" class="btn-logout">Cancel</button>
+      </form>
+    </div>
+  </div>
+
   <!-- CHANGE PASSWORD MODAL -->
-  <div id="passwordModal" class="login-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-    <div class="login-card" style="margin: auto;">
+  <div id="passwordModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
       <h2>Change Admin Password</h2>
       <form onsubmit="changePassword(event)">
-        <input type="password" id="currPass" placeholder="Current Password" required>
-        <input type="password" id="newPass" placeholder="New Password" required>
-        <button type="submit" class="btn-login" style="margin-bottom: 10px;">Save New Password</button>
-        <button type="button" onclick="togglePasswordModal(false)" class="btn-logout" style="width: 100%; margin: 0;">Cancel</button>
+        <input type="password" id="currPass" placeholder="Current Password" required style="width:100%; margin-bottom:10px; padding:8px;">
+        <input type="password" id="newPass" placeholder="New Password" required style="width:100%; margin-bottom:10px; padding:8px;">
+        <button type="submit" class="btn-login" style="width:100%; margin-bottom: 10px;">Save New Password</button>
+        <button type="button" onclick="togglePasswordModal(false)" class="btn-logout" style="width: 100%;">Cancel</button>
       </form>
       <p id="passMsg" class="error-msg"></p>
     </div>
