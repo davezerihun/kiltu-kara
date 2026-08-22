@@ -5,8 +5,9 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 
-// SERVE STATIC FILES FROM ROOT (Where index.html, style.css, admin.html are located)
+// SERVE STATIC FILES (CSS, JS, IMAGES) FROM CURRENT DIRECTORY
 app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // 1. MONGODB CONNECTION
 const mongoURI = process.env.MONGO_URI || 'YOUR_MONGODB_URI_HERE';
@@ -51,12 +52,24 @@ async function initAdmin() {
 }
 initAdmin();
 
-// 3. ROUTE TO SERVE INDEX.HTML FOR ROOT URL
+// 3. PAGE ROUTES (SAFE FALLBACK FOR LINUX ENVIRONMENT)
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.resolve(__dirname, 'index.html'), (err) => {
+    if (err) {
+      res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+    }
+  });
 });
 
-// 4. STUDENT ROUTES
+app.get('/admin.html', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'admin.html'), (err) => {
+    if (err) {
+      res.sendFile(path.resolve(__dirname, 'public', 'admin.html'));
+    }
+  });
+});
+
+// 4. STUDENT API ROUTES
 app.post('/api/register', async (req, res) => {
   try {
     const avg = Number(req.body.average) || 0;
@@ -125,5 +138,5 @@ app.post('/api/admin/change-password', async (req, res) => {
 });
 
 // 6. START SERVER
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
