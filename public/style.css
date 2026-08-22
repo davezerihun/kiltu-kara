@@ -10,26 +10,26 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  padding: 20px 10px;
+  padding: 25px 12px;
 }
 
 .main-wrapper {
   width: 100%;
-  max-width: 750px;
+  max-width: 760px;
 }
 
-/* HERO LANDING SECTION */
+/* HERO BANNER */
 .hero-section {
-  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-  color: white;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: #ffffff;
   border-radius: 12px 12px 0 0;
-  padding: 40px 25px;
+  padding: 40px 20px;
   text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
 }
 
 .school-title {
-  font-size: 1.8rem;
+  font-size: 1.85rem;
   font-weight: 800;
   letter-spacing: 1px;
 }
@@ -42,19 +42,20 @@ body {
 
 .badge-portal {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.16);
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 0.8rem;
   margin-top: 15px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
 /* FORM CARD */
 .form-card {
   background: #ffffff;
-  padding: 35px;
+  padding: 35px 30px;
   border-radius: 0 0 12px 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
@@ -68,12 +69,14 @@ body {
 
 .header-container h2 {
   color: #1e293b;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
 }
 
 .header-container p {
   color: #64748b;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
+  margin-top: 4px;
 }
 
 .form-row {
@@ -105,6 +108,7 @@ input, select {
   font-size: 0.95rem;
   outline: none;
   background-color: #f8fafc;
+  color: #1e293b;
 }
 
 input:focus, select:focus {
@@ -118,12 +122,13 @@ input:focus, select:focus {
   background-color: #2563eb;
   color: white;
   border: none;
-  padding: 13px;
+  padding: 14px;
   border-radius: 6px;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   margin-top: 10px;
+  transition: background-color 0.2s;
 }
 
 .btn-submit:hover {
@@ -132,7 +137,7 @@ input:focus, select:focus {
 
 .nav-footer {
   text-align: center;
-  margin-top: 22px;
+  margin-top: 25px;
 }
 
 .nav-footer a {
@@ -142,6 +147,12 @@ input:focus, select:focus {
   font-weight: 600;
 }
 
-@media (max-width: 550px) {
+.nav-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 580px) {
   .form-row { flex-direction: column; gap: 0; }
+  .form-card { padding: 25px 18px; }
+  .school-title { font-size: 1.4rem; }
 }
