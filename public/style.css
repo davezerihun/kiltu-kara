@@ -6,43 +6,74 @@
 }
 
 body {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  background: #0f172a;
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 30px 15px;
+  padding: 20px 10px;
 }
 
+.main-wrapper {
+  width: 100%;
+  max-width: 750px;
+}
+
+/* HERO LANDING SECTION */
+.hero-section {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: white;
+  border-radius: 12px 12px 0 0;
+  padding: 40px 25px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.school-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  color: #bfdbfe;
+  margin-top: 6px;
+}
+
+.badge-portal {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  margin-top: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* FORM CARD */
 .form-card {
   background: #ffffff;
-  width: 100%;
-  max-width: 650px;
   padding: 35px;
-  border-radius: 12px;
+  border-radius: 0 0 12px 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 .header-container {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 25px;
   border-bottom: 2px solid #f1f5f9;
-  padding-bottom: 18px;
+  padding-bottom: 15px;
 }
 
-.welcome-title {
-  color: #1e3a8a;
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  line-height: 1.4;
-  text-transform: uppercase;
+.header-container h2 {
+  color: #1e293b;
+  font-size: 1.25rem;
 }
 
-.welcome-subtitle {
+.header-container p {
   color: #64748b;
-  font-size: 0.9rem;
-  margin-top: 6px;
+  font-size: 0.88rem;
 }
 
 .form-row {
@@ -73,7 +104,6 @@ input, select {
   border-radius: 6px;
   font-size: 0.95rem;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   background-color: #f8fafc;
 }
 
@@ -94,7 +124,6 @@ input:focus, select:focus {
   font-weight: 700;
   cursor: pointer;
   margin-top: 10px;
-  transition: background-color 0.2s ease;
 }
 
 .btn-submit:hover {
@@ -113,13 +142,6 @@ input:focus, select:focus {
   font-weight: 600;
 }
 
-.nav-footer a:hover {
-  text-decoration: underline;
-}
-
 @media (max-width: 550px) {
-  .form-row {
-    flex-direction: column;
-    gap: 0;
-  }
+  .form-row { flex-direction: column; gap: 0; }
 }

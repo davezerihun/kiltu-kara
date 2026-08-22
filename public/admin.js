@@ -120,6 +120,9 @@ function renderTable(students) {
         <td>${student.previousSchool || 'N/A'}</td>
         <td>${student.guardianName || 'N/A'}</td>
         <td>${student.guardianPhone || 'N/A'}</td>
+        <td>${student.receiptNo || 'N/A'}</td>
+<td>${student.woreda || 'N/A'}</td>
+<td>${student.kebele || 'N/A'}</td>
         <td><button onclick="deleteStudent('${student._id}')" class="btn-delete">Delete</button></td>
       </tr>
     `;

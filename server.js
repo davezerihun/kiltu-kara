@@ -4,7 +4,7 @@ const path = require('path');
 
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // Adjust if static files are in root
+app.use(express.static(path.join(__dirname, 'public')));
 
 // 1. MONGODB CONNECTION
 const mongoURI = process.env.MONGO_URI || 'YOUR_MONGODB_URI_HERE';
@@ -23,6 +23,9 @@ const studentSchema = new mongoose.Schema({
   average: Number,
   academicStatus: String,
   previousSchool: String,
+  woreda: String,      // NEW FIELD
+  kebele: String,      // NEW FIELD
+  receiptNo: String,   // NEW FIELD
   guardianName: String,
   guardianPhone: String
 });
