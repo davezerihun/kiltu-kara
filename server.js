@@ -4,7 +4,9 @@ const path = require('path');
 
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// SERVE STATIC FILES FROM ROOT (Where index.html, style.css, admin.html are located)
+app.use(express.static(__dirname));
 
 // 1. MONGODB CONNECTION
 const mongoURI = process.env.MONGO_URI || 'YOUR_MONGODB_URI_HERE';
@@ -23,9 +25,9 @@ const studentSchema = new mongoose.Schema({
   average: Number,
   academicStatus: String,
   previousSchool: String,
-  woreda: String,      // NEW FIELD
-  kebele: String,      // NEW FIELD
-  receiptNo: String,   // NEW FIELD
+  woreda: String,      
+  kebele: String,      
+  receiptNo: String,   
   guardianName: String,
   guardianPhone: String
 });
@@ -49,7 +51,12 @@ async function initAdmin() {
 }
 initAdmin();
 
-// 3. STUDENT ROUTES
+// 3. ROUTE TO SERVE INDEX.HTML FOR ROOT URL
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// 4. STUDENT ROUTES
 app.post('/api/register', async (req, res) => {
   try {
     const avg = Number(req.body.average) || 0;
@@ -86,7 +93,7 @@ app.delete('/api/students/:id', async (req, res) => {
   }
 });
 
-// 4. ADMIN AUTHENTICATION ROUTES
+// 5. ADMIN AUTHENTICATION ROUTES
 app.post('/api/admin/login', async (req, res) => {
   try {
     const { password } = req.body;
@@ -117,6 +124,6 @@ app.post('/api/admin/change-password', async (req, res) => {
   }
 });
 
-// 5. START SERVER
+// 6. START SERVER
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
