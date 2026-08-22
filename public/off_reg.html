@@ -371,7 +371,6 @@
   <script>
     let photoBase64 = '';
 
-    // IMAGE PREVIEW FUNCTION
     function previewImage(event) {
       const file = event.target.files[0];
       if (file) {
@@ -386,7 +385,6 @@
       }
     }
 
-    // FORM SUBMISSION
     document.getElementById('officialForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -428,12 +426,12 @@
         educationStream: document.getElementById('educationStream').value,
         careerTechnical1stField: document.getElementById('careerTechnical1stField').value,
         careerTechnical2ndField: document.getElementById('careerTechnical2ndField').value,
-        numberOfTextbooks: document.getElementById('numberOfTextbooks').value,
+        numberOfTextbooks: Number(document.getElementById('numberOfTextbooks').value) || 0,
         mainInstructionalLanguage: document.getElementById('mainInstructionalLanguage').value,
         schoolFeedingParticipation: document.getElementById('schoolFeedingParticipation').value,
         foodRationHomeTaking: document.getElementById('foodRationHomeTaking').value,
-        numberOfMealsPerWeek: document.getElementById('numberOfMealsPerWeek').value,
-        average: document.getElementById('average').value
+        numberOfMealsPerWeek: Number(document.getElementById('numberOfMealsPerWeek').value) || 0,
+        average: Number(document.getElementById('average').value) || 0
       };
 
       try {
@@ -450,7 +448,7 @@
           document.getElementById('photoPlaceholder').style.display = 'block';
           photoBase64 = '';
         } else {
-          alert('Failed to submit registration.');
+          alert('Failed to submit registration. Check server logs.');
         }
       } catch (err) {
         alert('Server connection error.');
