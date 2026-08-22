@@ -94,35 +94,21 @@ function renderTable(students) {
   document.getElementById('recordCount').innerText = `Showing ${students.length} student record(s)`;
 
   students.forEach((student, index) => {
-    let statusText = student.academicStatus;
-    if (!statusText || statusText === 'undefined') {
-      const avgNum = Number(student.average) || 0;
-      if (avgNum < 50) statusText = 'FAILED';
-      else if (avgNum < 60) statusText = 'WARNING';
-      else statusText = 'PASSED';
-    }
-
-    let badgeClass = 'status-passed';
-    if (statusText === 'FAILED') badgeClass = 'status-failed';
-    if (statusText === 'WARNING') badgeClass = 'status-warning';
-
     const row = `
       <tr>
         <td>${index + 1}</td>
         <td><b>${student.fullName || ''}</b></td>
-        <td>${student.nationalId || 'N/A'}</td>
+        <td>${student.receiptNo || 'N/A'}</td>
         <td>${student.age || 'N/A'}</td>
         <td>${student.gender || 'N/A'}</td>
         <td>${student.grade || 'N/A'}</td>
         <td>${student.stream || 'N/A'}</td>
         <td>${student.average !== undefined ? student.average + '%' : 'N/A'}</td>
-        <td><span class="status-badge ${badgeClass}">${statusText}</span></td>
+        <td>${student.woreda || 'N/A'}</td>
+        <td>${student.kebele || 'N/A'}</td>
         <td>${student.previousSchool || 'N/A'}</td>
         <td>${student.guardianName || 'N/A'}</td>
         <td>${student.guardianPhone || 'N/A'}</td>
-        <td>${student.receiptNo || 'N/A'}</td>
-<td>${student.woreda || 'N/A'}</td>
-<td>${student.kebele || 'N/A'}</td>
         <td><button onclick="deleteStudent('${student._id}')" class="btn-delete">Delete</button></td>
       </tr>
     `;
@@ -138,7 +124,7 @@ function applyFilters() {
 
   const filtered = allStudents.filter(s => {
     const matchesQuery = (s.fullName && s.fullName.toLowerCase().includes(query)) || 
-                         (s.nationalId && s.nationalId.toLowerCase().includes(query));
+                         (s.receiptNo && s.receiptNo.toLowerCase().includes(query));
     
     const matchesGrade = selectedGrade === 'ALL' || s.grade === selectedGrade;
     const matchesStream = selectedStream === 'ALL' || s.stream === selectedStream;
@@ -173,27 +159,20 @@ document.getElementById('exportBtn').addEventListener('click', () => {
     return;
   }
 
-  const headers = ['Full Name', 'National ID', 'Age', 'Gender', 'Grade', 'Stream', 'Average (%)', 'Academic Status', 'Previous School', 'Guardian Name', 'Guardian Phone'];
+  const headers = ['Full Name', 'Receipt No', 'Age', 'Gender', 'Grade', 'Stream', 'Average (%)', 'Woreda', 'Kebele', 'Previous School', 'Guardian Name', 'Guardian Phone'];
   const csvRows = [headers.join(',')];
 
   allStudents.forEach(s => {
-    let statusText = s.academicStatus;
-    if (!statusText || statusText === 'undefined') {
-      const avgNum = Number(s.average) || 0;
-      if (avgNum < 50) statusText = 'FAILED';
-      else if (avgNum < 60) statusText = 'WARNING';
-      else statusText = 'PASSED';
-    }
-
     const row = [
       `"${s.fullName || ''}"`,
-      `"${s.nationalId || ''}"`,
+      `"${s.receiptNo || ''}"`,
       s.age || '',
       s.gender || '',
       `"${s.grade || ''}"`,
       s.stream || '',
       s.average || '',
-      statusText,
+      `"${s.woreda || ''}"`,
+      `"${s.kebele || ''}"`,
       `"${s.previousSchool || ''}"`,
       `"${s.guardianName || ''}"`,
       `"${s.guardianPhone || ''}"`
