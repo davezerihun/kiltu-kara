@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiltu Kara Secondary School - Registration Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="main-wrapper">
+    <!-- HERO LANDING BANNER -->
+    <header class="hero-section">
+      <div class="hero-overlay">
+        <h1 class="school-title">KILTU KARA SECONDARY SCHOOL</h1>
+        <p class="hero-subtitle">Excellence in Education & Future Leadership</p>
+        <span class="badge-portal">Official Student Registration Portal</span>
+      </div>
+    </header>
+
+    <!-- REGISTRATION FORM CARD -->
+    <main class="form-card">
+      <div class="header-container">
+        <h2>STUDENT REGISTRATION FORM</h2>
+        <p>Please complete all student and guardian information below</p>
+      </div>
+
+      <form id="registrationForm">
+        <!-- Full Name -->
+        <div class="input-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" placeholder="e.g. Dawit Zarihun" required>
+        </div>
+
+        <!-- National ID & Receipt No -->
+        <div class="form-row">
+          <div class="input-group">
+            <label for="nationalId">National / Student ID</label>
+            <input type="text" id="nationalId" placeholder="e.g. 7106316487932437" required>
+          </div>
+          <div class="input-group">
+            <label for="receiptNo">Receipt No.</label>
+            <input type="text" id="receiptNo" placeholder="e.g. REC-2026-001" required>
+          </div>
+        </div>
+
+        <!-- Age & Gender -->
+        <div class="form-row">
+          <div class="input-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" placeholder="Age" min="10" max="30" required>
+          </div>
+          <div class="input-group">
+            <label for="gender">Gender</label>
+            <select id="gender" required>
+              <option value="" disabled selected>Select Gender</option>
+              <option value="M">M</option>
+              <option value="F">F</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Grade & Stream -->
+        <div class="form-row">
+          <div class="input-group">
+            <label for="grade">Grade</label>
+            <select id="grade" required>
+              <option value="" disabled selected>Select Grade</option>
+              <option value="Grade 9">Grade 9</option>
+              <option value="Grade 10">Grade 10</option>
+              <option value="Grade 11">Grade 11</option>
+              <option value="Grade 12">Grade 12</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="stream">Academic Stream</label>
+            <select id="stream" required>
+              <option value="" disabled selected>Select Stream</option>
+              <option value="General">General</option>
+              <option value="NS">Natural Science (NS)</option>
+              <option value="SS">Social Science (SS)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Average & Previous School -->
+        <div class="form-row">
+          <div class="input-group">
+            <label for="average">Academic Average (%)</label>
+            <input type="number" id="average" placeholder="e.g. 85" min="0" max="100" required>
+          </div>
+          <div class="input-group">
+            <label for="previousSchool">Previous School</label>
+            <input type="text" id="previousSchool" placeholder="Previous school name" required>
+          </div>
+        </div>
+
+        <!-- Woreda & Kebele -->
+        <div class="form-row">
+          <div class="input-group">
+            <label for="woreda">Woreda</label>
+            <input type="text" id="woreda" placeholder="e.g. Kiltu Kara" required>
+          </div>
+          <div class="input-group">
+            <label for="kebele">Kebele</label>
+            <input type="text" id="kebele" placeholder="e.g. 01" required>
+          </div>
+        </div>
+
+        <!-- Guardian Information -->
+        <div class="form-row">
+          <div class="input-group">
+            <label for="guardianName">Guardian Name</label>
+            <input type="text" id="guardianName" placeholder="Guardian Full Name" required>
+          </div>
+          <div class="input-group">
+            <label for="guardianPhone">Guardian Phone</label>
+            <input type="tel" id="guardianPhone" placeholder="09xxxxxxxx" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Submit Registration</button>
+      </form>
+
+      <div class="nav-footer">
+        <a href="/admin.html">Go to Admin Dashboard →</a>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const payload = {
+        fullName: document.getElementById('fullName').value,
+        nationalId: document.getElementById('nationalId').value,
+        receiptNo: document.getElementById('receiptNo').value,
+        age: document.getElementById('age').value,
+        gender: document.getElementById('gender').value,
+        grade: document.getElementById('grade').value,
+        stream: document.getElementById('stream').value,
+        average: document.getElementById('average').value,
+        previousSchool: document.getElementById('previousSchool').value,
+        woreda: document.getElementById('woreda').value,
+        kebele: document.getElementById('kebele').value,
+        guardianName: document.getElementById('guardianName').value,
+        guardianPhone: document.getElementById('guardianPhone').value
+      };
+
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          alert('Student registered successfully!');
+          document.getElementById('registrationForm').reset();
+        } else {
+          alert('Error submitting registration.');
+        }
+      } catch (err) {
+        alert('Server connection failed. Please try again.');
+      }
+    });
+  </script>
+</body>
+</html>
