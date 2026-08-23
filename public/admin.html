@@ -8,7 +8,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #f1f5f9; padding: 20px; color: #1e293b; }
 
-    .admin-container { max-width: 1200px; margin: 0 auto; }
+    .admin-container { max-width: 100%; margin: 0 auto; }
     .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
     .btn-logout { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
@@ -18,9 +18,12 @@
     .tab-btn.trash-tab.active { background: #dc2626; border-color: #dc2626; }
 
     .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left; font-size: 0.85rem; }
-    th, td { padding: 10px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
-    th { background: #f8fafc; color: #334155; }
+    
+    /* HORIZONTAL SCROLLABLE TABLE CONTAINER */
+    .table-wrapper { width: 100%; overflow-x: auto; margin-top: 15px; border: 1px solid #e2e8f0; border-radius: 6px; }
+    table { width: max-content; min-width: 100%; border-collapse: collapse; text-align: left; font-size: 0.8rem; white-space: nowrap; }
+    th, td { padding: 10px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #f1f5f9; vertical-align: middle; }
+    th { background: #f8fafc; color: #334155; position: sticky; top: 0; }
 
     .img-thumb { width: 40px; height: 45px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1; }
     .btn-action { padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.75rem; margin-right: 4px; }
@@ -30,14 +33,15 @@
     .btn-delete { background: #991b1b; color: white; }
     .btn-view { background: #2563eb; color: white; }
 
-    /* MODALS */
+    /* EDIT MODAL */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
-    .modal-content { background: white; padding: 25px; border-radius: 8px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; }
-    .modal-content label { display: block; margin-top: 10px; font-size: 0.8rem; font-weight: bold; }
-    .modal-content input, .modal-content select { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #cbd5e1; border-radius: 4px; }
+    .modal-content { background: white; padding: 25px; border-radius: 8px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; }
+    .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .modal-content label { display: block; margin-top: 6px; font-size: 0.75rem; font-weight: bold; }
+    .modal-content input, .modal-content select { width: 100%; padding: 6px; margin-top: 2px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; }
     .modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
 
-    /* OFFICIAL 1-PAGE FORM PRINT VIEW */
+    /* OFFICIAL 1-PAGE PRINT VIEW */
     #paperFormPrintView { display: none; background: white; padding: 20px; border: 2px solid #000; max-width: 850px; margin: 0 auto; color: #000; font-family: Arial, sans-serif; }
     .paper-title { text-align: center; font-weight: bold; font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #000; padding-bottom: 5px; }
     
@@ -79,68 +83,119 @@
   <!-- STANDARD REGISTRATION TAB -->
   <div id="stdSection" class="card">
     <h3>Standard Online Submissions</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Full Name</th>
-          <th>Gender</th>
-          <th>Grade</th>
-          <th>Stream</th>
-          <th>Phone</th>
-          <th>Guardian</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="stdTable"></tbody>
-    </table>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Actions</th>
+            <th>Full Name</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Grade</th>
+            <th>Stream</th>
+            <th>Guardian Name</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Submitted Date</th>
+          </tr>
+        </thead>
+        <tbody id="stdTable"></tbody>
+      </table>
+    </div>
   </div>
 
-  <!-- OFFICIAL 2019 REGISTRATION TAB -->
+  <!-- OFFICIAL 2019 REGISTRATION TAB (ALL FIELDS FROM REGISTRATION FORM) -->
   <div id="offSection" class="card" style="display:none;">
     <h3>Official 2019 Census Submissions</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Photo</th>
-          <th>Full Name</th>
-          <th>Sex</th>
-          <th>Grade/Section</th>
-          <th>Kebele</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="offTable"></tbody>
-    </table>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Actions</th>
+            <th>Photo</th>
+            <th>Has Student ID</th>
+            <th>Student ID</th>
+            <th>First Name</th>
+            <th>Father's Name</th>
+            <th>Grandfather's Name</th>
+            <th>Admission Type</th>
+            <th>Sex</th>
+            <th>Disability</th>
+            <th>Disability Type</th>
+            <th>Date Of Birth</th>
+            <th>Country Of Birth</th>
+            <th>Region Of Birth</th>
+            <th>Zone Of Birth</th>
+            <th>Woreda Of Birth</th>
+            <th>Nationality</th>
+            <th>Region</th>
+            <th>Zone</th>
+            <th>Woreda</th>
+            <th>Kebele</th>
+            <th>Location Type</th>
+            <th>Student Economic Status</th>
+            <th>Parent Status</th>
+            <th>Father Education Level</th>
+            <th>Mother Education Level</th>
+            <th>Parent/Guardian Full Name</th>
+            <th>Parent/Guardian Email</th>
+            <th>Parent/Guardian Phone</th>
+            <th>Family Head Gender</th>
+            <th>National ID</th>
+            <th>Admission Category</th>
+            <th>Admission Modality</th>
+            <th>Grade Level</th>
+            <th>Section</th>
+            <th>Education Stream</th>
+            <th>Career 1st Field</th>
+            <th>Career 2nd Field</th>
+            <th>Number Of Text Books</th>
+            <th>Instructional Language</th>
+            <th>School Feeding</th>
+            <th>Food Ration Home Taking</th>
+            <th>Meals Per Week</th>
+            <th>Average (%)</th>
+            <th>Submitted Date</th>
+          </tr>
+        </thead>
+        <tbody id="offTable"></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- TRASH BIN TAB -->
   <div id="trashSection" class="card" style="display:none;">
-    <h3>Trash Bin (Mistake / Deleted Formats)</h3>
-    <h4 style="margin-top:15px; color:#475569;">Standard Submissions in Trash</h4>
-    <table>
-      <thead>
-        <tr>
-          <th>Full Name</th>
-          <th>Grade</th>
-          <th>Phone</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="trashStdTable"></tbody>
-    </table>
+    <h3>Trash Bin (Mistake Formats)</h3>
+    <h4 style="margin-top:15px; color:#475569;">Standard Submissions</h4>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Actions</th>
+            <th>Full Name</th>
+            <th>Grade</th>
+            <th>Phone</th>
+          </tr>
+        </thead>
+        <tbody id="trashStdTable"></tbody>
+      </table>
+    </div>
 
-    <h4 style="margin-top:25px; color:#475569;">Official 2019 Submissions in Trash</h4>
-    <table>
-      <thead>
-        <tr>
-          <th>Photo</th>
-          <th>Full Name</th>
-          <th>Kebele</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="trashOffTable"></tbody>
-    </table>
+    <h4 style="margin-top:25px; color:#475569;">Official 2019 Submissions</h4>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Actions</th>
+            <th>Photo</th>
+            <th>Full Name</th>
+            <th>Grade/Section</th>
+            <th>Kebele</th>
+          </tr>
+        </thead>
+        <tbody id="trashOffTable"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -149,13 +204,19 @@
   <div class="modal-content">
     <h3>Edit Standard Student</h3>
     <input type="hidden" id="editStdId">
-    <label>Full Name</label><input type="text" id="editStdFullName">
-    <label>Gender</label>
-    <select id="editStdGender"><option value="Male">Male</option><option value="Female">Female</option></select>
-    <label>Grade</label><input type="text" id="editStdGrade">
-    <label>Stream</label><input type="text" id="editStdStream">
-    <label>Phone</label><input type="text" id="editStdPhone">
-    <label>Guardian Name</label><input type="text" id="editStdGuardian">
+    <div class="modal-grid">
+      <div><label>Full Name</label><input type="text" id="editStdFullName"></div>
+      <div>
+        <label>Gender</label>
+        <select id="editStdGender"><option value="Male">Male</option><option value="Female">Female</option></select>
+      </div>
+      <div><label>Age</label><input type="number" id="editStdAge"></div>
+      <div><label>Grade</label><input type="text" id="editStdGrade"></div>
+      <div><label>Stream</label><input type="text" id="editStdStream"></div>
+      <div><label>Phone</label><input type="text" id="editStdPhone"></div>
+      <div><label>Guardian Name</label><input type="text" id="editStdGuardian"></div>
+      <div><label>Address</label><input type="text" id="editStdAddress"></div>
+    </div>
     <div class="modal-actions">
       <button class="btn-action" style="background:#64748b; color:white;" onclick="closeModal('editStdModal')">Cancel</button>
       <button class="btn-action btn-edit" onclick="saveStdEdit()">Save Changes</button>
@@ -163,20 +224,30 @@
   </div>
 </div>
 
-<!-- EDIT OFFICIAL MODAL -->
+<!-- EDIT OFFICIAL MODAL (ALL FIELDS) -->
 <div class="modal" id="editOffModal">
   <div class="modal-content">
     <h3>Edit Official 2019 Student Record</h3>
     <input type="hidden" id="editOffId">
-    <label>First Name</label><input type="text" id="editOffFirstName">
-    <label>Father's Name</label><input type="text" id="editOffFathersName">
-    <label>Grandfather's Name</label><input type="text" id="editOffGrandfathersName">
-    <label>Sex</label>
-    <select id="editOffSex"><option value="Male">Male</option><option value="Female">Female</option></select>
-    <label>Grade Level</label><input type="text" id="editOffGrade">
-    <label>Section</label><input type="text" id="editOffSection">
-    <label>Kebele</label><input type="text" id="editOffKebele">
-    <label>Average (%)</label><input type="number" id="editOffAverage">
+    <div class="modal-grid">
+      <div><label>Student ID</label><input type="text" id="editOffStudentId"></div>
+      <div><label>First Name</label><input type="text" id="editOffFirstName"></div>
+      <div><label>Father's Name</label><input type="text" id="editOffFathersName"></div>
+      <div><label>Grandfather's Name</label><input type="text" id="editOffGrandfathersName"></div>
+      <div>
+        <label>Sex</label>
+        <select id="editOffSex"><option value="Male">Male</option><option value="Female">Female</option></select>
+      </div>
+      <div><label>Grade Level</label><input type="text" id="editOffGradeLevel"></div>
+      <div><label>Section</label><input type="text" id="editOffSection"></div>
+      <div><label>Region</label><input type="text" id="editOffRegion"></div>
+      <div><label>Zone</label><input type="text" id="editOffZone"></div>
+      <div><label>Woreda</label><input type="text" id="editOffWoreda"></div>
+      <div><label>Kebele</label><input type="text" id="editOffKebele"></div>
+      <div><label>Parent/Guardian Name</label><input type="text" id="editOffParentFullName"></div>
+      <div><label>Parent Phone</label><input type="text" id="editOffParentPhone"></div>
+      <div><label>Average (%)</label><input type="number" id="editOffAverage"></div>
+    </div>
     <div class="modal-actions">
       <button class="btn-action" style="background:#64748b; color:white;" onclick="closeModal('editOffModal')">Cancel</button>
       <button class="btn-action btn-edit" onclick="saveOffEdit()">Save Changes</button>
@@ -184,7 +255,7 @@
   </div>
 </div>
 
-<!-- 1-PAGE OFFICIAL PRINTABLE FORM (Matches Paper Layout) -->
+<!-- 1-PAGE OFFICIAL PRINTABLE FORM VIEW -->
 <div id="paperFormPrintView">
   <div class="no-print" style="margin-bottom: 15px; display: flex; justify-content: space-between;">
     <button class="btn-action" style="background:#64748b; color:white;" onclick="closePrintView()">← Back to Dashboard</button>
@@ -194,15 +265,12 @@
   <div class="paper-title">Unka galmee Barattootaa Mana barumsaa Q/kaarraa Sad.2ffaa bara 2019</div>
 
   <div class="paper-grid">
-    <!-- LEFT COLUMN: Student Basic Data Template -->
+    <!-- LEFT COLUMN -->
     <div class="paper-col">
-      <div class="paper-header-row">
-        <span>Student Basic Data Template</span>
-      </div>
+      <div class="paper-header-row"><span>Student Basic Data Template</span></div>
       <div id="basicDataRows"></div>
     </div>
-
-    <!-- RIGHT COLUMN: Students Enrollment Template -->
+    <!-- RIGHT COLUMN -->
     <div class="paper-col">
       <div class="paper-header-row">
         <span>Students Enrollment Template</span>
@@ -233,11 +301,9 @@
   let offDataStore = [];
 
   async function fetchAllData() {
-    // Fetch Standard Records
     const resStd = await fetch('/api/admin/standard-students');
     stdDataStore = await resStd.json();
 
-    // Fetch Official Records
     const resOff = await fetch('/api/admin/official-students');
     offDataStore = await resOff.json();
 
@@ -245,73 +311,116 @@
   }
 
   function renderTables() {
-    // 1. Active Standard Records
+    // 1. ACTIVE STANDARD SUBMISSIONS
     const activeStd = stdDataStore.filter(s => !s.isTrashed);
     document.getElementById('stdTable').innerHTML = activeStd.length === 0 ? 
-      '<tr><td colspan="7">No active records found.</td></tr>' :
+      '<tr><td colspan="10">No active records found.</td></tr>' :
       activeStd.map(s => `
         <tr>
-          <td>${s.fullName || '-'}</td>
-          <td>${s.gender || '-'}</td>
-          <td>${s.grade || '-'}</td>
-          <td>${s.stream || '-'}</td>
-          <td>${s.phone || '-'}</td>
-          <td>${s.guardianName || '-'}</td>
           <td>
             <button class="btn-action btn-edit" onclick="openStdEdit('${s._id}')">Edit</button>
             <button class="btn-action btn-trash" onclick="trashStd('${s._id}', true)">Move to Trash</button>
           </td>
+          <td>${s.fullName || '-'}</td>
+          <td>${s.gender || '-'}</td>
+          <td>${s.age || '-'}</td>
+          <td>${s.grade || '-'}</td>
+          <td>${s.stream || '-'}</td>
+          <td>${s.guardianName || '-'}</td>
+          <td>${s.phone || '-'}</td>
+          <td>${s.address || '-'}</td>
+          <td>${new Date(s.createdAt).toLocaleDateString()}</td>
         </tr>
       `).join('');
 
-    // 2. Active Official Records
+    // 2. ACTIVE OFFICIAL 2019 SUBMISSIONS (SHOWING ALL FIELDS)
     const activeOff = offDataStore.filter(s => !s.isTrashed);
     document.getElementById('offTable').innerHTML = activeOff.length === 0 ?
-      '<tr><td colspan="6">No active records found.</td></tr>' :
+      '<tr><td colspan="45">No active records found.</td></tr>' :
       activeOff.map(s => `
         <tr>
-          <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : 'None'}</td>
-          <td>${s.firstName || ''} ${s.fathersName || ''} ${s.grandfathersName || ''}</td>
-          <td>${s.sex || '-'}</td>
-          <td>${s.gradeLevel || ''} ${s.section || ''}</td>
-          <td>${s.kebele || '-'}</td>
           <td>
-            <button class="btn-action btn-view" onclick="viewPaperForm('${s._id}')">View/Print Page</button>
+            <button class="btn-action btn-view" onclick="viewPaperForm('${s._id}')">Print Page</button>
             <button class="btn-action btn-edit" onclick="openOffEdit('${s._id}')">Edit</button>
             <button class="btn-action btn-trash" onclick="trashOff('${s._id}', true)">Move to Trash</button>
           </td>
+          <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : 'None'}</td>
+          <td>${s.hasStudentId || '-'}</td>
+          <td>${s.studentId || '-'}</td>
+          <td>${s.firstName || '-'}</td>
+          <td>${s.fathersName || '-'}</td>
+          <td>${s.grandfathersName || '-'}</td>
+          <td>${s.admissionType || '-'}</td>
+          <td>${s.sex || '-'}</td>
+          <td>${s.disability || '-'}</td>
+          <td>${s.disabilityType || '-'}</td>
+          <td>${s.dateOfBirth || '-'}</td>
+          <td>${s.countryOfBirth || '-'}</td>
+          <td>${s.regionOfBirth || '-'}</td>
+          <td>${s.zoneOfBirth || '-'}</td>
+          <td>${s.woredaOfBirth || '-'}</td>
+          <td>${s.nationality || '-'}</td>
+          <td>${s.region || '-'}</td>
+          <td>${s.zone || '-'}</td>
+          <td>${s.woreda || '-'}</td>
+          <td>${s.kebele || '-'}</td>
+          <td>${s.locationType || '-'}</td>
+          <td>${s.studentEconomicStatus || '-'}</td>
+          <td>${s.parentStatus || '-'}</td>
+          <td>${s.fatherEducationLevel || '-'}</td>
+          <td>${s.motherEducationLevel || '-'}</td>
+          <td>${s.parentGuardianFullName || '-'}</td>
+          <td>${s.parentGuardianEmail || '-'}</td>
+          <td>${s.parentGuardianPhone || '-'}</td>
+          <td>${s.familyHeadGender || '-'}</td>
+          <td>${s.nationalId || '-'}</td>
+          <td>${s.admissionCategory || '-'}</td>
+          <td>${s.admissionModality || '-'}</td>
+          <td>${s.gradeLevel || '-'}</td>
+          <td>${s.section || '-'}</td>
+          <td>${s.educationStream || '-'}</td>
+          <td>${s.careerTechnical1stField || '-'}</td>
+          <td>${s.careerTechnical2ndField || '-'}</td>
+          <td>${s.numberOfTextbooks || '-'}</td>
+          <td>${s.mainInstructionalLanguage || '-'}</td>
+          <td>${s.schoolFeedingParticipation || '-'}</td>
+          <td>${s.foodRationHomeTaking || '-'}</td>
+          <td>${s.numberOfMealsPerWeek || '-'}</td>
+          <td>${s.average || '-'}</td>
+          <td>${new Date(s.createdAt).toLocaleDateString()}</td>
         </tr>
       `).join('');
 
-    // 3. Trashed Standard Records
+    // 3. TRASHED STANDARD
     const trashedStd = stdDataStore.filter(s => s.isTrashed);
     document.getElementById('trashStdTable').innerHTML = trashedStd.length === 0 ?
-      '<tr><td colspan="4">No standard records in trash.</td></tr>' :
+      '<tr><td colspan="5">No standard records in trash.</td></tr>' :
       trashedStd.map(s => `
         <tr>
-          <td>${s.fullName || '-'}</td>
-          <td>${s.grade || '-'}</td>
-          <td>${s.phone || '-'}</td>
           <td>
             <button class="btn-action btn-restore" onclick="trashStd('${s._id}', false)">Restore</button>
             <button class="btn-action btn-delete" onclick="deleteStdPermanent('${s._id}')">Delete Permanently</button>
           </td>
+          <td>${s.fullName || '-'}</td>
+          <td>${s.grade || '-'}</td>
+          <td>${s.phone || '-'}</td>
         </tr>
       `).join('');
 
-    // 4. Trashed Official Records
+    // 4. TRASHED OFFICIAL
     const trashedOff = offDataStore.filter(s => s.isTrashed);
     document.getElementById('trashOffTable').innerHTML = trashedOff.length === 0 ?
-      '<tr><td colspan="4">No official records in trash.</td></tr>' :
+      '<tr><td colspan="5">No official records in trash.</td></tr>' :
       trashedOff.map(s => `
         <tr>
-          <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : 'None'}</td>
-          <td>${s.firstName || ''} ${s.fathersName || ''} ${s.grandfathersName || ''}</td>
-          <td>${s.kebele || '-'}</td>
           <td>
             <button class="btn-action btn-restore" onclick="trashOff('${s._id}', false)">Restore</button>
             <button class="btn-action btn-delete" onclick="deleteOffPermanent('${s._id}')">Delete Permanently</button>
           </td>
+          <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : 'None'}</td>
+          <td>${s.firstName || ''} ${s.fathersName || ''} ${s.grandfathersName || ''}</td>
+          <td>${s.gradeLevel || ''} ${s.section || ''}</td>
+          <td>${s.kebele || '-'}</td>
         </tr>
       `).join('');
   }
@@ -327,7 +436,7 @@
   }
 
   async function deleteStdPermanent(id) {
-    if (confirm('Permanently remove this standard record? This cannot be undone.')) {
+    if (confirm('Permanently remove this standard record?')) {
       await fetch(`/api/admin/standard-students/${id}`, { method: 'DELETE' });
       fetchAllData();
     }
@@ -339,10 +448,12 @@
     document.getElementById('editStdId').value = s._id;
     document.getElementById('editStdFullName').value = s.fullName || '';
     document.getElementById('editStdGender').value = s.gender || 'Male';
+    document.getElementById('editStdAge').value = s.age || '';
     document.getElementById('editStdGrade').value = s.grade || '';
     document.getElementById('editStdStream').value = s.stream || '';
     document.getElementById('editStdPhone').value = s.phone || '';
     document.getElementById('editStdGuardian').value = s.guardianName || '';
+    document.getElementById('editStdAddress').value = s.address || '';
     document.getElementById('editStdModal').style.display = 'flex';
   }
 
@@ -354,10 +465,12 @@
       body: JSON.stringify({
         fullName: document.getElementById('editStdFullName').value,
         gender: document.getElementById('editStdGender').value,
+        age: document.getElementById('editStdAge').value,
         grade: document.getElementById('editStdGrade').value,
         stream: document.getElementById('editStdStream').value,
         phone: document.getElementById('editStdPhone').value,
-        guardianName: document.getElementById('editStdGuardian').value
+        guardianName: document.getElementById('editStdGuardian').value,
+        address: document.getElementById('editStdAddress').value
       })
     });
     closeModal('editStdModal');
@@ -375,7 +488,7 @@
   }
 
   async function deleteOffPermanent(id) {
-    if (confirm('Permanently remove this official record? This cannot be undone.')) {
+    if (confirm('Permanently remove this official record?')) {
       await fetch(`/api/admin/official-students/${id}`, { method: 'DELETE' });
       fetchAllData();
     }
@@ -385,13 +498,19 @@
     const s = offDataStore.find(i => i._id === id);
     if (!s) return;
     document.getElementById('editOffId').value = s._id;
+    document.getElementById('editOffStudentId').value = s.studentId || '';
     document.getElementById('editOffFirstName').value = s.firstName || '';
     document.getElementById('editOffFathersName').value = s.fathersName || '';
     document.getElementById('editOffGrandfathersName').value = s.grandfathersName || '';
     document.getElementById('editOffSex').value = s.sex || 'Male';
-    document.getElementById('editOffGrade').value = s.gradeLevel || '';
+    document.getElementById('editOffGradeLevel').value = s.gradeLevel || '';
     document.getElementById('editOffSection').value = s.section || '';
+    document.getElementById('editOffRegion').value = s.region || '';
+    document.getElementById('editOffZone').value = s.zone || '';
+    document.getElementById('editOffWoreda').value = s.woreda || '';
     document.getElementById('editOffKebele').value = s.kebele || '';
+    document.getElementById('editOffParentFullName').value = s.parentGuardianFullName || '';
+    document.getElementById('editOffParentPhone').value = s.parentGuardianPhone || '';
     document.getElementById('editOffAverage').value = s.average || '';
     document.getElementById('editOffModal').style.display = 'flex';
   }
@@ -402,13 +521,19 @@
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        studentId: document.getElementById('editOffStudentId').value,
         firstName: document.getElementById('editOffFirstName').value,
         fathersName: document.getElementById('editOffFathersName').value,
         grandfathersName: document.getElementById('editOffGrandfathersName').value,
         sex: document.getElementById('editOffSex').value,
-        gradeLevel: document.getElementById('editOffGrade').value,
+        gradeLevel: document.getElementById('editOffGradeLevel').value,
         section: document.getElementById('editOffSection').value,
+        region: document.getElementById('editOffRegion').value,
+        zone: document.getElementById('editOffZone').value,
+        woreda: document.getElementById('editOffWoreda').value,
         kebele: document.getElementById('editOffKebele').value,
+        parentGuardianFullName: document.getElementById('editOffParentFullName').value,
+        parentGuardianPhone: document.getElementById('editOffParentPhone').value,
         average: document.getElementById('editOffAverage').value
       })
     });
@@ -471,3 +596,4 @@
 </script>
 </body>
 </html>
+
