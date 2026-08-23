@@ -5,10 +5,11 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
+
 // Middlewares
 app.use(cors());
 app.use(express.json({ limit: '50mb' })); 
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB
@@ -16,11 +17,12 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kiltu_kar
   .then(() => console.log('Connected to MongoDB successfully'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Flexible Schemas (strict: false prevents form submission validation errors)
-const StandardStudent = mongoose.model('StandardStudent', new mongoose.Schema({}, { strict: false }));
-const OfficialStudent = mongoose.model('OfficialStudent', new mongoose.Schema({}, { strict: false }));
+// Schema Definitions (Strict false ensures any payload fields save cleanly)
+const StudentSchema = new mongoose.Schema({}, { strict: false });
+const StandardStudent = mongoose.model('StandardStudent', StudentSchema);
+const OfficialStudent = mongoose.model('OfficialStudent', StudentSchema);
 
-// Admin Login API Route
+// 1. ADMIN LOGIN API
 app.post('/api/login', (req, res) => {
   const { password } = req.body;
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
@@ -32,31 +34,42 @@ app.post('/api/login', (req, res) => {
   }
 });
 
-// API Endpoint: Standard Registration
+// 2. ONLINE REGISTRATION API
 app.post('/api/register', async (req, res) => {
   try {
     const student = new StandardStudent(req.body);
     await student.save();
-    res.status(201).json({ message: 'Standard registration successful!' });
+    return res.status(201).json({ success: true, message: 'Standard registration successful!' });
   } catch (error) {
     console.error('Registration Error:', error);
-    res.status(500).json({ error: 'Failed to submit standard registration' });
+    return res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// API Endpoint: Official Census Registration
+// 3. OFFICIAL CENSUS REGISTRATION API
 app.post('/api/official-register', async (req, res) => {
   try {
     const officialStudent = new OfficialStudent(req.body);
     await officialStudent.save();
-    res.status(201).json({ message: 'Official registration successful!' });
+    return res.status(201).json({ success: true, message: 'Official registration successful!' });
   } catch (error) {
     console.error('Official Registration Error:', error);
-    res.status(500).json({ error: 'Failed to submit official registration' });
+    return res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// Serve Main Landing Page
+// GET ALL STUDENTS FOR ADMIN DASHBOARD
+app.get('/api/students', async (req, res) => {
+  try {
+    const standard = await StandardStudent.find();
+    const official = await OfficialStudent.find();
+    res.json({ standard, official });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch students' });
+  }
+});
+
+// Fallback Route
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
