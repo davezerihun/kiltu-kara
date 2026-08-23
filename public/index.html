@@ -6,26 +6,32 @@
   <title>Kiltu Kara Secondary School - Online Registration</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #0f172a; color: #f8fafc; padding: 20px; display: flex; justify-content: center; }
-    .container { background: #1e293b; width: 100%; max-width: 800px; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-    h1 { color: #38bdf8; text-align: center; margin-bottom: 8px; font-size: 1.6rem; }
-    p.subtitle { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-bottom: 25px; }
-    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    body { background-color: #e2e8f0; color: #1e293b; padding: 30px 20px; display: flex; justify-content: center; }
+    .container { background: #ffffff; width: 100%; max-width: 850px; padding: 35px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    
+    .header-box { background-color: #047857; color: #ffffff; padding: 12px 20px; border-radius: 6px; font-weight: 700; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 0.5px; }
+    
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
     .input-group { display: flex; flex-direction: column; }
     .input-group.full-width { grid-column: span 2; }
-    label { font-size: 0.8rem; color: #cbd5e1; margin-bottom: 5px; font-weight: 600; }
-    input, select { padding: 10px; border: 1px solid #334155; border-radius: 6px; font-size: 0.9rem; background: #0f172a; color: #fff; outline: none; }
-    input:focus, select:focus { border-color: #38bdf8; }
-    .btn-submit { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 700; font-size: 1rem; margin-top: 20px; cursor: pointer; }
-    .btn-submit:hover { background: #1d4ed8; }
-    .nav-link { display: inline-block; margin-top: 15px; color: #38bdf8; text-decoration: none; font-size: 0.85rem; }
-    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .input-group.full-width { grid-column: span 1; } }
+    
+    label { font-size: 0.85rem; color: #334155; margin-bottom: 6px; font-weight: 600; }
+    
+    input, select { padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: #e0f2fe; color: #0f172a; outline: none; transition: all 0.2s ease; }
+    input:focus, select:focus { border-color: #047857; background: #ffffff; box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.15); }
+    
+    .btn-submit { width: 100%; background: #047857; color: white; border: none; padding: 14px; border-radius: 6px; font-weight: 700; font-size: 1.05rem; margin-top: 25px; cursor: pointer; transition: background 0.2s; }
+    .btn-submit:hover { background: #065f46; }
+    
+    .nav-link { display: inline-block; margin-top: 20px; color: #047857; text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+    .nav-link:hover { text-decoration: underline; }
+    
+    @media (max-width: 650px) { .form-grid { grid-template-columns: 1fr; } .input-group.full-width { grid-column: span 1; } }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Standard Student Registration</h1>
-    <p class="subtitle">Fill out all required details to register online</p>
+    <div class="header-box">1. Online Student Registration</div>
 
     <form id="onlineRegForm">
       <div class="form-grid">
@@ -91,7 +97,7 @@
       </div>
       <button type="submit" class="btn-submit">Submit Registration</button>
     </form>
-    <a href="/off_reg.html" class="nav-link">Go to Official Census Form →</a>
+    <a href="/off_reg.html" class="nav-link">← Go to Official Census Form</a>
   </div>
 
   <script>
