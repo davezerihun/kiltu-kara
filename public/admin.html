@@ -4,36 +4,70 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - Kiltu Kara Secondary School</title>
-  <link rel="stylesheet" href="style.css">
   <style>
-    body { padding: 20px; font-family: sans-serif; background-color: #f8fafc; }
-    .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #fff; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-    .tab-btn { padding: 10px 20px; background: #e2e8f0; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: #475569; }
-    .tab-btn.active { background: #2563eb; color: white; }
-    .table-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
-    th, td { padding: 10px; border-bottom: 1px solid #e2e8f0; }
-    th { background: #f1f5f9; color: #1e293b; }
-    .img-thumb { width: 45px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #ccc; }
-    .btn-logout { background: #ef4444; color: white; padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    body { background-color: #f1f5f9; padding: 20px; color: #1e293b; }
+    
+    .admin-container { max-width: 1200px; margin: 0 auto; }
+    .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .header h2 { font-size: 1.4rem; color: #0f172a; }
+    .btn-logout { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; }
+    .tab-btn { padding: 10px 20px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-weight: bold; color: #475569; }
+    .tab-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
+
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left; font-size: 0.85rem; }
+    th, td { padding: 10px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+    th { background: #f8fafc; color: #334155; }
+    
+    .img-thumb { width: 40px; height: 45px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1; }
+    
+    .btn-action { padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.75rem; margin-right: 5px; }
+    .btn-edit { background: #f59e0b; color: white; }
+    .btn-delete { background: #ef4444; color: white; }
+    .btn-view { background: #059669; color: white; }
+
+    /* EDIT MODAL */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
+    .modal-content { background: white; padding: 25px; border-radius: 8px; width: 90%; max-width: 500px; }
+    .modal-content h3 { margin-bottom: 15px; }
+    .modal-content label { display: block; margin-top: 10px; font-size: 0.8rem; font-weight: bold; }
+    .modal-content input, .modal-content select { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #cbd5e1; border-radius: 4px; }
+    .modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
+
+    /* SINGLE STUDENT PRINT FORM STYLES */
+    #printFormView { display: none; background: white; padding: 30px; border-radius: 8px; max-width: 850px; margin: 0 auto; border: 1px solid #ccc; }
+    .print-header { display: flex; justify-content: space-between; border-bottom: 2px solid #059669; padding-bottom: 10px; margin-bottom: 15px; }
+    .print-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 0.8rem; }
+    .print-field { background: #f8fafc; padding: 6px; border-radius: 4px; border: 1px solid #e2e8f0; }
+    .print-field strong { display: block; color: #475569; font-size: 0.7rem; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #printFormView, #printFormView * { visibility: visible; }
+      #printFormView { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0; }
+      .no-print { display: none !important; }
+    }
   </style>
 </head>
 <body>
-  <div class="dashboard-header">
+
+<div class="admin-container no-print" id="dashboardContainer">
+  <div class="header">
     <h2>Administrative Data Hub</h2>
     <button class="btn-logout" onclick="logout()">Logout</button>
   </div>
 
-  <!-- NAVIGATION TABS -->
   <div class="tabs">
-    <button class="tab-btn active" id="tabStandardBtn" onclick="switchTab('standard')">Standard Online Submissions</button>
-    <button class="tab-btn" id="tabOfficialBtn" onclick="switchTab('official')">Official 2019 Census Submissions</button>
+    <button class="tab-btn active" id="tabStdBtn" onclick="showTab('std')">Standard Online Submissions</button>
+    <button class="tab-btn" id="tabOffBtn" onclick="showTab('off')">Official 2019 Census Submissions</button>
   </div>
 
-  <!-- TAB 1: STANDARD SUBMISSIONS -->
-  <div id="standardSection" class="table-container">
-    <h3>Standard Online Registration Records</h3>
+  <!-- STANDARD REGISTRATION TAB -->
+  <div id="stdSection" class="card">
+    <h3>Standard Online Submissions</h3>
     <table>
       <thead>
         <tr>
@@ -43,16 +77,16 @@
           <th>Stream</th>
           <th>Phone</th>
           <th>Guardian</th>
-          <th>Date Submitted</th>
+          <th>Actions</th>
         </tr>
       </thead>
-      <tbody id="standardTableBody"></tbody>
+      <tbody id="stdTable"></tbody>
     </table>
   </div>
 
-  <!-- TAB 2: OFFICIAL CENSUS SUBMISSIONS -->
-  <div id="officialSection" class="table-container" style="display: none;">
-    <h3>Official Census 2019 Registration Records</h3>
+  <!-- OFFICIAL 2019 REGISTRATION TAB -->
+  <div id="offSection" class="card" style="display:none;">
+    <h3>Official 2019 Census Submissions</h3>
     <table>
       <thead>
         <tr>
@@ -60,82 +94,227 @@
           <th>Full Name</th>
           <th>Sex</th>
           <th>Grade/Section</th>
-          <th>Stream</th>
-          <th>Phone</th>
           <th>Kebele</th>
-          <th>Average</th>
-          <th>Date Submitted</th>
+          <th>Actions</th>
         </tr>
       </thead>
-      <tbody id="officialTableBody"></tbody>
+      <tbody id="offTable"></tbody>
     </table>
   </div>
+</div>
 
-  <script>
-    if (!localStorage.getItem('adminToken')) {
-      window.location.href = '/login.html';
+<!-- EDIT STANDARD MODAL -->
+<div class="modal" id="editModal">
+  <div class="modal-content">
+    <h3>Edit Student Record</h3>
+    <input type="hidden" id="editId">
+    <label>Full Name</label>
+    <input type="text" id="editFullName">
+    <label>Gender</label>
+    <select id="editGender">
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select>
+    <label>Grade</label>
+    <input type="text" id="editGrade">
+    <label>Stream</label>
+    <input type="text" id="editStream">
+    <label>Phone</label>
+    <input type="text" id="editPhone">
+    <label>Guardian Name</label>
+    <input type="text" id="editGuardian">
+    <div class="modal-actions">
+      <button class="btn-action" style="background:#64748b; color:white;" onclick="closeEditModal()">Cancel</button>
+      <button class="btn-action btn-edit" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- SINGLE OFFICIAL STUDENT PAGE FOR VIEW & PRINT -->
+<div id="printFormView">
+  <div class="no-print" style="margin-bottom: 20px; display: flex; justify-content: space-between;">
+    <button class="btn-action" style="background:#64748b; color:white;" onclick="closePrintView()">← Back to Dashboard</button>
+    <button class="btn-action btn-view" onclick="window.print()">Print Official 1-Page Form</button>
+  </div>
+
+  <div class="print-header">
+    <div>
+      <h2 style="color:#059669; font-size: 1.1rem;">KILTU KARA SECONDARY SCHOOL</h2>
+      <p style="font-size:0.8rem; color:#475569;">Official Student Registration Document (2019 Census)</p>
+    </div>
+    <div id="pPhotoBox" style="width: 80px; height: 95px; border: 1px solid #000; display:flex; align-items:center; justify-center:center; text-align:center;">
+      <img id="pPhoto" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+      <span id="pNoPhoto" style="font-size:0.6rem;">No Photo</span>
+    </div>
+  </div>
+
+  <div style="font-weight:bold; background:#059669; color:white; padding:4px 8px; font-size:0.75rem; margin-bottom:10px;">1. STUDENT BASIC DATA</div>
+  <div class="print-grid" id="printBasicGrid"></div>
+
+  <div style="font-weight:bold; background:#059669; color:white; padding:4px 8px; font-size:0.75rem; margin: 15px 0 10px 0;">2. ENROLLMENT DATA</div>
+  <div class="print-grid" id="printEnrollGrid"></div>
+</div>
+
+<script>
+  if (!localStorage.getItem('adminToken')) {
+    window.location.href = '/login.html';
+  }
+
+  function logout() {
+    localStorage.removeItem('adminToken');
+    window.location.href = '/login.html';
+  }
+
+  function showTab(tab) {
+    if (tab === 'std') {
+      document.getElementById('stdSection').style.display = 'block';
+      document.getElementById('offSection').style.display = 'none';
+      document.getElementById('tabStdBtn').classList.add('active');
+      document.getElementById('tabOffBtn').classList.remove('active');
+    } else {
+      document.getElementById('stdSection').style.display = 'none';
+      document.getElementById('offSection').style.display = 'block';
+      document.getElementById('tabStdBtn').classList.remove('active');
+      document.getElementById('tabOffBtn').classList.add('active');
+    }
+  }
+
+  let stdDataStore = [];
+  let offDataStore = [];
+
+  async function fetchAllData() {
+    // Fetch Standard
+    const resStd = await fetch('/api/admin/standard-students');
+    stdDataStore = await resStd.json();
+    document.getElementById('stdTable').innerHTML = stdDataStore.map(s => `
+      <tr>
+        <td>${s.fullName || '-'}</td>
+        <td>${s.gender || '-'}</td>
+        <td>${s.grade || '-'}</td>
+        <td>${s.stream || '-'}</td>
+        <td>${s.phone || '-'}</td>
+        <td>${s.guardianName || '-'}</td>
+        <td>
+          <button class="btn-action btn-edit" onclick="openEditModal('${s._id}')">Edit</button>
+          <button class="btn-action btn-delete" onclick="deleteStd('${s._id}')">Delete</button>
+        </td>
+      </tr>
+    `).join('');
+
+    // Fetch Official
+    const resOff = await fetch('/api/admin/official-students');
+    offDataStore = await resOff.json();
+    document.getElementById('offTable').innerHTML = offDataStore.map(s => `
+      <tr>
+        <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : 'None'}</td>
+        <td>${s.firstName || ''} ${s.fathersName || ''} ${s.grandfathersName || ''}</td>
+        <td>${s.sex || '-'}</td>
+        <td>${s.gradeLevel || ''} ${s.section || ''}</td>
+        <td>${s.kebele || '-'}</td>
+        <td>
+          <button class="btn-action btn-view" onclick="viewOfficialDocument('${s._id}')">View/Print Page</button>
+          <button class="btn-action btn-delete" onclick="deleteOff('${s._id}')">Delete</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // DELETE & EDIT STANDARD
+  async function deleteStd(id) {
+    if (confirm('Delete this standard student record?')) {
+      await fetch(`/api/admin/standard-students/${id}`, { method: 'DELETE' });
+      fetchAllData();
+    }
+  }
+
+  function openEditModal(id) {
+    const s = stdDataStore.find(item => item._id === id);
+    if (!s) return;
+    document.getElementById('editId').value = s._id;
+    document.getElementById('editFullName').value = s.fullName || '';
+    document.getElementById('editGender').value = s.gender || 'Male';
+    document.getElementById('editGrade').value = s.grade || '';
+    document.getElementById('editStream').value = s.stream || '';
+    document.getElementById('editPhone').value = s.phone || '';
+    document.getElementById('editGuardian').value = s.guardianName || '';
+    document.getElementById('editModal').style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+  }
+
+  async function saveEdit() {
+    const id = document.getElementById('editId').value;
+    const body = {
+      fullName: document.getElementById('editFullName').value,
+      gender: document.getElementById('editGender').value,
+      grade: document.getElementById('editGrade').value,
+      stream: document.getElementById('editStream').value,
+      phone: document.getElementById('editPhone').value,
+      guardianName: document.getElementById('editGuardian').value
+    };
+
+    await fetch(`/api/admin/standard-students/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    closeEditModal();
+    fetchAllData();
+  }
+
+  // DELETE & PRINT VIEW OFFICIAL
+  async function deleteOff(id) {
+    if (confirm('Delete this official census record?')) {
+      await fetch(`/api/admin/official-students/${id}`, { method: 'DELETE' });
+      fetchAllData();
+    }
+  }
+
+  function viewOfficialDocument(id) {
+    const s = offDataStore.find(item => item._id === id);
+    if (!s) return;
+
+    if (s.photo) {
+      document.getElementById('pPhoto').src = s.photo;
+      document.getElementById('pPhoto').style.display = 'block';
+      document.getElementById('pNoPhoto').style.display = 'none';
+    } else {
+      document.getElementById('pPhoto').style.display = 'none';
+      document.getElementById('pNoPhoto').style.display = 'block';
     }
 
-    function logout() {
-      localStorage.removeItem('adminToken');
-      window.location.href = '/login.html';
-    }
+    const basicFields = [
+      ['Student ID', s.studentId], ['First Name', s.firstName], ['Father Name', s.fathersName], ['Grandfather Name', s.grandfathersName],
+      ['Admission Type', s.admissionType], ['Sex', s.sex], ['DOB', s.dateOfBirth], ['Disability', s.disability], ['Nationality', s.nationality],
+      ['Region', s.region], ['Zone', s.zone], ['Woreda', s.woreda], ['Kebele', s.kebele], ['Parent Name', s.parentGuardianFullName], ['Parent Phone', s.parentGuardianPhone]
+    ];
 
-    function switchTab(tab) {
-      if (tab === 'standard') {
-        document.getElementById('standardSection').style.display = 'block';
-        document.getElementById('officialSection').style.display = 'none';
-        document.getElementById('tabStandardBtn').classList.add('active');
-        document.getElementById('tabOfficialBtn').classList.remove('active');
-      } else {
-        document.getElementById('standardSection').style.display = 'none';
-        document.getElementById('officialSection').style.display = 'block';
-        document.getElementById('tabStandardBtn').classList.remove('active');
-        document.getElementById('tabOfficialBtn').classList.add('active');
-      }
-    }
+    const enrollFields = [
+      ['Admission Category', s.admissionCategory], ['Admission Modality', s.admissionModality], ['Grade Level', s.gradeLevel], ['Section', s.section],
+      ['Education Stream', s.educationStream], ['Textbooks', s.numberOfTextbooks], ['Language', s.mainInstructionalLanguage], ['Average (%)', s.average]
+    ];
 
-    async function loadData() {
-      // Standard Data
-      try {
-        const resStd = await fetch('/api/admin/standard-students');
-        const stdData = await resStd.json();
-        const stdBody = document.getElementById('standardTableBody');
-        stdBody.innerHTML = stdData.map(s => `
-          <tr>
-            <td>${s.fullName || '-'}</td>
-            <td>${s.gender || '-'}</td>
-            <td>${s.grade || '-'}</td>
-            <td>${s.stream || '-'}</td>
-            <td>${s.phone || '-'}</td>
-            <td>${s.guardianName || '-'}</td>
-            <td>${new Date(s.createdAt).toLocaleDateString()}</td>
-          </tr>
-        `).join('');
-      } catch(e) {}
+    document.getElementById('printBasicGrid').innerHTML = basicFields.map(([k, v]) => `
+      <div class="print-field"><strong>${k}</strong>${v || '-'}</div>
+    `).join('');
 
-      // Official Data
-      try {
-        const resOff = await fetch('/api/admin/official-students');
-        const offData = await resOff.json();
-        const offBody = document.getElementById('officialTableBody');
-        offBody.innerHTML = offData.map(s => `
-          <tr>
-            <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : 'No Photo'}</td>
-            <td>${s.firstName || ''} ${s.fathersName || ''} ${s.grandfathersName || ''}</td>
-            <td>${s.sex || '-'}</td>
-            <td>${s.gradeLevel || ''} - ${s.section || ''}</td>
-            <td>${s.educationStream || '-'}</td>
-            <td>${s.parentGuardianPhone || '-'}</td>
-            <td>${s.kebele || '-'}</td>
-            <td>${s.average ? s.average + '%' : '-'}</td>
-            <td>${new Date(s.createdAt).toLocaleDateString()}</td>
-          </tr>
-        `).join('');
-      } catch(e) {}
-    }
+    document.getElementById('printEnrollGrid').innerHTML = enrollFields.map(([k, v]) => `
+      <div class="print-field"><strong>${k}</strong>${v || '-'}</div>
+    `).join('');
 
-    loadData();
-  </script>
+    document.getElementById('dashboardContainer').style.display = 'none';
+    document.getElementById('printFormView').style.display = 'block';
+  }
+
+  function closePrintView() {
+    document.getElementById('printFormView').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'block';
+  }
+
+  fetchAllData();
+</script>
 </body>
 </html>

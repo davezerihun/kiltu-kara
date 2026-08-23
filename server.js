@@ -6,17 +6,14 @@ require('dotenv').config();
 
 const app = express();
 
-// Middlewares
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kiltu_kara_db')
   .then(() => console.log('Connected to MongoDB successfully'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// 1. Schema for Standard Online Registration Form
 const standardStudentSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   gender: String,
@@ -31,7 +28,6 @@ const standardStudentSchema = new mongoose.Schema({
 
 const StandardStudent = mongoose.model('StandardStudent', standardStudentSchema);
 
-// 2. Schema for Official Registration Form 2019
 const officialStudentSchema = new mongoose.Schema({
   photo: String,
   hasStudentId: String,
@@ -81,8 +77,7 @@ const officialStudentSchema = new mongoose.Schema({
 
 const OfficialStudent = mongoose.model('OfficialStudent', officialStudentSchema);
 
-// --- SUBMISSION ENDPOINTS ---
-
+// SUBMISSIONS
 app.post('/api/register', async (req, res) => {
   try {
     const student = new StandardStudent(req.body);
@@ -103,9 +98,7 @@ app.post('/api/official-register', async (req, res) => {
   }
 });
 
-// --- ADMIN AUTH & DATA ENDPOINTS ---
-
-// Admin Login Route
+// ADMIN AUTH & DATA API
 app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;
   const ADMIN_USER = process.env.ADMIN_USER || 'admin';
@@ -118,7 +111,6 @@ app.post('/api/admin/login', (req, res) => {
   }
 });
 
-// Fetch Standard Submissions
 app.get('/api/admin/standard-students', async (req, res) => {
   try {
     const students = await StandardStudent.find().sort({ createdAt: -1 });
@@ -128,7 +120,24 @@ app.get('/api/admin/standard-students', async (req, res) => {
   }
 });
 
-// Fetch Official 2019 Submissions
+app.put('/api/admin/standard-students/:id', async (req, res) => {
+  try {
+    const updated = await StandardStudent.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update record' });
+  }
+});
+
+app.delete('/api/admin/standard-students/:id', async (req, res) => {
+  try {
+    await StandardStudent.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Record deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete record' });
+  }
+});
+
 app.get('/api/admin/official-students', async (req, res) => {
   try {
     const students = await OfficialStudent.find().sort({ createdAt: -1 });
@@ -138,7 +147,14 @@ app.get('/api/admin/official-students', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.delete('/api/admin/official-students/:id', async (req, res) => {
+  try {
+    await OfficialStudent.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Record deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete record' });
+  }
 });
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
