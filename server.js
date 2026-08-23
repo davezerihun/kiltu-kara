@@ -8,19 +8,26 @@ const app = express();
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kiltu_kara_db')
   .then(() => console.log('Connected to MongoDB successfully'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// SCHEMAS (WITH TRASH / SOFT-DELETE FLAGS)
+// SCHEMAS (FLEXIBLE VALIDATION TO PREVENT FORM SUBMISSION ERRORS)
 const standardStudentSchema = new mongoose.Schema({
-  fullName: { type: String, required: true },
+  fullName: { type: String, required: false },
+  firstName: String,
+  lastName: String,
   gender: String,
   age: Number,
   grade: String,
   stream: String,
+  academicAverage: Number,
+  previousSchool: String,
+  woreda: String,
+  kebele: String,
   guardianName: String,
   phone: String,
   address: String,
@@ -82,11 +89,24 @@ const OfficialStudent = mongoose.model('OfficialStudent', officialStudentSchema)
 // PUBLIC SUBMISSIONS
 app.post('/api/register', async (req, res) => {
   try {
-    const student = new StandardStudent(req.body);
+    const data = req.body;
+
+    // Build fullName if submitted as separate fields
+    if (!data.fullName && (data.firstName || data.lastName)) {
+      data.fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim();
+    }
+
+    // Fallback if fullName is still empty
+    if (!data.fullName) {
+      data.fullName = data.studentName || 'Unnamed Student';
+    }
+
+    const student = new StandardStudent(data);
     await student.save();
     res.status(201).json({ message: 'Standard registration successful!' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed standard submission' });
+    console.error('STANDARD SUBMISSION ERROR:', error);
+    res.status(500).json({ error: error.message || 'Failed standard submission' });
   }
 });
 
@@ -96,7 +116,8 @@ app.post('/api/official-register', async (req, res) => {
     await officialStudent.save();
     res.status(201).json({ message: 'Official registration successful!' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed official submission' });
+    console.error('OFFICIAL SUBMISSION ERROR:', error);
+    res.status(500).json({ error: error.message || 'Failed official submission' });
   }
 });
 
