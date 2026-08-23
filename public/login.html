@@ -1,119 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Login — Kiltu Kara Secondary School</title>
-<link rel="stylesheet" href="style.css">
-<style>
-  body { display:flex; align-items:center; justify-content:center; min-height:100vh; background:var(--forest-deep); }
-  .login-box {
-    background:#fff; border-radius:4px; width:100%; max-width:380px; margin:20px;
-    box-shadow: 0 24px 60px -10px rgba(0,0,0,0.5);
-    overflow:hidden;
-  }
-  .login-header {
-    background: linear-gradient(160deg, var(--forest) 0%, var(--forest-deep) 100%);
-    border-bottom: 4px solid var(--ochre);
-    padding: 30px 28px 24px;
-    color: var(--parchment);
-  }
-  .login-header .eyebrow {
-    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.18em;
-    text-transform:uppercase; color:var(--ochre-light); margin:0 0 10px;
-  }
-  .login-header h1 {
-    font-family:'Fraunces',serif; font-size:22px; margin:0; font-weight:700; line-height:1.2;
-  }
-  .login-body { padding:28px; }
-  .login-body .field { margin-bottom:18px; }
-  .login-body .field label {
-    display:block; font-size:12px; font-weight:600; text-transform:uppercase;
-    letter-spacing:.05em; color:#5b5340; margin-bottom:6px;
-  }
-  .login-body input {
-    width:100%; padding:11px 12px; border:1.5px solid var(--line); border-radius:3px;
-    font-family:'Work Sans',sans-serif; font-size:14.5px; background:var(--parchment-dim);
-  }
-  .login-body input:focus { outline:none; border-color:var(--ochre); background:#fff; }
-  .login-body button {
-    width:100%; padding:13px; border:none; border-radius:3px; background:var(--clay); color:#fff;
-    font-family:'Work Sans',sans-serif; font-weight:600; font-size:15px; cursor:pointer; margin-top:6px;
-    transition:background .15s;
-  }
-  .login-body button:hover { background:#7f3b23; }
-  .error-msg {
-    display:none; margin-bottom:14px; padding:10px 12px; border-radius:3px;
-    background:rgba(140,43,35,0.1); color:var(--paid-red); font-size:13px; border:1px solid rgba(140,43,35,0.25);
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - Kiltu Kara Secondary School</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f1f5f9; }
+    .login-card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 380px; }
+    .login-card h2 { text-align: center; margin-bottom: 20px; color: #1e293b; }
+    .input-group { margin-bottom: 15px; }
+    .input-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #475569; }
+    .input-group input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
+    .btn-login { width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .btn-login:hover { background: #1d4ed8; }
+    .error-msg { color: #dc2626; font-size: 0.85rem; text-align: center; margin-bottom: 10px; display: none; }
+  </style>
 </head>
 <body>
-
-<div class="login-box">
-  <div class="login-header">
-    <p class="eyebrow">Admin Portal</p>
-    <h1>Kiltu Kara<br>Secondary School</h1>
-  </div>
-  <div class="login-body">
-    <div class="error-msg" id="errMsg"></div>
+  <div class="login-card">
+    <h2>Admin Login</h2>
+    <div id="errorMsg" class="error-msg">Invalid username or password</div>
     <form id="loginForm">
-      <div class="field">
+      <div class="input-group">
         <label>Username</label>
-        <input type="text" id="username" autocomplete="username" required placeholder="admin">
+        <input type="text" id="username" placeholder="admin" required>
       </div>
-      <div class="field">
+      <div class="input-group">
         <label>Password</label>
-        <input type="password" id="password" autocomplete="current-password" required placeholder="••••••••">
+        <input type="password" id="password" placeholder="••••••••" required>
       </div>
-      <button type="submit" id="loginBtn">Sign In</button>
+      <button type="submit" class="btn-login">Login to Dashboard</button>
     </form>
   </div>
-</div>
 
-<script>
-  // If already logged in, go straight to the app
-  if (localStorage.getItem('kkss_token')) {
-    window.location.replace('index.html');
-  }
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
 
-  const form   = document.getElementById('loginForm');
-  const errMsg = document.getElementById('errMsg');
-  const btn    = document.getElementById('loginBtn');
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
 
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    errMsg.style.display = 'none';
-    btn.disabled = true;
-    btn.textContent = 'Signing in…';
-
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: document.getElementById('username').value.trim(),
-          password: document.getElementById('password').value
-        })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Login failed.');
+        if (data.success) {
+          localStorage.setItem('adminToken', data.token);
+          window.location.href = '/admin.html';
+        } else {
+          document.getElementById('errorMsg').style.display = 'block';
+        }
+      } catch (err) {
+        alert('Server error connecting to login API');
       }
-
-      localStorage.setItem('kkss_token', data.token);
-      localStorage.setItem('kkss_user', data.username);
-      window.location.replace('index.html');
-
-    } catch (err) {
-      errMsg.textContent = err.message;
-      errMsg.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Sign In';
-    }
-  });
-</script>
+    });
+  </script>
 </body>
 </html>

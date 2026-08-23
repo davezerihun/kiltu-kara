@@ -8,7 +8,7 @@ const app = express();
 
 // Middlewares
 app.use(cors());
-app.use(express.json({ limit: '10mb' })); // Increased payload limit to support photo uploads
+app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB
@@ -81,7 +81,8 @@ const officialStudentSchema = new mongoose.Schema({
 
 const OfficialStudent = mongoose.model('OfficialStudent', officialStudentSchema);
 
-// API Endpoint: Standard Registration
+// --- SUBMISSION ENDPOINTS ---
+
 app.post('/api/register', async (req, res) => {
   try {
     const student = new StandardStudent(req.body);
@@ -92,7 +93,6 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// API Endpoint: Official Census Registration
 app.post('/api/official-register', async (req, res) => {
   try {
     const officialStudent = new OfficialStudent(req.body);
@@ -103,9 +103,39 @@ app.post('/api/official-register', async (req, res) => {
   }
 });
 
-// Serve Main Landing Page
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// --- ADMIN AUTH & DATA ENDPOINTS ---
+
+// Admin Login Route
+app.post('/api/admin/login', (req, res) => {
+  const { username, password } = req.body;
+  const ADMIN_USER = process.env.ADMIN_USER || 'admin';
+  const ADMIN_PASS = process.env.ADMIN_PASS || 'admin123';
+
+  if (username === ADMIN_USER && password === ADMIN_PASS) {
+    res.json({ success: true, token: 'authenticated-admin-session' });
+  } else {
+    res.status(401).json({ success: false, message: 'Invalid credentials' });
+  }
+});
+
+// Fetch Standard Submissions
+app.get('/api/admin/standard-students', async (req, res) => {
+  try {
+    const students = await StandardStudent.find().sort({ createdAt: -1 });
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch standard records' });
+  }
+});
+
+// Fetch Official 2019 Submissions
+app.get('/api/admin/official-students', async (req, res) => {
+  try {
+    const students = await OfficialStudent.find().sort({ createdAt: -1 });
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch official records' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
