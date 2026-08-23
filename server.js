@@ -13,14 +13,15 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kiltu_kara_db')
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kiltu_kara_db';
+mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB successfully'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Schema Definitions (Strict false ensures any payload fields save cleanly)
-const StudentSchema = new mongoose.Schema({}, { strict: false });
-const StandardStudent = mongoose.model('StandardStudent', StudentSchema);
-const OfficialStudent = mongoose.model('OfficialStudent', StudentSchema);
+// Schema Definitions with Timestamps
+const StudentSchema = new mongoose.Schema({}, { strict: false, timestamps: true });
+const StandardStudent = mongoose.model('StandardStudent', StudentSchema, 'standard_students');
+const OfficialStudent = mongoose.model('OfficialStudent', StudentSchema, 'official_students');
 
 // 1. ADMIN LOGIN API
 app.post('/api/login', (req, res) => {
@@ -58,14 +59,15 @@ app.post('/api/official-register', async (req, res) => {
   }
 });
 
-// GET ALL STUDENTS FOR ADMIN DASHBOARD
+// GET SEPARATE LISTS OF STUDENTS (SORTED BY MOST RECENT FIRST)
 app.get('/api/students', async (req, res) => {
   try {
-    const standard = await StandardStudent.find();
-    const official = await OfficialStudent.find();
+    // .sort({ createdAt: -1 }) ensures the most recent registrations show at the top
+    const standard = await StandardStudent.find().sort({ createdAt: -1 });
+    const official = await OfficialStudent.find().sort({ createdAt: -1 });
     res.json({ standard, official });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch students' });
+    res.status(500).json({ error: 'Failed to fetch student records' });
   }
 });
 
