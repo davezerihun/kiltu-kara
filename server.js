@@ -8,70 +8,102 @@ const app = express();
 
 // Middlewares
 app.use(cors());
-app.use(express.json({ limit: '50mb' })); 
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json({ limit: '10mb' })); // Increased payload limit to support photo uploads
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kiltu_kara_db';
-mongoose.connect(MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kiltu_kara_db')
   .then(() => console.log('Connected to MongoDB successfully'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Schema Definitions with Timestamps
-const StudentSchema = new mongoose.Schema({}, { strict: false, timestamps: true });
-const StandardStudent = mongoose.model('StandardStudent', StudentSchema, 'standard_students');
-const OfficialStudent = mongoose.model('OfficialStudent', StudentSchema, 'official_students');
-
-// 1. ADMIN LOGIN API
-app.post('/api/login', (req, res) => {
-  const { password } = req.body;
-  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
-
-  if (password === ADMIN_PASSWORD) {
-    return res.status(200).json({ success: true, message: 'Login successful' });
-  } else {
-    return res.status(401).json({ success: false, message: 'Incorrect password!' });
-  }
+// 1. Schema for Standard Online Registration Form
+const standardStudentSchema = new mongoose.Schema({
+  fullName: { type: String, required: true },
+  gender: String,
+  age: Number,
+  grade: String,
+  stream: String,
+  guardianName: String,
+  phone: String,
+  address: String,
+  createdAt: { type: Date, default: Date.now }
 });
 
-// 2. ONLINE REGISTRATION API
+const StandardStudent = mongoose.model('StandardStudent', standardStudentSchema);
+
+// 2. Schema for Official Registration Form 2019
+const officialStudentSchema = new mongoose.Schema({
+  photo: String,
+  hasStudentId: String,
+  studentId: String,
+  firstName: String,
+  fathersName: String,
+  grandfathersName: String,
+  admissionType: String,
+  sex: String,
+  disability: String,
+  disabilityType: String,
+  dateOfBirth: String,
+  countryOfBirth: String,
+  regionOfBirth: String,
+  zoneOfBirth: String,
+  woredaOfBirth: String,
+  nationality: String,
+  region: String,
+  zone: String,
+  woreda: String,
+  kebele: String,
+  locationType: String,
+  studentEconomicStatus: String,
+  parentStatus: String,
+  fatherEducationLevel: String,
+  motherEducationLevel: String,
+  parentGuardianFullName: String,
+  parentGuardianEmail: String,
+  parentGuardianPhone: String,
+  familyHeadGender: String,
+  nationalId: String,
+  admissionCategory: String,
+  admissionModality: String,
+  gradeLevel: String,
+  section: String,
+  educationStream: String,
+  careerTechnical1stField: String,
+  careerTechnical2ndField: String,
+  numberOfTextbooks: Number,
+  mainInstructionalLanguage: String,
+  schoolFeedingParticipation: String,
+  foodRationHomeTaking: String,
+  numberOfMealsPerWeek: Number,
+  average: Number,
+  createdAt: { type: Date, default: Date.now }
+});
+
+const OfficialStudent = mongoose.model('OfficialStudent', officialStudentSchema);
+
+// API Endpoint: Standard Registration
 app.post('/api/register', async (req, res) => {
   try {
     const student = new StandardStudent(req.body);
     await student.save();
-    return res.status(201).json({ success: true, message: 'Standard registration successful!' });
+    res.status(201).json({ message: 'Standard registration successful!' });
   } catch (error) {
-    console.error('Registration Error:', error);
-    return res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ error: 'Failed to submit standard registration' });
   }
 });
 
-// 3. OFFICIAL CENSUS REGISTRATION API
+// API Endpoint: Official Census Registration
 app.post('/api/official-register', async (req, res) => {
   try {
     const officialStudent = new OfficialStudent(req.body);
     await officialStudent.save();
-    return res.status(201).json({ success: true, message: 'Official registration successful!' });
+    res.status(201).json({ message: 'Official registration successful!' });
   } catch (error) {
-    console.error('Official Registration Error:', error);
-    return res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ error: 'Failed to submit official registration' });
   }
 });
 
-// GET SEPARATE LISTS OF STUDENTS (SORTED BY MOST RECENT FIRST)
-app.get('/api/students', async (req, res) => {
-  try {
-    // .sort({ createdAt: -1 }) ensures the most recent registrations show at the top
-    const standard = await StandardStudent.find().sort({ createdAt: -1 });
-    const official = await OfficialStudent.find().sort({ createdAt: -1 });
-    res.json({ standard, official });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch student records' });
-  }
-});
-
-// Fallback Route
+// Serve Main Landing Page
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });

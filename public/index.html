@@ -3,140 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kiltu Kara Secondary School - Online Registration</title>
+  <title>Kiltu Kara Secondary School - Registration Hub</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #e2e8f0; color: #1e293b; padding: 30px 20px; display: flex; justify-content: center; }
-    .container { background: #ffffff; width: 100%; max-width: 850px; padding: 35px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-    
-    .header-box { background-color: #047857; color: #ffffff; padding: 12px 20px; border-radius: 6px; font-weight: 700; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 0.5px; }
-    
-    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-    .input-group { display: flex; flex-direction: column; }
-    .input-group.full-width { grid-column: span 2; }
-    
-    label { font-size: 0.85rem; color: #334155; margin-bottom: 6px; font-weight: 600; }
-    
-    input, select { padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: #e0f2fe; color: #0f172a; outline: none; transition: all 0.2s ease; }
-    input:focus, select:focus { border-color: #047857; background: #ffffff; box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.15); }
-    
-    .btn-submit { width: 100%; background: #047857; color: white; border: none; padding: 14px; border-radius: 6px; font-weight: 700; font-size: 1.05rem; margin-top: 25px; cursor: pointer; transition: background 0.2s; }
-    .btn-submit:hover { background: #065f46; }
-    
-    .nav-link { display: inline-block; margin-top: 20px; color: #047857; text-decoration: none; font-size: 0.9rem; font-weight: 600; }
-    .nav-link:hover { text-decoration: underline; }
-    
-    @media (max-width: 650px) { .form-grid { grid-template-columns: 1fr; } .input-group.full-width { grid-column: span 1; } }
+    .portal-container { 
+      display: flex; 
+      gap: 20px; 
+      flex-wrap: wrap; 
+      margin-top: 30px; 
+      justify-content: center; 
+    }
+    .portal-card { 
+      background: #ffffff; 
+      padding: 25px; 
+      border-radius: 12px; 
+      flex: 1; 
+      min-width: 280px; 
+      max-width: 340px; 
+      text-align: center; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+      border-top: 5px solid #2563eb; 
+    }
+    .portal-card h3 { 
+      margin-bottom: 10px; 
+      color: #1e293b; 
+      font-size: 1.2rem; 
+    }
+    .portal-card p { 
+      font-size: 0.9rem; 
+      color: #64748b; 
+      margin-bottom: 20px; 
+      line-height: 1.4; 
+    }
+    .btn-portal { 
+      display: block; 
+      width: 100%; 
+      padding: 12px; 
+      background: #2563eb; 
+      color: white; 
+      text-decoration: none; 
+      border-radius: 6px; 
+      font-weight: bold; 
+    }
+    .btn-portal:hover { 
+      background: #1d4ed8; 
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header-box">1. Online Student Registration</div>
+  <div class="main-wrapper">
+    <header class="hero-section">
+      <div class="hero-overlay">
+        <h1 class="school-title">KILTU KARA SECONDARY SCHOOL</h1>
+        <p class="hero-subtitle">Official Student Registration & Data Portal</p>
+      </div>
+    </header>
 
-    <form id="onlineRegForm">
-      <div class="form-grid">
-        <div class="input-group">
-          <label>Full Name *</label>
-          <input type="text" id="fullName" required>
+    <main class="form-card">
+      <h2 style="text-align: center; color: #1e293b;">Select Registration Type</h2>
+      
+      <div class="portal-container">
+        <!-- Standard Online Portal Card -->
+        <div class="portal-card">
+          <h3>Standard Online Registration</h3>
+          <p>Standard student registration portal for regular applicants and general enrollment.</p>
+          <a href="/online_reg.html" class="btn-portal">Open Standard Form →</a>
         </div>
-        <div class="input-group">
-          <label>National / Student ID</label>
-          <input type="text" id="nationalId">
-        </div>
-        <div class="input-group">
-          <label>Age *</label>
-          <input type="number" id="age" required min="10" max="30">
-        </div>
-        <div class="input-group">
-          <label>Sex *</label>
-          <select id="sex" required>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label>Grade Level *</label>
-          <select id="grade" required>
-            <option value="Grade 9">Grade 9</option>
-            <option value="Grade 10">Grade 10</option>
-            <option value="Grade 11">Grade 11</option>
-            <option value="Grade 12">Grade 12</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label>Academic Stream</label>
-          <select id="stream">
-            <option value="Natural Science (NS)">Natural Science (NS)</option>
-            <option value="Social Science (SS)">Social Science (SS)</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label>Academic Average (%)</label>
-          <input type="number" id="average" min="0" max="100">
-        </div>
-        <div class="input-group">
-          <label>Previous School</label>
-          <input type="text" id="previousSchool">
-        </div>
-        <div class="input-group">
-          <label>Woreda *</label>
-          <input type="text" id="woreda" required>
-        </div>
-        <div class="input-group">
-          <label>Kebele</label>
-          <input type="text" id="kebele">
-        </div>
-        <div class="input-group">
-          <label>Guardian Name *</label>
-          <input type="text" id="guardianName" required>
-        </div>
-        <div class="input-group">
-          <label>Guardian Phone *</label>
-          <input type="tel" id="guardianPhone" required>
+
+        <!-- Official Census Card -->
+        <div class="portal-card" style="border-top-color: #059669;">
+          <h3>Official Registration Form 2019</h3>
+          <p>Official school census registration template (Student Basic Data & Enrollment Template).</p>
+          <a href="/off_reg.html" class="btn-portal" style="background: #059669;">Open Official Form →</a>
         </div>
       </div>
-      <button type="submit" class="btn-submit">Submit Registration</button>
-    </form>
-    <a href="/off_reg.html" class="nav-link">← Go to Official Census Form</a>
+
+      <div class="nav-footer" style="margin-top: 30px; text-align: center;">
+        <a href="/admin.html">Go to Administrative Dashboard →</a>
+      </div>
+    </main>
   </div>
-
-  <script>
-    document.getElementById('onlineRegForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const payload = {
-        fullName: document.getElementById('fullName').value,
-        nationalId: document.getElementById('nationalId').value,
-        age: Number(document.getElementById('age').value),
-        sex: document.getElementById('sex').value,
-        grade: document.getElementById('grade').value,
-        stream: document.getElementById('stream').value,
-        average: Number(document.getElementById('average').value) || 0,
-        previousSchool: document.getElementById('previousSchool').value,
-        woreda: document.getElementById('woreda').value,
-        kebele: document.getElementById('kebele').value,
-        guardianName: document.getElementById('guardianName').value,
-        guardianPhone: document.getElementById('guardianPhone').value
-      };
-
-      try {
-        const res = await fetch('/api/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
-        if (res.ok && data.success) {
-          alert('Registration submitted successfully!');
-          document.getElementById('onlineRegForm').reset();
-        } else {
-          alert('Error: ' + (data.error || 'Failed to submit registration.'));
-        }
-      } catch (err) {
-        alert('Server error: ' + err.message);
-      }
-    });
-  </script>
 </body>
 </html>
