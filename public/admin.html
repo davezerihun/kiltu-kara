@@ -85,10 +85,14 @@
       background: #1e293b; padding: 10px 16px;
     }
     .cert-toolbar button { padding: 7px 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 0.82rem; }
-    .cert-close { background: #64748b; color: white; }
+    .cert-close      { background: #64748b; color: white; }
     .cert-close:hover { background: #475569; }
-    .cert-print { background: #7c3aed; color: white; }
+    .cert-print      { background: #7c3aed; color: white; }
     .cert-print:hover { background: #6d28d9; }
+    .cert-btn-csv    { background: #16a34a; color: white; }
+    .cert-btn-csv:hover   { background: #15803d; }
+    .cert-btn-excel  { background: #0f766e; color: white; }
+    .cert-btn-excel:hover { background: #0d5e58; }
     .cert-body { padding: 28px 32px; }
     .cert-head {
       display: flex; justify-content: space-between; align-items: flex-start;
@@ -203,6 +207,10 @@
   <div id="offSection" class="card" style="display:none;">
     <div class="card-header">
       <span class="card-title">Official 2019 Census Submissions</span>
+      <div class="dl-group">
+        <button class="btn-dl btn-csv"   onclick="downloadOffCSV()">⬇ CSV</button>
+        <button class="btn-dl btn-excel" onclick="downloadOffExcel()">⬇ Excel</button>
+      </div>
     </div>
     <input class="search-bar" type="text" id="offSearch" placeholder="Search by name or kebele…" oninput="renderTables()">
     <div class="table-wrapper">
@@ -259,8 +267,10 @@
 <div class="cert-overlay" id="certOverlay">
   <div class="cert-paper" id="certPaper">
     <div class="cert-toolbar">
-      <button class="cert-print" onclick="printCert()">🖨 Print / Save PDF</button>
-      <button class="cert-close" onclick="closeCert()">✕ Close</button>
+      <button class="cert-btn-csv"   onclick="downloadSingleOffCSV()">⬇ CSV</button>
+      <button class="cert-btn-excel" onclick="downloadSingleOffExcel()">⬇ Excel</button>
+      <button class="cert-print"     onclick="printCert()">🖨 Print / PDF</button>
+      <button class="cert-close"     onclick="closeCert()">✕ Close</button>
     </div>
     <div class="cert-body" id="certBody"></div>
   </div>
@@ -480,7 +490,10 @@
   /* ── CERTIFICATE VIEW ──────────────────────────────────────────────── */
   function f(v) { return (v !== undefined && v !== null && v !== '') ? v : '—'; }
 
+  let currentCertId = null; // track which official record is open
+
   function openCert(id) {
+    currentCertId = id;
     const s = offDataStore.find(i => i._id === id);
     if (!s) return;
     document.getElementById('certBody').innerHTML = `
@@ -564,6 +577,98 @@
   }
   function closeCert() { document.getElementById('certOverlay').classList.remove('open'); }
   function printCert() { window.print(); }
+
+  /* ── OFFICIAL SINGLE-RECORD EXPORT ────────────────────────────────── */
+  function offRowToArray(s) {
+    return [
+      s.firstName || '', s.fathersName || '', s.grandfathersName || '',
+      s.studentId || '', s.hasStudentId || '', s.admissionType || '',
+      s.sex || '', s.dateOfBirth || '', s.disability || '', s.disabilityType || '',
+      s.nationality || '', s.countryOfBirth || '', s.regionOfBirth || '',
+      s.zoneOfBirth || '', s.woredaOfBirth || '',
+      s.region || '', s.zone || '', s.woreda || '', s.kebele || '',
+      s.locationType || '', s.studentEconomicStatus || '', s.parentStatus || '',
+      s.fatherEducationLevel || '', s.motherEducationLevel || '',
+      s.parentGuardianFullName || '', s.parentGuardianEmail || '',
+      s.parentGuardianPhone || '', s.familyHeadGender || '', s.nationalId || '',
+      s.admissionCategory || '', s.admissionModality || '',
+      s.gradeLevel || '', s.section || '', s.educationStream || '',
+      s.careerTechnical1stField || '', s.careerTechnical2ndField || '',
+      s.numberOfTextbooks || '', s.mainInstructionalLanguage || '',
+      s.schoolFeedingParticipation || '', s.foodRationHomeTaking || '',
+      s.numberOfMealsPerWeek || '', s.average || '',
+      s.createdAt ? new Date(s.createdAt).toLocaleDateString() : ''
+    ];
+  }
+
+  const OFF_HEADERS = [
+    'First Name',"Father's Name","Grandfather's Name",'Student ID','Has Student ID',
+    'Admission Type','Sex','Date of Birth','Disability','Disability Type',
+    'Nationality','Country of Birth','Region of Birth','Zone of Birth','Woreda of Birth',
+    'Region','Zone','Woreda','Kebele','Location Type','Economic Status','Parent Status',
+    "Father's Edu Level","Mother's Edu Level",'Parent/Guardian Name','Parent Email',
+    'Parent Phone','Family Head Gender','National ID',
+    'Admission Category','Admission Modality','Grade Level','Section','Education Stream',
+    'Career 1st Field','Career 2nd Field','Textbooks Count','Instruction Language',
+    'School Feeding','Ration Home Taking','Meals Per Week','Average (%)','Registered At'
+  ];
+
+  function downloadSingleOffCSV() {
+    if (!currentCertId) return;
+    const s = offDataStore.find(i => i._id === currentCertId);
+    if (!s) return;
+    const name = `${s.firstName||'Student'}_${s.fathersName||''}`.trim().replace(/\s+/g,'_');
+    const csv = [OFF_HEADERS.join(','),
+      offRowToArray(s).map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')
+    ].join('\n');
+    triggerDownload('\uFEFF' + csv, 'text/csv', `Official_${name}.csv`);
+  }
+
+  function downloadSingleOffExcel() {
+    if (!currentCertId) return;
+    const s = offDataStore.find(i => i._id === currentCertId);
+    if (!s) return;
+    const name = `${s.firstName||'Student'}_${s.fathersName||''}`.trim().replace(/\s+/g,'_');
+    const tHead = `<tr>${OFF_HEADERS.map(h =>
+      `<th style="background:#065f46;color:white;padding:7px;border:1px solid #cbd5e1">${h}</th>`).join('')}</tr>`;
+    const tBody = `<tr>${offRowToArray(s).map(v =>
+      `<td style="padding:6px 9px;border:1px solid #e2e8f0">${v}</td>`).join('')}</tr>`;
+    const html = buildExcelHtml(tHead + tBody, 'OfficialRecord');
+    triggerDownload(html, 'application/vnd.ms-excel', `Official_${name}.xls`);
+  }
+
+  /* ── OFFICIAL TABLE-LEVEL EXPORT (all active records) ─────────────── */
+  function getActiveOff() { return offDataStore.filter(s => !s.isTrashed); }
+
+  function downloadOffCSV() {
+    const rows = getActiveOff();
+    if (!rows.length) { alert('No active official records to export.'); return; }
+    const csv = [OFF_HEADERS.join(','),
+      ...rows.map(s => offRowToArray(s).map(v =>
+        `"${String(v).replace(/"/g,'""')}"`).join(','))
+    ].join('\n');
+    triggerDownload('\uFEFF' + csv, 'text/csv', 'KiltuKara_Official_Census.csv');
+  }
+
+  function downloadOffExcel() {
+    const rows = getActiveOff();
+    if (!rows.length) { alert('No active official records to export.'); return; }
+    const tHead = `<tr>${OFF_HEADERS.map(h =>
+      `<th style="background:#065f46;color:white;padding:7px;border:1px solid #cbd5e1">${h}</th>`).join('')}</tr>`;
+    const tBody = rows.map(s => `<tr>${offRowToArray(s).map(v =>
+      `<td style="padding:6px 9px;border:1px solid #e2e8f0">${v}</td>`).join('')}</tr>`).join('');
+    triggerDownload(buildExcelHtml(tHead + tBody, 'OfficialCensus'),
+      'application/vnd.ms-excel', 'KiltuKara_Official_Census.xls');
+  }
+
+  function buildExcelHtml(tableContent, sheetName) {
+    return `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+      <head><meta charset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>
+      <x:ExcelWorksheet><x:Name>${sheetName}</x:Name><x:WorksheetOptions><x:DisplayGridlines/>
+      </x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+      </head><body><table border="1">${tableContent}</table></body></html>`;
+  }
   document.getElementById('certOverlay').addEventListener('click', function(e) {
     if (e.target === this) closeCert();
   });
@@ -681,7 +786,6 @@
       </head><body><table border="1">${tHead}${tBody}</table></body></html>`;
 
     triggerDownload(html, 'application/vnd.ms-excel', 'KiltuKara_Standard_Students.xls');
-  }
 
   function etd(v) {
     return `<td style="padding:6px 10px;border:1px solid #e2e8f0">${(v !== undefined && v !== null) ? v : ''}</td>`;
