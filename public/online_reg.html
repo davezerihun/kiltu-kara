@@ -60,7 +60,7 @@
           </div>
         </div>
 
-        <!-- Grade & Stream -->
+        <!-- Grade, Stream & Section -->
         <div class="form-row">
           <div class="input-group">
             <label for="grade">Grade</label>
@@ -83,12 +83,27 @@
           </div>
         </div>
 
-        <!-- Average & Previous School -->
+        <!-- Section & Average -->
         <div class="form-row">
+          <div class="input-group">
+            <label for="section">Section</label>
+            <select id="section" required>
+              <option value="" disabled selected>Select Section</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+              <option value="E">E</option>
+            </select>
+          </div>
           <div class="input-group">
             <label for="average">Academic Average (%)</label>
             <input type="number" id="average" placeholder="e.g. 85" min="0" max="100" required>
           </div>
+        </div>
+
+        <!-- Previous School -->
+        <div class="form-row">
           <div class="input-group">
             <label for="previousSchool">Previous School</label>
             <input type="text" id="previousSchool" placeholder="Previous school name" required>
@@ -140,7 +155,9 @@
         gender: document.getElementById('gender').value,
         grade: document.getElementById('grade').value,
         stream: document.getElementById('stream').value,
+        section: document.getElementById('section').value,
         average: document.getElementById('average').value,
+        academicAverage: document.getElementById('average').value,
         previousSchool: document.getElementById('previousSchool').value,
         woreda: document.getElementById('woreda').value,
         kebele: document.getElementById('kebele').value,

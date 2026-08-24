@@ -6,79 +6,188 @@
   <title>Admin Dashboard - Kiltu Kara Secondary School</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-    body { background-color: #f1f5f9; padding: 20px; color: #1e293b; }
+    body { background: #f1f5f9; padding: 20px; color: #1e293b; }
 
-    .admin-container { max-width: 1200px; margin: 0 auto; }
-    .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    .btn-logout { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .admin-container { max-width: 1400px; margin: 0 auto; }
 
-    .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; flex-wrap: wrap; }
-    .tab-btn { padding: 10px 16px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-weight: bold; color: #475569; }
+    /* HEADER */
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      background: white; padding: 18px 24px; border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 20px; gap: 12px; flex-wrap: wrap;
+    }
+    .header h2 { font-size: 1.3rem; color: #1e293b; }
+    .header-btns { display: flex; gap: 10px; }
+    .btn-logout   { background: #ef4444; color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: 700; }
+    .btn-chgpass  { background: #7c3aed; color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: 700; }
+    .btn-back     { background: #0f766e; color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+    .btn-logout:hover  { background: #dc2626; }
+    .btn-chgpass:hover { background: #6d28d9; }
+    .btn-back:hover    { background: #0d5e58; }
+
+    /* TABS */
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .tab-btn { padding: 10px 18px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-weight: 600; color: #475569; transition: all 0.15s; }
     .tab-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
     .tab-btn.trash-tab.active { background: #dc2626; border-color: #dc2626; }
 
-    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    .table-wrapper { width: 100%; overflow-x: auto; margin-top: 15px; border: 1px solid #e2e8f0; border-radius: 6px; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
-    th, td { padding: 12px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
-    th { background: #f8fafc; color: #334155; }
+    /* CARD */
+    .card { background: white; padding: 22px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+    .card-title { font-size: 1rem; font-weight: 700; color: #1e293b; }
 
-    .img-thumb { width: 45px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1; }
-    .btn-action { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; margin-right: 4px; }
-    .btn-edit { background: #f59e0b; color: white; }
-    .btn-trash { background: #dc2626; color: white; }
-    .btn-restore { background: #16a34a; color: white; }
-    .btn-delete { background: #991b1b; color: white; }
-    .btn-view { background: #2563eb; color: white; }
+    /* DOWNLOAD BUTTONS */
+    .btn-dl { padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 5px; }
+    .btn-csv   { background: #16a34a; color: white; }
+    .btn-excel { background: #0f766e; color: white; }
+    .btn-csv:hover   { background: #15803d; }
+    .btn-excel:hover { background: #0d5e58; }
+    .dl-group { display: flex; gap: 8px; flex-wrap: wrap; }
 
-    /* FULL REGISTRATION PAGE CARD (MATCHES REGISTRATION FORM LOOK) */
-    .reg-card { background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 20px; margin-top: 20px; position: relative; }
-    .reg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; border-bottom: 2px solid #00875a; padding-bottom: 10px; }
-    .reg-title { font-size: 1.1rem; font-weight: bold; color: #00875a; }
-    .reg-photo { width: 100px; height: 120px; border: 2px dashed #cbd5e1; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #f8fafc; font-size: 0.75rem; color: #64748b; overflow: hidden; }
-    .reg-photo img { width: 100%; height: 100%; object-fit: cover; }
+    /* SEARCH */
+    .search-bar { width: 100%; max-width: 360px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.87rem; outline: none; margin-bottom: 12px; }
 
-    .section-banner { background: #00875a; color: white; font-weight: bold; padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; margin: 15px 0 10px 0; }
-    .field-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
-    .field-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px; border-radius: 4px; }
-    .field-label { font-size: 0.7rem; color: #64748b; font-weight: bold; text-transform: uppercase; }
-    .field-val { font-size: 0.85rem; font-weight: 600; color: #1e293b; margin-top: 2px; }
+    /* TABLE */
+    .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+    th { background: #1e293b; color: white; padding: 11px 12px; text-align: left; font-weight: 600; white-space: nowrap; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+    tbody tr:hover { background: #f8fafc; }
+    .img-thumb { width: 38px; height: 44px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1; }
 
-    /* EDIT MODAL */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
-    .modal-content { background: white; padding: 25px; border-radius: 8px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; }
+    /* ICON ACTION BUTTONS */
+    .btn-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border: none; border-radius: 5px;
+      cursor: pointer; font-size: 1rem; margin-right: 2px;
+      transition: opacity 0.15s;
+    }
+    .btn-icon:hover { opacity: 0.82; }
+    .ic-view    { background: #dbeafe; color: #1d4ed8; }
+    .ic-edit    { background: #fef3c7; color: #b45309; }
+    .ic-trash   { background: #fee2e2; color: #dc2626; }
+    .ic-delete  { background: #450a0a; color: #fca5a5; }
+    .ic-restore { background: #dcfce7; color: #16a34a; }
+
+    /* CERTIFICATE OVERLAY */
+    .cert-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      justify-content: center; align-items: flex-start; z-index: 200;
+      overflow-y: auto; padding: 30px 16px;
+    }
+    .cert-overlay.open { display: flex; }
+    .cert-paper {
+      background: #fff; width: 100%; max-width: 860px; border-radius: 8px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3); overflow: hidden;
+    }
+    .cert-toolbar {
+      display: flex; justify-content: flex-end; gap: 8px;
+      background: #1e293b; padding: 10px 16px;
+    }
+    .cert-toolbar button { padding: 7px 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 0.82rem; }
+    .cert-close { background: #64748b; color: white; }
+    .cert-close:hover { background: #475569; }
+    .cert-print { background: #7c3aed; color: white; }
+    .cert-print:hover { background: #6d28d9; }
+    .cert-body { padding: 28px 32px; }
+    .cert-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      border-bottom: 3px solid #059669; padding-bottom: 16px; margin-bottom: 20px;
+    }
+    .cert-school-info h2 { font-size: 1.15rem; color: #065f46; font-weight: 800; text-transform: uppercase; line-height: 1.4; }
+    .cert-school-info p  { font-size: 0.8rem; color: #475569; margin-top: 4px; }
+    .cert-photo {
+      width: 100px; height: 120px; border: 2px solid #cbd5e1; border-radius: 6px;
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+      background: #f8fafc; font-size: 0.75rem; color: #94a3b8; flex-shrink: 0;
+    }
+    .cert-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .cert-section {
+      background: #059669; color: white; font-weight: 700; font-size: 0.78rem;
+      padding: 6px 12px; border-radius: 4px; margin: 16px 0 10px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+    .cert-field { background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 10px; border-radius: 5px; }
+    .cert-label { font-size: 0.67rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+    .cert-val   { font-size: 0.84rem; font-weight: 600; color: #1e293b; margin-top: 3px; }
+    .cert-actions {
+      display: flex; gap: 10px; justify-content: flex-end;
+      border-top: 1px solid #e2e8f0; margin-top: 20px; padding-top: 14px; flex-wrap: wrap;
+    }
+
+    /* MODALS */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 300; }
+    .modal.open { display: flex; }
+    .modal-content { background: white; padding: 26px; border-radius: 10px; width: 92%; max-width: 680px; max-height: 88vh; overflow-y: auto; }
+    .modal-content h3 { margin-bottom: 14px; color: #1e293b; }
     .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .modal-content label { display: block; margin-top: 6px; font-size: 0.75rem; font-weight: bold; }
-    .modal-content input, .modal-content select { width: 100%; padding: 6px; margin-top: 2px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; }
-    .modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
+    .modal-content label { display: block; margin-top: 8px; font-size: 0.75rem; font-weight: 700; color: #334155; }
+    .modal-content input, .modal-content select { width: 100%; padding: 7px 10px; margin-top: 3px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 0.85rem; }
+    .modal-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 10px; }
+    .btn-save   { background: #2563eb; color: white; border: none; padding: 9px 20px; border-radius: 6px; cursor: pointer; font-weight: 700; }
+    .btn-cancel { background: #64748b; color: white; border: none; padding: 9px 20px; border-radius: 6px; cursor: pointer; font-weight: 700; }
+    .modal-msg  { margin-top: 12px; font-size: 0.85rem; font-weight: 600; padding: 8px 12px; border-radius: 5px; display: none; }
+    .modal-msg.success { background: #dcfce7; color: #166534; display: block; }
+    .modal-msg.error   { background: #fee2e2; color: #991b1b; display: block; }
+
+    /* PRINT STYLES */
+    @media print {
+      body * { visibility: hidden; }
+      .cert-paper, .cert-paper * { visibility: visible; }
+      .cert-paper { position: fixed; inset: 0; box-shadow: none; border-radius: 0; max-width: 100%; }
+      .cert-toolbar, .cert-actions { display: none !important; }
+      @page { size: A4 portrait; margin: 12mm; }
+    }
   </style>
 </head>
 <body>
 
 <div class="admin-container">
+
+  <!-- HEADER -->
   <div class="header">
-    <h2>Administrative Data Hub</h2>
-    <button class="btn-logout" onclick="logout()">Logout</button>
+    <h2>🏫 Kiltu Kara — Administrative Dashboard</h2>
+    <div class="header-btns">
+      <a href="/index.html" class="btn-back">🏠 Registration Portal</a>
+      <button class="btn-chgpass" onclick="openModal('changePassModal')">🔒 Change Password</button>
+      <button class="btn-logout"  onclick="logout()">⏻ Logout</button>
+    </div>
   </div>
 
+  <!-- TABS -->
   <div class="tabs">
-    <button class="tab-btn active" id="tabStdBtn" onclick="showTab('std')">Standard Online Submissions</button>
-    <button class="tab-btn" id="tabOffBtn" onclick="showTab('off')">Official 2019 Census Submissions</button>
+    <button class="tab-btn active" id="tabStdBtn"   onclick="showTab('std')">Standard Submissions</button>
+    <button class="tab-btn"        id="tabOffBtn"   onclick="showTab('off')">Official 2019 Census</button>
     <button class="tab-btn trash-tab" id="tabTrashBtn" onclick="showTab('trash')">🗑 Trash Bin</button>
   </div>
 
-  <!-- STANDARD REGISTRATION TAB -->
+  <!-- ════════════════════════════════════════════════════════════════
+       STANDARD TABLE
+  ════════════════════════════════════════════════════════════════════ -->
   <div id="stdSection" class="card">
-    <h3>Standard Online Submissions</h3>
+    <div class="card-header">
+      <span class="card-title">Standard Online Submissions</span>
+      <div class="dl-group">
+        <button class="btn-dl btn-csv"   onclick="downloadStdCSV()">⬇ CSV</button>
+        <button class="btn-dl btn-excel" onclick="downloadStdExcel()">⬇ Excel</button>
+      </div>
+    </div>
+    <input class="search-bar" type="text" id="stdSearch" placeholder="Search by name, receipt, phone…" oninput="renderTables()">
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
+            <th>#</th>
             <th>Full Name</th>
-            <th>Gender</th>
-            <th>Age</th>
+            <th>Sex</th>
             <th>Grade</th>
+            <th>Section</th>
             <th>Stream</th>
+            <th>Average (%)</th>
+            <th>Receipt No.</th>
+            <th>Woreda</th>
+            <th>Kebele</th>
+            <th>Guardian Name</th>
             <th>Guardian Phone</th>
             <th>Actions</th>
           </tr>
@@ -88,19 +197,23 @@
     </div>
   </div>
 
-  <!-- OFFICIAL 2019 REGISTRATION TAB -->
+  <!-- ════════════════════════════════════════════════════════════════
+       OFFICIAL TABLE
+  ════════════════════════════════════════════════════════════════════ -->
   <div id="offSection" class="card" style="display:none;">
-    <h3>Official 2019 Census Submissions</h3>
-    <p style="font-size:0.85rem; color:#64748b; margin-top:4px;">Click <b>"View Full Form"</b> on any student to open their complete registration layout with photo.</p>
-    
+    <div class="card-header">
+      <span class="card-title">Official 2019 Census Submissions</span>
+    </div>
+    <input class="search-bar" type="text" id="offSearch" placeholder="Search by name or kebele…" oninput="renderTables()">
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
+            <th>#</th>
             <th>Photo</th>
             <th>Full Name</th>
             <th>Sex</th>
-            <th>Grade/Section</th>
+            <th>Grade / Section</th>
             <th>Kebele</th>
             <th>Parent Phone</th>
             <th>Actions</th>
@@ -109,42 +222,76 @@
         <tbody id="offTable"></tbody>
       </table>
     </div>
-
-    <!-- DISPLAY CONTAINER FOR FULL REGISTRATION FORM PAGE -->
-    <div id="officialPageContainer"></div>
   </div>
 
-  <!-- TRASH BIN TAB -->
+  <!-- ════════════════════════════════════════════════════════════════
+       TRASH BIN
+  ════════════════════════════════════════════════════════════════════ -->
   <div id="trashSection" class="card" style="display:none;">
-    <h3>Trash Bin</h3>
-    <h4 style="margin-top:15px; color:#475569;">Standard Submissions</h4>
+    <div class="card-title" style="margin-bottom:14px;">🗑 Trash Bin</div>
+
+    <p style="font-size:0.82rem;color:#64748b;margin-bottom:8px;">Standard Records</p>
     <div class="table-wrapper">
       <table>
         <thead>
-          <tr>
-            <th>Full Name</th>
-            <th>Grade</th>
-            <th>Phone</th>
-            <th>Actions</th>
-          </tr>
+          <tr><th>Full Name</th><th>Grade</th><th>Guardian Phone</th><th>Actions</th></tr>
         </thead>
         <tbody id="trashStdTable"></tbody>
       </table>
     </div>
 
-    <h4 style="margin-top:25px; color:#475569;">Official 2019 Submissions</h4>
+    <p style="font-size:0.82rem;color:#64748b;margin:20px 0 8px;">Official Records</p>
     <div class="table-wrapper">
       <table>
         <thead>
-          <tr>
-            <th>Photo</th>
-            <th>Full Name</th>
-            <th>Grade/Section</th>
-            <th>Actions</th>
-          </tr>
+          <tr><th>Photo</th><th>Full Name</th><th>Grade / Section</th><th>Actions</th></tr>
         </thead>
         <tbody id="trashOffTable"></tbody>
       </table>
+    </div>
+  </div>
+
+</div><!-- /.admin-container -->
+
+<!-- ════════════════════════════════════════════════════════════════════
+     CERTIFICATE OVERLAY
+════════════════════════════════════════════════════════════════════════ -->
+<div class="cert-overlay" id="certOverlay">
+  <div class="cert-paper" id="certPaper">
+    <div class="cert-toolbar">
+      <button class="cert-print" onclick="printCert()">🖨 Print / Save PDF</button>
+      <button class="cert-close" onclick="closeCert()">✕ Close</button>
+    </div>
+    <div class="cert-body" id="certBody"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     CHANGE PASSWORD MODAL
+════════════════════════════════════════════════════════════════════════ -->
+<div class="modal" id="changePassModal">
+  <div class="modal-content" style="max-width:440px;">
+    <h3>🔒 Change Admin Password</h3>
+    <div>
+      <label>Current Password</label>
+      <input type="password" id="cpCurrent" placeholder="Enter current password">
+    </div>
+    <div>
+      <label>New Password</label>
+      <input type="password" id="cpNew" placeholder="Min. 6 characters">
+    </div>
+    <div>
+      <label>Confirm New Password</label>
+      <input type="password" id="cpConfirm" placeholder="Repeat new password">
+    </div>
+    <div>
+      <label>🔑 Master Permission Key</label>
+      <input type="password" id="cpMaster" placeholder="Enter master secret key">
+    </div>
+    <div class="modal-msg" id="cpMsg"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('changePassModal')">Cancel</button>
+      <button class="btn-save"   onclick="submitChangePassword()">🔒 Update Password</button>
     </div>
   </div>
 </div>
@@ -152,24 +299,34 @@
 <!-- EDIT STANDARD MODAL -->
 <div class="modal" id="editStdModal">
   <div class="modal-content">
-    <h3>Edit Standard Student</h3>
+    <h3>✏️ Edit Standard Student</h3>
     <input type="hidden" id="editStdId">
     <div class="modal-grid">
       <div><label>Full Name</label><input type="text" id="editStdFullName"></div>
-      <div>
-        <label>Gender</label>
-        <select id="editStdGender"><option value="Male">Male</option><option value="Female">Female</option></select>
+      <div><label>Gender</label>
+        <select id="editStdGender">
+          <option>Male</option><option>Female</option><option>M</option><option>F</option>
+        </select>
       </div>
       <div><label>Age</label><input type="number" id="editStdAge"></div>
       <div><label>Grade</label><input type="text" id="editStdGrade"></div>
+      <div><label>Section</label>
+        <select id="editStdSection">
+          <option value="">—</option>
+          <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option>
+        </select>
+      </div>
       <div><label>Stream</label><input type="text" id="editStdStream"></div>
-      <div><label>Phone</label><input type="text" id="editStdPhone"></div>
+      <div><label>Academic Average (%)</label><input type="number" id="editStdAverage" min="0" max="100"></div>
+      <div><label>Receipt No.</label><input type="text" id="editStdReceiptNo"></div>
+      <div><label>Woreda</label><input type="text" id="editStdWoreda"></div>
+      <div><label>Kebele</label><input type="text" id="editStdKebele"></div>
       <div><label>Guardian Name</label><input type="text" id="editStdGuardian"></div>
-      <div><label>Address</label><input type="text" id="editStdAddress"></div>
+      <div><label>Guardian Phone</label><input type="text" id="editStdPhone"></div>
     </div>
     <div class="modal-actions">
-      <button class="btn-action" style="background:#64748b; color:white;" onclick="closeModal('editStdModal')">Cancel</button>
-      <button class="btn-action btn-edit" onclick="saveStdEdit()">Save Changes</button>
+      <button class="btn-cancel" onclick="closeModal('editStdModal')">Cancel</button>
+      <button class="btn-save"   onclick="saveStdEdit()">Save Changes</button>
     </div>
   </div>
 </div>
@@ -177,313 +334,471 @@
 <!-- EDIT OFFICIAL MODAL -->
 <div class="modal" id="editOffModal">
   <div class="modal-content">
-    <h3>Edit Official 2019 Student Record</h3>
+    <h3>✏️ Edit Official Student Record</h3>
     <input type="hidden" id="editOffId">
     <div class="modal-grid">
       <div><label>Student ID</label><input type="text" id="editOffStudentId"></div>
       <div><label>First Name</label><input type="text" id="editOffFirstName"></div>
       <div><label>Father's Name</label><input type="text" id="editOffFathersName"></div>
       <div><label>Grandfather's Name</label><input type="text" id="editOffGrandfathersName"></div>
-      <div>
-        <label>Sex</label>
-        <select id="editOffSex"><option value="Male">Male</option><option value="Female">Female</option></select>
-      </div>
+      <div><label>Sex</label><select id="editOffSex"><option>Male</option><option>Female</option></select></div>
       <div><label>Grade Level</label><input type="text" id="editOffGradeLevel"></div>
       <div><label>Section</label><input type="text" id="editOffSection"></div>
       <div><label>Kebele</label><input type="text" id="editOffKebele"></div>
-      <div><label>Parent/Guardian Name</label><input type="text" id="editOffParentFullName"></div>
+      <div><label>Parent / Guardian Name</label><input type="text" id="editOffParentFullName"></div>
       <div><label>Parent Phone</label><input type="text" id="editOffParentPhone"></div>
     </div>
     <div class="modal-actions">
-      <button class="btn-action" style="background:#64748b; color:white;" onclick="closeModal('editOffModal')">Cancel</button>
-      <button class="btn-action btn-edit" onclick="saveOffEdit()">Save Changes</button>
+      <button class="btn-cancel" onclick="closeModal('editOffModal')">Cancel</button>
+      <button class="btn-save"   onclick="saveOffEdit()">Save Changes</button>
     </div>
   </div>
 </div>
 
 <script>
+  /* ── AUTH ──────────────────────────────────────────────────────────── */
   if (!localStorage.getItem('adminToken')) { window.location.href = '/login.html'; }
   function logout() { localStorage.removeItem('adminToken'); window.location.href = '/login.html'; }
 
+  /* ── TAB SWITCHER ──────────────────────────────────────────────────── */
   function showTab(tab) {
-    document.getElementById('stdSection').style.display = tab === 'std' ? 'block' : 'none';
-    document.getElementById('offSection').style.display = tab === 'off' ? 'block' : 'none';
-    document.getElementById('trashSection').style.display = tab === 'trash' ? 'block' : 'none';
-
-    document.getElementById('tabStdBtn').classList.toggle('active', tab === 'std');
-    document.getElementById('tabOffBtn').classList.toggle('active', tab === 'off');
+    ['std','off','trash'].forEach(t => {
+      document.getElementById(t + 'Section').style.display = (t === tab) ? 'block' : 'none';
+    });
+    document.getElementById('tabStdBtn').classList.toggle('active',   tab === 'std');
+    document.getElementById('tabOffBtn').classList.toggle('active',   tab === 'off');
     document.getElementById('tabTrashBtn').classList.toggle('active', tab === 'trash');
   }
 
-  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+  /* ── MODAL HELPERS ─────────────────────────────────────────────────── */
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  function openModal(id)  { document.getElementById(id).classList.add('open'); }
 
+  /* ── DATA STORE ────────────────────────────────────────────────────── */
   let stdDataStore = [];
   let offDataStore = [];
 
   async function fetchAllData() {
-    const resStd = await fetch('/api/admin/standard-students');
+    const [resStd, resOff] = await Promise.all([
+      fetch('/api/admin/standard-students'),
+      fetch('/api/admin/official-students')
+    ]);
     stdDataStore = await resStd.json();
-
-    const resOff = await fetch('/api/admin/official-students');
     offDataStore = await resOff.json();
-
     renderTables();
   }
 
+  /* ── RENDER TABLES ─────────────────────────────────────────────────── */
   function renderTables() {
-    // 1. STANDARD LIST
-    const activeStd = stdDataStore.filter(s => !s.isTrashed);
-    document.getElementById('stdTable').innerHTML = activeStd.length === 0 ? 
-      '<tr><td colspan="7">No active records found.</td></tr>' :
-      activeStd.map(s => `
-        <tr>
-          <td>${s.fullName || '-'}</td>
-          <td>${s.gender || '-'}</td>
-          <td>${s.age || '-'}</td>
-          <td>${s.grade || '-'}</td>
-          <td>${s.stream || '-'}</td>
-          <td>${s.phone || '-'}</td>
-          <td>
-            <button class="btn-action btn-edit" onclick="openStdEdit('${s._id}')">Edit</button>
-            <button class="btn-action btn-trash" onclick="trashStd('${s._id}', true)">Trash</button>
-          </td>
-        </tr>
-      `).join('');
+    const stdQ = (document.getElementById('stdSearch')?.value || '').toLowerCase();
+    const offQ = (document.getElementById('offSearch')?.value  || '').toLowerCase();
 
-    // 2. OFFICIAL LIST
-    const activeOff = offDataStore.filter(s => !s.isTrashed);
-    document.getElementById('offTable').innerHTML = activeOff.length === 0 ?
-      '<tr><td colspan="7">No active records found.</td></tr>' :
-      activeOff.map(s => `
-        <tr>
-          <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : 'No Photo'}</td>
-          <td><b>${s.firstName || ''} ${s.fathersName || ''} ${s.grandfathersName || ''}</b></td>
-          <td>${s.sex || '-'}</td>
-          <td>${s.gradeLevel || ''} - ${s.section || ''}</td>
-          <td>${s.kebele || '-'}</td>
-          <td>${s.parentGuardianPhone || '-'}</td>
-          <td>
-            <button class="btn-action btn-view" onclick="renderFullOfficialPage('${s._id}')">View Full Form</button>
-            <button class="btn-action btn-edit" onclick="openOffEdit('${s._id}')">Edit</button>
-            <button class="btn-action btn-trash" onclick="trashOff('${s._id}', true)">Trash</button>
-          </td>
-        </tr>
-      `).join('');
+    // 1 — STANDARD active (expanded columns)
+    const activeStd = stdDataStore.filter(s => !s.isTrashed && (
+      !stdQ ||
+      (s.fullName  || '').toLowerCase().includes(stdQ) ||
+      (s.receiptNo || '').toLowerCase().includes(stdQ) ||
+      (s.phone || s.guardianPhone || '').includes(stdQ)
+    ));
+    document.getElementById('stdTable').innerHTML = activeStd.length === 0
+      ? '<tr><td colspan="13" style="text-align:center;color:#94a3b8;padding:20px;">No active records found.</td></tr>'
+      : activeStd.map((s, i) => `
+          <tr>
+            <td style="color:#94a3b8;font-size:0.78rem">${i + 1}</td>
+            <td><b>${s.fullName || '—'}</b></td>
+            <td>${s.gender || '—'}</td>
+            <td>${s.grade  || '—'}</td>
+            <td>${s.section || '—'}</td>
+            <td>${s.stream || '—'}</td>
+            <td style="text-align:center">${s.academicAverage || s.average || '—'}</td>
+            <td style="font-size:0.8rem;color:#475569">${s.receiptNo || '—'}</td>
+            <td>${s.woreda || '—'}</td>
+            <td>${s.kebele || '—'}</td>
+            <td>${s.guardianName || '—'}</td>
+            <td>${s.phone || s.guardianPhone || '—'}</td>
+            <td style="white-space:nowrap">
+              <button class="btn-icon ic-edit"  onclick="openStdEdit('${s._id}')"  title="✏️ Edit">✏️</button>
+              <button class="btn-icon ic-trash" onclick="trashStd('${s._id}',true)" title="🗑 Move to Trash">🗑️</button>
+            </td>
+          </tr>`).join('');
 
-    // 3. TRASH TABLES
-    const trashedStd = stdDataStore.filter(s => s.isTrashed);
-    document.getElementById('trashStdTable').innerHTML = trashedStd.length === 0 ?
-      '<tr><td colspan="4">No standard records in trash.</td></tr>' :
-      trashedStd.map(s => `
-        <tr>
-          <td>${s.fullName || '-'}</td>
-          <td>${s.grade || '-'}</td>
-          <td>${s.phone || '-'}</td>
-          <td>
-            <button class="btn-action btn-restore" onclick="trashStd('${s._id}', false)">Restore</button>
-            <button class="btn-action btn-delete" onclick="deleteStdPermanent('${s._id}')">Delete Permanently</button>
-          </td>
-        </tr>
-      `).join('');
+    // 2 — OFFICIAL active
+    const activeOff = offDataStore.filter(s => !s.isTrashed && (
+      !offQ ||
+      (`${s.firstName||''} ${s.fathersName||''} ${s.grandfathersName||''}`).toLowerCase().includes(offQ) ||
+      (s.kebele || '').toLowerCase().includes(offQ)
+    ));
+    document.getElementById('offTable').innerHTML = activeOff.length === 0
+      ? '<tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:20px;">No active records found.</td></tr>'
+      : activeOff.map((s, i) => `
+          <tr>
+            <td style="color:#94a3b8;font-size:0.78rem">${i + 1}</td>
+            <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : '<span style="font-size:0.72rem;color:#94a3b8">No photo</span>'}</td>
+            <td><b>${s.firstName||''} ${s.fathersName||''} ${s.grandfathersName||''}</b></td>
+            <td>${s.sex || '—'}</td>
+            <td>${s.gradeLevel||'—'} / ${s.section||'—'}</td>
+            <td>${s.kebele || '—'}</td>
+            <td>${s.parentGuardianPhone || '—'}</td>
+            <td style="white-space:nowrap">
+              <button class="btn-icon ic-view"  onclick="openCert('${s._id}')"         title="👁️ View Full Record">👁️</button>
+              <button class="btn-icon ic-edit"  onclick="openOffEdit('${s._id}')"       title="✏️ Edit">✏️</button>
+              <button class="btn-icon ic-trash" onclick="trashOff('${s._id}',true)"    title="🗑 Move to Trash">🗑️</button>
+            </td>
+          </tr>`).join('');
 
-    const trashedOff = offDataStore.filter(s => s.isTrashed);
-    document.getElementById('trashOffTable').innerHTML = trashedOff.length === 0 ?
-      '<tr><td colspan="4">No official records in trash.</td></tr>' :
-      trashedOff.map(s => `
-        <tr>
-          <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : 'No Photo'}</td>
-          <td>${s.firstName || ''} ${s.fathersName || ''} ${s.grandfathersName || ''}</td>
-          <td>${s.gradeLevel || ''} - ${s.section || ''}</td>
-          <td>
-            <button class="btn-action btn-restore" onclick="trashOff('${s._id}', false)">Restore</button>
-            <button class="btn-action btn-delete" onclick="deleteOffPermanent('${s._id}')">Delete Permanently</button>
-          </td>
-        </tr>
-      `).join('');
+    // 3 — TRASH standard
+    const trStd = stdDataStore.filter(s => s.isTrashed);
+    document.getElementById('trashStdTable').innerHTML = trStd.length === 0
+      ? '<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:16px;">Empty</td></tr>'
+      : trStd.map(s => `
+          <tr>
+            <td>${s.fullName || '—'}</td>
+            <td>${s.grade   || '—'}</td>
+            <td>${s.phone || s.guardianPhone || '—'}</td>
+            <td style="white-space:nowrap">
+              <button class="btn-icon ic-restore" onclick="trashStd('${s._id}',false)"      title="♻️ Restore">♻️</button>
+              <button class="btn-icon ic-delete"  onclick="deleteStdPermanent('${s._id}')"  title="❌ Delete Forever">❌</button>
+            </td>
+          </tr>`).join('');
+
+    // 4 — TRASH official
+    const trOff = offDataStore.filter(s => s.isTrashed);
+    document.getElementById('trashOffTable').innerHTML = trOff.length === 0
+      ? '<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:16px;">Empty</td></tr>'
+      : trOff.map(s => `
+          <tr>
+            <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : '—'}</td>
+            <td>${s.firstName||''} ${s.fathersName||''} ${s.grandfathersName||''}</td>
+            <td>${s.gradeLevel||'—'} / ${s.section||'—'}</td>
+            <td style="white-space:nowrap">
+              <button class="btn-icon ic-restore" onclick="trashOff('${s._id}',false)"      title="♻️ Restore">♻️</button>
+              <button class="btn-icon ic-delete"  onclick="deleteOffPermanent('${s._id}')"  title="❌ Delete Forever">❌</button>
+            </td>
+          </tr>`).join('');
   }
 
-  // RENDER COMPLETE FORM PAGE LIKE REGISTRATION FORM
-  function renderFullOfficialPage(id) {
+  /* ── CERTIFICATE VIEW ──────────────────────────────────────────────── */
+  function f(v) { return (v !== undefined && v !== null && v !== '') ? v : '—'; }
+
+  function openCert(id) {
     const s = offDataStore.find(i => i._id === id);
     if (!s) return;
-
-    const html = `
-      <div class="reg-card">
-        <div class="reg-header">
-          <div>
-            <div class="reg-title">KILTU KARA SECONDARY SCHOOL STUDENT REGISTRATION FORM 2019</div>
-            <div style="font-size:0.8rem; color:#64748b;">Official School Census & Student Data Record</div>
-          </div>
-          <div class="reg-photo">
-            ${s.photo ? `<img src="${s.photo}">` : 'Photo'}
-          </div>
+    document.getElementById('certBody').innerHTML = `
+      <div class="cert-head">
+        <div class="cert-school-info">
+          <h2>Kiltu Kara Secondary School<br>Student Registration Form 2019</h2>
+          <p>Official School Census &amp; Student Data Record</p>
+          <p style="margin-top:6px;font-size:0.78rem;color:#059669;">
+            Submitted: ${s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '—'}
+          </p>
         </div>
-
-        <div class="section-banner">1. STUDENT BASIC DATA TEMPLATE</div>
-        <div class="field-grid">
-          <div class="field-box"><div class="field-label">Has Student ID?</div><div class="field-val">${s.hasStudentId || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Student ID</div><div class="field-val">${s.studentId || '-'}</div></div>
-          <div class="field-box"><div class="field-label">First Name</div><div class="field-val">${s.firstName || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Father's Name</div><div class="field-val">${s.fathersName || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Grandfather's Name</div><div class="field-val">${s.grandfathersName || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Admission Type</div><div class="field-val">${s.admissionType || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Sex</div><div class="field-val">${s.sex || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Date Of Birth</div><div class="field-val">${s.dateOfBirth || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Disability</div><div class="field-val">${s.disability || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Disability Type</div><div class="field-val">${s.disabilityType || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Country Of Birth</div><div class="field-val">${s.countryOfBirth || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Region Of Birth</div><div class="field-val">${s.regionOfBirth || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Zone Of Birth</div><div class="field-val">${s.zoneOfBirth || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Woreda Of Birth</div><div class="field-val">${s.woredaOfBirth || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Nationality</div><div class="field-val">${s.nationality || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Region</div><div class="field-val">${s.region || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Zone</div><div class="field-val">${s.zone || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Woreda</div><div class="field-val">${s.woreda || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Kebele</div><div class="field-val">${s.kebele || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Location Type</div><div class="field-val">${s.locationType || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Economic Status</div><div class="field-val">${s.studentEconomicStatus || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Parent Status</div><div class="field-val">${s.parentStatus || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Father Edu Level</div><div class="field-val">${s.fatherEducationLevel || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Mother Edu Level</div><div class="field-val">${s.motherEducationLevel || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Parent Name</div><div class="field-val">${s.parentGuardianFullName || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Parent Phone</div><div class="field-val">${s.parentGuardianPhone || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Family Head Gender</div><div class="field-val">${s.familyHeadGender || '-'}</div></div>
-          <div class="field-box"><div class="field-label">National ID</div><div class="field-val">${s.nationalId || '-'}</div></div>
-        </div>
-
-        <div class="section-banner">2. STUDENTS ENROLLMENT TEMPLATE</div>
-        <div class="field-grid">
-          <div class="field-box"><div class="field-label">Admission Category</div><div class="field-val">${s.admissionCategory || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Admission Modality</div><div class="field-val">${s.admissionModality || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Grade Level</div><div class="field-val">${s.gradeLevel || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Section</div><div class="field-val">${s.section || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Education Stream</div><div class="field-val">${s.educationStream || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Career 1st Field</div><div class="field-val">${s.careerTechnical1stField || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Career 2nd Field</div><div class="field-val">${s.careerTechnical2ndField || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Textbooks Count</div><div class="field-val">${s.numberOfTextbooks || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Instruction Language</div><div class="field-val">${s.mainInstructionalLanguage || '-'}</div></div>
-          <div class="field-box"><div class="field-label">School Feeding</div><div class="field-val">${s.schoolFeedingParticipation || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Ration Home Taking</div><div class="field-val">${s.foodRationHomeTaking || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Meals Per Week</div><div class="field-val">${s.numberOfMealsPerWeek || '-'}</div></div>
-          <div class="field-box"><div class="field-label">Average (%)</div><div class="field-val">${s.average || '-'}</div></div>
+        <div class="cert-photo">
+          ${s.photo ? `<img src="${s.photo}" alt="Student Photo">` : 'No Photo'}
         </div>
       </div>
-    `;
 
-    document.getElementById('officialPageContainer').innerHTML = html;
-    document.getElementById('officialPageContainer').scrollIntoView({ behavior: 'smooth' });
+      <div class="cert-section">1. Student Basic Data</div>
+      <div class="cert-grid">
+        ${cf('Has Student ID',     f(s.hasStudentId))}
+        ${cf('Student ID',         f(s.studentId))}
+        ${cf('First Name',         f(s.firstName))}
+        ${cf("Father's Name",      f(s.fathersName))}
+        ${cf("Grandfather's Name", f(s.grandfathersName))}
+        ${cf('Admission Type',     f(s.admissionType))}
+        ${cf('Sex',                f(s.sex))}
+        ${cf('Date of Birth',      f(s.dateOfBirth))}
+        ${cf('Disability',         f(s.disability))}
+        ${cf('Disability Type',    f(s.disabilityType))}
+        ${cf('Country of Birth',   f(s.countryOfBirth))}
+        ${cf('Region of Birth',    f(s.regionOfBirth))}
+        ${cf('Zone of Birth',      f(s.zoneOfBirth))}
+        ${cf('Woreda of Birth',    f(s.woredaOfBirth))}
+        ${cf('Nationality',        f(s.nationality))}
+        ${cf('Region',             f(s.region))}
+        ${cf('Zone',               f(s.zone))}
+        ${cf('Woreda',             f(s.woreda))}
+        ${cf('Kebele',             f(s.kebele))}
+        ${cf('Location Type',      f(s.locationType))}
+        ${cf('Economic Status',    f(s.studentEconomicStatus))}
+        ${cf('Parent Status',      f(s.parentStatus))}
+        ${cf("Father's Edu Level", f(s.fatherEducationLevel))}
+        ${cf("Mother's Edu Level", f(s.motherEducationLevel))}
+        ${cf('Parent / Guardian',  f(s.parentGuardianFullName))}
+        ${cf('Parent Email',       f(s.parentGuardianEmail))}
+        ${cf('Parent Phone',       f(s.parentGuardianPhone))}
+        ${cf('Family Head Gender', f(s.familyHeadGender))}
+        ${cf('National ID',        f(s.nationalId))}
+      </div>
+
+      <div class="cert-section">2. Enrollment Template</div>
+      <div class="cert-grid">
+        ${cf('Admission Category',    f(s.admissionCategory))}
+        ${cf('Admission Modality',    f(s.admissionModality))}
+        ${cf('Grade Level',           f(s.gradeLevel))}
+        ${cf('Section',               f(s.section))}
+        ${cf('Education Stream',      f(s.educationStream))}
+        ${cf('Career 1st Field',      f(s.careerTechnical1stField))}
+        ${cf('Career 2nd Field',      f(s.careerTechnical2ndField))}
+        ${cf('Textbooks Count',       f(s.numberOfTextbooks))}
+        ${cf('Instruction Language',  f(s.mainInstructionalLanguage))}
+        ${cf('School Feeding',        f(s.schoolFeedingParticipation))}
+        ${cf('Ration Home Taking',    f(s.foodRationHomeTaking))}
+        ${cf('Meals Per Week',        f(s.numberOfMealsPerWeek))}
+        ${cf('Average (%)',           f(s.average))}
+      </div>
+
+      <div class="cert-actions">
+        <button class="btn-icon ic-edit"  style="width:auto;padding:0 14px;gap:6px;font-size:0.85rem"
+          onclick="openOffEdit('${s._id}');closeCert()">✏️ Edit</button>
+        <button class="btn-icon ic-trash" style="width:auto;padding:0 14px;gap:6px;font-size:0.85rem"
+          onclick="trashOff('${s._id}',true);closeCert()">🗑️ Move to Trash</button>
+        <button class="btn-icon ic-delete" style="width:auto;padding:0 14px;gap:6px;font-size:0.85rem"
+          onclick="deleteOffPermanent('${s._id}');closeCert()">❌ Delete Forever</button>
+      </div>
+    `;
+    document.getElementById('certOverlay').classList.add('open');
   }
 
-  // API ACTIONS
+  function cf(label, val) {
+    return `<div class="cert-field"><div class="cert-label">${label}</div><div class="cert-val">${val}</div></div>`;
+  }
+  function closeCert() { document.getElementById('certOverlay').classList.remove('open'); }
+  function printCert() { window.print(); }
+  document.getElementById('certOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeCert();
+  });
+
+  /* ── CHANGE PASSWORD ───────────────────────────────────────────────── */
+  async function submitChangePassword() {
+    const currentPassword = document.getElementById('cpCurrent').value;
+    const newPassword     = document.getElementById('cpNew').value;
+    const confirmPassword = document.getElementById('cpConfirm').value;
+    const masterKey       = document.getElementById('cpMaster').value;
+    const msgEl           = document.getElementById('cpMsg');
+
+    msgEl.className = 'modal-msg';
+    msgEl.textContent = '';
+
+    if (newPassword !== confirmPassword) {
+      msgEl.className = 'modal-msg error';
+      msgEl.textContent = 'New passwords do not match.';
+      return;
+    }
+    if (newPassword.length < 6) {
+      msgEl.className = 'modal-msg error';
+      msgEl.textContent = 'New password must be at least 6 characters.';
+      return;
+    }
+
+    try {
+      const res  = await fetch('/api/admin/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword, newPassword, masterKey })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        msgEl.className = 'modal-msg success';
+        msgEl.textContent = '✅ ' + data.message;
+        // Clear fields
+        ['cpCurrent','cpNew','cpConfirm','cpMaster'].forEach(id => {
+          document.getElementById(id).value = '';
+        });
+      } else {
+        msgEl.className = 'modal-msg error';
+        msgEl.textContent = '❌ ' + (data.message || 'Failed to update password.');
+      }
+    } catch {
+      msgEl.className = 'modal-msg error';
+      msgEl.textContent = '❌ Server connection error.';
+    }
+  }
+
+  /* ── CSV / EXCEL EXPORT ────────────────────────────────────────────── */
+  function getActiveStd() { return stdDataStore.filter(s => !s.isTrashed); }
+
+  function downloadStdCSV() {
+    const rows = getActiveStd();
+    if (!rows.length) { alert('No active records to export.'); return; }
+
+    const headers = [
+      'Full Name','Sex','Age','Grade','Section','Stream','Average (%)',
+      'Receipt No.','Woreda','Kebele','Guardian Name','Guardian Phone',
+      'Previous School','Registered At'
+    ];
+    const csv = [headers.join(','), ...rows.map(s => [
+      `"${s.fullName      || ''}"`,
+      `"${s.gender        || ''}"`,
+      s.age               || '',
+      `"${s.grade         || ''}"`,
+      `"${s.section       || ''}"`,
+      `"${s.stream        || ''}"`,
+      s.academicAverage || s.average || '',
+      `"${s.receiptNo     || ''}"`,
+      `"${s.woreda        || ''}"`,
+      `"${s.kebele        || ''}"`,
+      `"${s.guardianName  || ''}"`,
+      `"${s.phone || s.guardianPhone || ''}"`,
+      `"${s.previousSchool|| ''}"`,
+      `"${s.createdAt ? new Date(s.createdAt).toLocaleDateString() : ''}"`
+    ].join(','))].join('\n');
+
+    triggerDownload('\uFEFF' + csv, 'text/csv', 'KiltuKara_Standard_Students.csv');
+  }
+
+  function downloadStdExcel() {
+    const rows = getActiveStd();
+    if (!rows.length) { alert('No active records to export.'); return; }
+
+    const headers = [
+      'Full Name','Sex','Age','Grade','Section','Stream','Average (%)',
+      'Receipt No.','Woreda','Kebele','Guardian Name','Guardian Phone',
+      'Previous School','Registered At'
+    ];
+    const tHead = `<tr>${headers.map(h =>
+      `<th style="background:#1e293b;color:white;padding:8px;border:1px solid #cbd5e1">${h}</th>`
+    ).join('')}</tr>`;
+    const tBody = rows.map(s => `<tr>
+      ${etd(s.fullName)} ${etd(s.gender)} ${etd(s.age)} ${etd(s.grade)}
+      ${etd(s.section)} ${etd(s.stream)} ${etd(s.academicAverage || s.average)}
+      ${etd(s.receiptNo)} ${etd(s.woreda)} ${etd(s.kebele)}
+      ${etd(s.guardianName)} ${etd(s.phone || s.guardianPhone)}
+      ${etd(s.previousSchool)}
+      ${etd(s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '')}
+    </tr>`).join('');
+
+    const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+      <head><meta charset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>
+      <x:ExcelWorksheet><x:Name>Students</x:Name><x:WorksheetOptions><x:DisplayGridlines/>
+      </x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+      </head><body><table border="1">${tHead}${tBody}</table></body></html>`;
+
+    triggerDownload(html, 'application/vnd.ms-excel', 'KiltuKara_Standard_Students.xls');
+  }
+
+  function etd(v) {
+    return `<td style="padding:6px 10px;border:1px solid #e2e8f0">${(v !== undefined && v !== null) ? v : ''}</td>`;
+  }
+  function triggerDownload(content, mime, filename) {
+    const blob = new Blob([content], { type: mime });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  /* ── TRASH / DELETE ────────────────────────────────────────────────── */
   async function trashStd(id, isTrashed) {
     await fetch(`/api/admin/standard-students/${id}/trash`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'PATCH', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ isTrashed })
     });
     fetchAllData();
   }
-
   async function deleteStdPermanent(id) {
-    if (confirm('Permanently delete record?')) {
-      await fetch(`/api/admin/standard-students/${id}`, { method: 'DELETE' });
-      fetchAllData();
-    }
+    if (!confirm('Permanently delete this record? This cannot be undone.')) return;
+    await fetch(`/api/admin/standard-students/${id}`, { method: 'DELETE' });
+    fetchAllData();
   }
-
   async function trashOff(id, isTrashed) {
     await fetch(`/api/admin/official-students/${id}/trash`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'PATCH', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ isTrashed })
     });
-    document.getElementById('officialPageContainer').innerHTML = '';
+    fetchAllData();
+  }
+  async function deleteOffPermanent(id) {
+    if (!confirm('Permanently delete this official record? This cannot be undone.')) return;
+    await fetch(`/api/admin/official-students/${id}`, { method: 'DELETE' });
     fetchAllData();
   }
 
-  async function deleteOffPermanent(id) {
-    if (confirm('Permanently delete record?')) {
-      await fetch(`/api/admin/official-students/${id}`, { method: 'DELETE' });
-      fetchAllData();
-    }
-  }
-
+  /* ── EDIT STANDARD ─────────────────────────────────────────────────── */
   function openStdEdit(id) {
     const s = stdDataStore.find(i => i._id === id);
     if (!s) return;
-    document.getElementById('editStdId').value = s._id;
-    document.getElementById('editStdFullName').value = s.fullName || '';
-    document.getElementById('editStdGender').value = s.gender || 'Male';
-    document.getElementById('editStdAge').value = s.age || '';
-    document.getElementById('editStdGrade').value = s.grade || '';
-    document.getElementById('editStdStream').value = s.stream || '';
-    document.getElementById('editStdPhone').value = s.phone || '';
-    document.getElementById('editStdGuardian').value = s.guardianName || '';
-    document.getElementById('editStdAddress').value = s.address || '';
-    document.getElementById('editStdModal').style.display = 'flex';
+    document.getElementById('editStdId').value        = s._id;
+    document.getElementById('editStdFullName').value  = s.fullName    || '';
+    document.getElementById('editStdGender').value    = s.gender      || 'Male';
+    document.getElementById('editStdAge').value       = s.age         || '';
+    document.getElementById('editStdGrade').value     = s.grade       || '';
+    document.getElementById('editStdSection').value   = s.section     || '';
+    document.getElementById('editStdStream').value    = s.stream      || '';
+    document.getElementById('editStdAverage').value   = s.academicAverage || s.average || '';
+    document.getElementById('editStdReceiptNo').value = s.receiptNo   || '';
+    document.getElementById('editStdWoreda').value    = s.woreda      || '';
+    document.getElementById('editStdKebele').value    = s.kebele      || '';
+    document.getElementById('editStdGuardian').value  = s.guardianName|| '';
+    document.getElementById('editStdPhone').value     = s.phone || s.guardianPhone || '';
+    openModal('editStdModal');
   }
-
   async function saveStdEdit() {
     const id = document.getElementById('editStdId').value;
     await fetch(`/api/admin/standard-students/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'PUT', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        fullName: document.getElementById('editStdFullName').value,
-        gender: document.getElementById('editStdGender').value,
-        age: document.getElementById('editStdAge').value,
-        grade: document.getElementById('editStdGrade').value,
-        stream: document.getElementById('editStdStream').value,
-        phone: document.getElementById('editStdPhone').value,
-        guardianName: document.getElementById('editStdGuardian').value,
-        address: document.getElementById('editStdAddress').value
+        fullName:        document.getElementById('editStdFullName').value,
+        gender:          document.getElementById('editStdGender').value,
+        age:             document.getElementById('editStdAge').value,
+        grade:           document.getElementById('editStdGrade').value,
+        section:         document.getElementById('editStdSection').value,
+        stream:          document.getElementById('editStdStream').value,
+        academicAverage: document.getElementById('editStdAverage').value,
+        average:         document.getElementById('editStdAverage').value,
+        receiptNo:       document.getElementById('editStdReceiptNo').value,
+        woreda:          document.getElementById('editStdWoreda').value,
+        kebele:          document.getElementById('editStdKebele').value,
+        guardianName:    document.getElementById('editStdGuardian').value,
+        phone:           document.getElementById('editStdPhone').value
       })
     });
     closeModal('editStdModal');
     fetchAllData();
   }
 
+  /* ── EDIT OFFICIAL ─────────────────────────────────────────────────── */
   function openOffEdit(id) {
     const s = offDataStore.find(i => i._id === id);
     if (!s) return;
-    document.getElementById('editOffId').value = s._id;
-    document.getElementById('editOffStudentId').value = s.studentId || '';
-    document.getElementById('editOffFirstName').value = s.firstName || '';
-    document.getElementById('editOffFathersName').value = s.fathersName || '';
-    document.getElementById('editOffGrandfathersName').value = s.grandfathersName || '';
-    document.getElementById('editOffSex').value = s.sex || 'Male';
-    document.getElementById('editOffGradeLevel').value = s.gradeLevel || '';
-    document.getElementById('editOffSection').value = s.section || '';
-    document.getElementById('editOffKebele').value = s.kebele || '';
-    document.getElementById('editOffParentFullName').value = s.parentGuardianFullName || '';
-    document.getElementById('editOffParentPhone').value = s.parentGuardianPhone || '';
-    document.getElementById('editOffModal').style.display = 'flex';
+    document.getElementById('editOffId').value               = s._id;
+    document.getElementById('editOffStudentId').value        = s.studentId              || '';
+    document.getElementById('editOffFirstName').value        = s.firstName              || '';
+    document.getElementById('editOffFathersName').value      = s.fathersName            || '';
+    document.getElementById('editOffGrandfathersName').value = s.grandfathersName       || '';
+    document.getElementById('editOffSex').value              = s.sex                    || 'Male';
+    document.getElementById('editOffGradeLevel').value       = s.gradeLevel             || '';
+    document.getElementById('editOffSection').value          = s.section                || '';
+    document.getElementById('editOffKebele').value           = s.kebele                 || '';
+    document.getElementById('editOffParentFullName').value   = s.parentGuardianFullName || '';
+    document.getElementById('editOffParentPhone').value      = s.parentGuardianPhone    || '';
+    openModal('editOffModal');
   }
-
   async function saveOffEdit() {
     const id = document.getElementById('editOffId').value;
     await fetch(`/api/admin/official-students/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'PUT', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        studentId: document.getElementById('editOffStudentId').value,
-        firstName: document.getElementById('editOffFirstName').value,
-        fathersName: document.getElementById('editOffFathersName').value,
-        grandfathersName: document.getElementById('editOffGrandfathersName').value,
-        sex: document.getElementById('editOffSex').value,
-        gradeLevel: document.getElementById('editOffGradeLevel').value,
-        section: document.getElementById('editOffSection').value,
-        kebele: document.getElementById('editOffKebele').value,
+        studentId:              document.getElementById('editOffStudentId').value,
+        firstName:              document.getElementById('editOffFirstName').value,
+        fathersName:            document.getElementById('editOffFathersName').value,
+        grandfathersName:       document.getElementById('editOffGrandfathersName').value,
+        sex:                    document.getElementById('editOffSex').value,
+        gradeLevel:             document.getElementById('editOffGradeLevel').value,
+        section:                document.getElementById('editOffSection').value,
+        kebele:                 document.getElementById('editOffKebele').value,
         parentGuardianFullName: document.getElementById('editOffParentFullName').value,
-        parentGuardianPhone: document.getElementById('editOffParentPhone').value
+        parentGuardianPhone:    document.getElementById('editOffParentPhone').value
       })
     });
     closeModal('editOffModal');
     fetchAllData();
   }
 
+  /* ── BOOT ──────────────────────────────────────────────────────────── */
   fetchAllData();
 </script>
 </body>
 </html>
-
