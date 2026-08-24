@@ -372,12 +372,25 @@
 
   /* ── TAB SWITCHER ──────────────────────────────────────────────────── */
   function showTab(tab) {
+    console.log('Tab switched to:', tab);
+
     ['std','off','trash'].forEach(t => {
       document.getElementById(t + 'Section').style.display = (t === tab) ? 'block' : 'none';
     });
     document.getElementById('tabStdBtn').classList.toggle('active',   tab === 'std');
     document.getElementById('tabOffBtn').classList.toggle('active',   tab === 'off');
     document.getElementById('tabTrashBtn').classList.toggle('active', tab === 'trash');
+
+    // If data hasn't loaded yet (e.g. initial fetch failed), retry on tab switch
+    if (tab === 'off') {
+      console.log('Switched to Official Census tab');
+      if (!offDataStore.length) {
+        console.log('offDataStore empty — fetching official data...');
+        fetchAllData();
+      } else {
+        renderTables();
+      }
+    }
   }
 
   /* ── MODAL HELPERS ─────────────────────────────────────────────────── */
@@ -389,13 +402,34 @@
   let offDataStore = [];
 
   async function fetchAllData() {
-    const [resStd, resOff] = await Promise.all([
-      fetch('/api/admin/standard-students'),
-      fetch('/api/admin/official-students')
-    ]);
-    stdDataStore = await resStd.json();
-    offDataStore = await resOff.json();
-    renderTables();
+    try {
+      console.log('[fetchAllData] Fetching standard and official records...');
+      const [resStd, resOff] = await Promise.all([
+        fetch('/api/admin/standard-students'),
+        fetch('/api/admin/official-students')
+      ]);
+
+      // Guard: ensure response is JSON array, never let a bad response crash renderTables
+      const stdRaw = await resStd.json();
+      const offRaw = await resOff.json();
+
+      stdDataStore = Array.isArray(stdRaw) ? stdRaw : [];
+      offDataStore = Array.isArray(offRaw) ? offRaw : [];
+
+      console.log(`[fetchAllData] Loaded ${stdDataStore.length} standard, ${offDataStore.length} official records.`);
+      renderTables();
+    } catch (err) {
+      console.error('[fetchAllData] Failed to load data:', err);
+      // Show error state in both tables instead of blank
+      const errRow = (cols) =>
+        `<tr><td colspan="${cols}" style="text-align:center;color:#ef4444;padding:20px;">
+          ⚠ Failed to load records. Check server connection.
+        </td></tr>`;
+      document.getElementById('stdTable').innerHTML    = errRow(13);
+      document.getElementById('offTable').innerHTML    = errRow(8);
+      document.getElementById('trashStdTable').innerHTML = errRow(4);
+      document.getElementById('trashOffTable').innerHTML = errRow(4);
+    }
   }
 
   /* ── RENDER TABLES ─────────────────────────────────────────────────── */
@@ -785,7 +819,9 @@
       </x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
       </head><body><table border="1">${tHead}${tBody}</table></body></html>`;
 
-    triggerDownload(html, 'application/vnd.ms-excel', 'KiltuKara_Standard_Students.xls');
+    triggerDownload(buildExcelHtml(tHead + tBody, 'Students'),
+      'application/vnd.ms-excel', 'KiltuKara_Standard_Students.xls');
+  }
 
   function etd(v) {
     return `<td style="padding:6px 10px;border:1px solid #e2e8f0">${(v !== undefined && v !== null) ? v : ''}</td>`;
