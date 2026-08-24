@@ -22,36 +22,37 @@
     <main class="form-card">
       <div class="header-container">
         <h2>STUDENT REGISTRATION FORM</h2>
-        <p>Please complete all student and guardian information below</p>
+        <p>Fields marked <span style="color:#ef4444">*</span> are required</p>
       </div>
 
       <form id="registrationForm">
-        <!-- Full Name -->
+
+        <!-- Full Name — REQUIRED -->
         <div class="input-group">
-          <label for="fullName">Full Name</label>
+          <label for="fullName">Full Name <span style="color:#ef4444">*</span></label>
           <input type="text" id="fullName" placeholder="e.g. Dawit Zarihun" required>
         </div>
 
-        <!-- National ID & Receipt No -->
+        <!-- National ID & Receipt No — optional -->
         <div class="form-row">
           <div class="input-group">
             <label for="nationalId">National / Student ID</label>
-            <input type="text" id="nationalId" placeholder="e.g. 7106316487932437" required>
+            <input type="text" id="nationalId" placeholder="e.g. 7106316487932437">
           </div>
           <div class="input-group">
             <label for="receiptNo">Receipt No.</label>
-            <input type="text" id="receiptNo" placeholder="e.g. REC-2026-001" required>
+            <input type="text" id="receiptNo" placeholder="e.g. REC-2026-001">
           </div>
         </div>
 
-        <!-- Age & Gender -->
+        <!-- Age & Gender — Gender REQUIRED -->
         <div class="form-row">
           <div class="input-group">
             <label for="age">Age</label>
-            <input type="number" id="age" placeholder="Age" min="10" max="30" required>
+            <input type="number" id="age" placeholder="Age" min="10" max="30">
           </div>
           <div class="input-group">
-            <label for="gender">Gender</label>
+            <label for="gender">Gender <span style="color:#ef4444">*</span></label>
             <select id="gender" required>
               <option value="" disabled selected>Select Gender</option>
               <option value="M">M</option>
@@ -60,10 +61,10 @@
           </div>
         </div>
 
-        <!-- Grade, Stream & Section -->
+        <!-- Grade — REQUIRED & Stream — optional -->
         <div class="form-row">
           <div class="input-group">
-            <label for="grade">Grade</label>
+            <label for="grade">Grade <span style="color:#ef4444">*</span></label>
             <select id="grade" required>
               <option value="" disabled selected>Select Grade</option>
               <option value="Grade 9">Grade 9</option>
@@ -74,8 +75,8 @@
           </div>
           <div class="input-group">
             <label for="stream">Academic Stream</label>
-            <select id="stream" required>
-              <option value="" disabled selected>Select Stream</option>
+            <select id="stream">
+              <option value="">— Select Stream —</option>
               <option value="General">General</option>
               <option value="NS">Natural Science (NS)</option>
               <option value="SS">Social Science (SS)</option>
@@ -83,12 +84,12 @@
           </div>
         </div>
 
-        <!-- Section & Average -->
+        <!-- Section & Average — both optional -->
         <div class="form-row">
           <div class="input-group">
             <label for="section">Section</label>
-            <select id="section" required>
-              <option value="" disabled selected>Select Section</option>
+            <select id="section">
+              <option value="">— Select Section —</option>
               <option value="A">A</option>
               <option value="B">B</option>
               <option value="C">C</option>
@@ -98,39 +99,39 @@
           </div>
           <div class="input-group">
             <label for="average">Academic Average (%)</label>
-            <input type="number" id="average" placeholder="e.g. 85" min="0" max="100" required>
+            <input type="number" id="average" placeholder="e.g. 85" min="0" max="100">
           </div>
         </div>
 
-        <!-- Previous School -->
+        <!-- Previous School — optional -->
         <div class="form-row">
           <div class="input-group">
             <label for="previousSchool">Previous School</label>
-            <input type="text" id="previousSchool" placeholder="Previous school name" required>
+            <input type="text" id="previousSchool" placeholder="Previous school name">
           </div>
         </div>
 
-        <!-- Woreda & Kebele -->
+        <!-- Woreda & Kebele — optional -->
         <div class="form-row">
           <div class="input-group">
             <label for="woreda">Woreda</label>
-            <input type="text" id="woreda" placeholder="e.g. Kiltu Kara" required>
+            <input type="text" id="woreda" placeholder="e.g. Kiltu Kara">
           </div>
           <div class="input-group">
             <label for="kebele">Kebele</label>
-            <input type="text" id="kebele" placeholder="e.g. 01" required>
+            <input type="text" id="kebele" placeholder="e.g. 01">
           </div>
         </div>
 
-        <!-- Guardian Information -->
+        <!-- Guardian Information — optional -->
         <div class="form-row">
           <div class="input-group">
             <label for="guardianName">Guardian Name</label>
-            <input type="text" id="guardianName" placeholder="Guardian Full Name" required>
+            <input type="text" id="guardianName" placeholder="Guardian Full Name">
           </div>
           <div class="input-group">
             <label for="guardianPhone">Guardian Phone</label>
-            <input type="tel" id="guardianPhone" placeholder="09xxxxxxxx" required>
+            <input type="tel" id="guardianPhone" placeholder="09xxxxxxxx">
           </div>
         </div>
 
@@ -146,23 +147,23 @@
   <script>
     document.getElementById('registrationForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       const payload = {
-        fullName: document.getElementById('fullName').value,
-        nationalId: document.getElementById('nationalId').value,
-        receiptNo: document.getElementById('receiptNo').value,
-        age: document.getElementById('age').value,
-        gender: document.getElementById('gender').value,
-        grade: document.getElementById('grade').value,
-        stream: document.getElementById('stream').value,
-        section: document.getElementById('section').value,
-        average: document.getElementById('average').value,
+        fullName:        document.getElementById('fullName').value,
+        nationalId:      document.getElementById('nationalId').value,
+        receiptNo:       document.getElementById('receiptNo').value,
+        age:             document.getElementById('age').value,
+        gender:          document.getElementById('gender').value,
+        grade:           document.getElementById('grade').value,
+        stream:          document.getElementById('stream').value,
+        section:         document.getElementById('section').value,
+        average:         document.getElementById('average').value,
         academicAverage: document.getElementById('average').value,
-        previousSchool: document.getElementById('previousSchool').value,
-        woreda: document.getElementById('woreda').value,
-        kebele: document.getElementById('kebele').value,
-        guardianName: document.getElementById('guardianName').value,
-        guardianPhone: document.getElementById('guardianPhone').value
+        previousSchool:  document.getElementById('previousSchool').value,
+        woreda:          document.getElementById('woreda').value,
+        kebele:          document.getElementById('kebele').value,
+        guardianName:    document.getElementById('guardianName').value,
+        guardianPhone:   document.getElementById('guardianPhone').value
       };
 
       try {
@@ -172,11 +173,12 @@
           body: JSON.stringify(payload)
         });
 
+        const data = await res.json();
         if (res.ok) {
           alert('Student registered successfully!');
           document.getElementById('registrationForm').reset();
         } else {
-          alert('Error submitting registration.');
+          alert('Error: ' + (data.error || 'Registration failed.'));
         }
       } catch (err) {
         alert('Server connection failed. Please try again.');

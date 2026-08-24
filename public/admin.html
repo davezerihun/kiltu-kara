@@ -45,7 +45,11 @@
     .dl-group { display: flex; gap: 8px; flex-wrap: wrap; }
 
     /* SEARCH */
-    .search-bar { width: 100%; max-width: 360px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.87rem; outline: none; margin-bottom: 12px; }
+    .search-bar { width: 100%; max-width: 360px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.87rem; outline: none; }
+
+    /* FILTER ROW */
+    .filter-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+    .grade-filter { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.87rem; outline: none; background: white; min-width: 140px; cursor: pointer; }
 
     /* TABLE */
     .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px; }
@@ -134,12 +138,56 @@
     .modal-msg.success { background: #dcfce7; color: #166534; display: block; }
     .modal-msg.error   { background: #fee2e2; color: #991b1b; display: block; }
 
-    /* PRINT STYLES */
+    /* ── PRINT: Full multi-page modal output ─────────────────────────── */
     @media print {
-      body * { visibility: hidden; }
-      .cert-paper, .cert-paper * { visibility: visible; }
-      .cert-paper { position: fixed; inset: 0; box-shadow: none; border-radius: 0; max-width: 100%; }
-      .cert-toolbar, .cert-actions { display: none !important; }
+      /* Hide all dashboard chrome */
+      body > *                  { display: none !important; }
+      .header, .tabs, .card,
+      .admin-container          { display: none !important; }
+
+      /* Reveal only the open certificate overlay */
+      .cert-overlay.open        { display: block !important; }
+
+      /* Overlay: reset fixed positioning so content flows across pages */
+      .cert-overlay.open {
+        position: absolute !important;
+        top: 0 !important; left: 0 !important;
+        width: 100% !important; height: auto !important;
+        max-height: none !important;
+        background: none !important;
+        padding: 0 !important; margin: 0 !important;
+        overflow: visible !important;
+        z-index: auto !important;
+      }
+
+      /* Paper: full width, no height clipping */
+      .cert-paper {
+        position: static !important;
+        width: 100% !important; max-width: 100% !important;
+        height: auto !important; max-height: none !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+      }
+
+      /* Body of cert: unconstrained height */
+      .cert-body {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        padding: 12px 16px !important;
+      }
+
+      /* Hide toolbar and action buttons */
+      .cert-toolbar,
+      .cert-actions             { display: none !important; }
+
+      /* Avoid awkward page breaks inside sections */
+      .cert-section             { page-break-inside: avoid; break-inside: avoid; }
+      .cert-grid                { page-break-inside: avoid; break-inside: avoid; }
+      .cert-field               { page-break-inside: avoid; break-inside: avoid; }
+      .cert-section + .cert-grid{ page-break-before: avoid; break-before: avoid; }
+
       @page { size: A4 portrait; margin: 12mm; }
     }
   </style>
@@ -176,7 +224,16 @@
         <button class="btn-dl btn-excel" onclick="downloadStdExcel()">⬇ Excel</button>
       </div>
     </div>
-    <input class="search-bar" type="text" id="stdSearch" placeholder="Search by name, receipt, phone…" oninput="renderTables()">
+    <div class="filter-row">
+      <input class="search-bar" type="text" id="stdSearch" placeholder="Search by name, receipt, phone…" oninput="renderTables()">
+      <select class="grade-filter" id="stdGradeFilter" onchange="renderTables()">
+        <option value="">All Grades</option>
+        <option value="Grade 9">Grade 9</option>
+        <option value="Grade 10">Grade 10</option>
+        <option value="Grade 11">Grade 11</option>
+        <option value="Grade 12">Grade 12</option>
+      </select>
+    </div>
     <div class="table-wrapper">
       <table>
         <thead>
@@ -212,7 +269,16 @@
         <button class="btn-dl btn-excel" onclick="downloadOffExcel()">⬇ Excel</button>
       </div>
     </div>
-    <input class="search-bar" type="text" id="offSearch" placeholder="Search by name or kebele…" oninput="renderTables()">
+    <div class="filter-row">
+      <input class="search-bar" type="text" id="offSearch" placeholder="Search by name or kebele…" oninput="renderTables()">
+      <select class="grade-filter" id="offGradeFilter" onchange="renderTables()">
+        <option value="">All Grades</option>
+        <option value="Grade 9">Grade 9</option>
+        <option value="Grade 10">Grade 10</option>
+        <option value="Grade 11">Grade 11</option>
+        <option value="Grade 12">Grade 12</option>
+      </select>
+    </div>
     <div class="table-wrapper">
       <table>
         <thead>
@@ -434,16 +500,21 @@
 
   /* ── RENDER TABLES ─────────────────────────────────────────────────── */
   function renderTables() {
-    const stdQ = (document.getElementById('stdSearch')?.value || '').toLowerCase();
-    const offQ = (document.getElementById('offSearch')?.value  || '').toLowerCase();
+    const stdQ  = (document.getElementById('stdSearch')?.value  || '').toLowerCase();
+    const offQ  = (document.getElementById('offSearch')?.value  || '').toLowerCase();
+    const stdGF = (document.getElementById('stdGradeFilter')?.value || '');
+    const offGF = (document.getElementById('offGradeFilter')?.value || '');
 
     // 1 — STANDARD active (expanded columns)
-    const activeStd = stdDataStore.filter(s => !s.isTrashed && (
-      !stdQ ||
-      (s.fullName  || '').toLowerCase().includes(stdQ) ||
-      (s.receiptNo || '').toLowerCase().includes(stdQ) ||
-      (s.phone || s.guardianPhone || '').includes(stdQ)
-    ));
+    const activeStd = stdDataStore.filter(s => !s.isTrashed
+      && (!stdGF || (s.grade || '') === stdGF)
+      && (
+        !stdQ ||
+        (s.fullName  || '').toLowerCase().includes(stdQ) ||
+        (s.receiptNo || '').toLowerCase().includes(stdQ) ||
+        (s.phone || s.guardianPhone || '').includes(stdQ)
+      )
+    );
     document.getElementById('stdTable').innerHTML = activeStd.length === 0
       ? '<tr><td colspan="13" style="text-align:center;color:#94a3b8;padding:20px;">No active records found.</td></tr>'
       : activeStd.map((s, i) => `
@@ -467,11 +538,14 @@
           </tr>`).join('');
 
     // 2 — OFFICIAL active
-    const activeOff = offDataStore.filter(s => !s.isTrashed && (
-      !offQ ||
-      (`${s.firstName||''} ${s.fathersName||''} ${s.grandfathersName||''}`).toLowerCase().includes(offQ) ||
-      (s.kebele || '').toLowerCase().includes(offQ)
-    ));
+    const activeOff = offDataStore.filter(s => !s.isTrashed
+      && (!offGF || (s.gradeLevel || '') === offGF)
+      && (
+        !offQ ||
+        (`${s.firstName||''} ${s.fathersName||''} ${s.grandfathersName||''}`).toLowerCase().includes(offQ) ||
+        (s.kebele || '').toLowerCase().includes(offQ)
+      )
+    );
     document.getElementById('offTable').innerHTML = activeOff.length === 0
       ? '<tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:20px;">No active records found.</td></tr>'
       : activeOff.map((s, i) => `
