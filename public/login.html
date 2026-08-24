@@ -50,9 +50,11 @@
 
         if (data.success) {
           localStorage.setItem('adminToken', data.token);
+          localStorage.setItem('adminUsername', username.toLowerCase().trim());
           window.location.href = '/admin.html';
         } else {
           document.getElementById('errorMsg').style.display = 'block';
+          document.getElementById('errorMsg').textContent = data.message || 'Invalid username or password';
         }
       } catch (err) {
         alert('Server error connecting to login API');

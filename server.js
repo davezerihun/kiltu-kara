@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const app = express();
@@ -14,8 +15,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // ── DATABASE ──────────────────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kiltu_kara_db')
-  .then(() => console.log('Connected to MongoDB successfully'))
+  .then(() => {
+    console.log('Connected to MongoDB successfully');
+    seedAdminIfNone(); // ensure at least one admin exists on first boot
+  })
   .catch(err => console.error('MongoDB connection error:', err));
+
+// ── ADMIN SCHEMA (stored in MongoDB — survives restarts & works on all devices) ─
+const adminSchema = new mongoose.Schema({
+  username:     { type: String, required: true, unique: true, trim: true, lowercase: true },
+  passwordHash: { type: String, required: true },
+  createdAt:    { type: Date, default: Date.now }
+});
+const Admin = mongoose.model('Admin', adminSchema);
 
 // ── SCHEMAS ───────────────────────────────────────────────────────────────────
 
@@ -103,6 +115,22 @@ function toNum(v) {
   return isNaN(n) ? undefined : n;
 }
 
+// ── SEED: create default admin on first boot if no admin exists ───────────────
+async function seedAdminIfNone() {
+  try {
+    const count = await Admin.countDocuments();
+    if (count === 0) {
+      const defaultUser = process.env.ADMIN_USER || 'admin';
+      const defaultPass = process.env.ADMIN_PASS || 'admin123';
+      const hash = await bcrypt.hash(defaultPass, 10);
+      await Admin.create({ username: defaultUser, passwordHash: hash });
+      console.log(`[SEED] Default admin "${defaultUser}" created in MongoDB.`);
+    }
+  } catch (err) {
+    console.error('[SEED] Failed to seed admin:', err.message);
+  }
+}
+
 // ── PUBLIC SUBMISSION ROUTES ──────────────────────────────────────────────────
 
 // Standard registration
@@ -153,48 +181,71 @@ app.post('/api/official-register', async (req, res) => {
 
 // ── ADMIN AUTH ────────────────────────────────────────────────────────────────
 
-app.post('/api/admin/login', (req, res) => {
-  const { username, password } = req.body;
-  const ADMIN_USER = process.env.ADMIN_USER || 'admin';
-  const ADMIN_PASS = process.env.ADMIN_PASS || 'admin123';
+// LOGIN — checks MongoDB, works across all devices and deployments
+app.post('/api/admin/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: 'Username and password are required.' });
+    }
 
-  if (username === ADMIN_USER && password === ADMIN_PASS) {
+    const admin = await Admin.findOne({ username: username.toLowerCase().trim() });
+    if (!admin) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+    }
+
+    const match = await bcrypt.compare(password, admin.passwordHash);
+    if (!match) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+    }
+
+    console.log(`[AUTH] Admin "${admin.username}" logged in.`);
     res.json({ success: true, token: 'authenticated-admin-session' });
-  } else {
-    res.status(401).json({ success: false, message: 'Invalid credentials' });
+  } catch (err) {
+    console.error('[AUTH] Login error:', err.message);
+    res.status(500).json({ success: false, message: 'Server error during login.' });
   }
 });
 
-// ── CHANGE PASSWORD ───────────────────────────────────────────────────────────
-// Requires: currentPassword, newPassword, masterKey
-// masterKey must match MASTER_SECRET_KEY in .env (prevents unauthorised changes)
-app.post('/api/admin/change-password', (req, res) => {
-  const { currentPassword, newPassword, masterKey } = req.body;
+// CHANGE PASSWORD — verifies master key + current password, saves bcrypt hash to MongoDB
+app.post('/api/admin/change-password', async (req, res) => {
+  try {
+    const { username, currentPassword, newPassword, masterKey } = req.body;
 
-  const MASTER_KEY  = process.env.MASTER_SECRET_KEY || 'kiltu-master-2024';
-  const ADMIN_PASS  = process.env.ADMIN_PASS         || 'admin123';
+    // 1. Verify master permission key
+    const MASTER_KEY = process.env.MASTER_SECRET_KEY || 'kiltu-master-2024';
+    if (masterKey !== MASTER_KEY) {
+      return res.status(403).json({ success: false, message: 'Invalid master permission key.' });
+    }
 
-  // 1. Verify master permission key first
-  if (masterKey !== MASTER_KEY) {
-    return res.status(403).json({ success: false, message: 'Invalid master permission key.' });
+    // 2. Basic strength check
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 6 characters.' });
+    }
+
+    // 3. Find the admin in MongoDB
+    const adminName = (username || process.env.ADMIN_USER || 'admin').toLowerCase().trim();
+    const admin = await Admin.findOne({ username: adminName });
+    if (!admin) {
+      return res.status(404).json({ success: false, message: `Admin "${adminName}" not found.` });
+    }
+
+    // 4. Verify current password against stored hash
+    const match = await bcrypt.compare(currentPassword, admin.passwordHash);
+    if (!match) {
+      return res.status(401).json({ success: false, message: 'Current password is incorrect.' });
+    }
+
+    // 5. Hash new password and save to MongoDB — persists across restarts and all devices
+    admin.passwordHash = await bcrypt.hash(newPassword, 10);
+    await admin.save();
+
+    console.log(`[AUTH] Password changed for admin "${adminName}".`);
+    res.json({ success: true, message: 'Password updated successfully. New password is active on all devices.' });
+  } catch (err) {
+    console.error('[AUTH] Change password error:', err.message);
+    res.status(500).json({ success: false, message: 'Server error while changing password.' });
   }
-
-  // 2. Verify current password
-  if (currentPassword !== ADMIN_PASS) {
-    return res.status(401).json({ success: false, message: 'Current password is incorrect.' });
-  }
-
-  // 3. Basic strength check
-  if (!newPassword || newPassword.length < 6) {
-    return res.status(400).json({ success: false, message: 'New password must be at least 6 characters.' });
-  }
-
-  // 4. Write new password back to process.env so it takes effect for this session.
-  //    For persistence across restarts, the admin must update their .env file manually.
-  process.env.ADMIN_PASS = newPassword;
-
-  console.log('[AUTH] Admin password changed successfully.');
-  res.json({ success: true, message: 'Password updated successfully. Update your .env file to make it permanent.' });
 });
 
 // ── STANDARD STUDENT ROUTES ───────────────────────────────────────────────────

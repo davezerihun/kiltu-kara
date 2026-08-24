@@ -594,14 +594,19 @@
       const res  = await fetch('/api/admin/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentPassword, newPassword, masterKey })
+        // send username so the server knows which admin record to update
+        body: JSON.stringify({
+          username: localStorage.getItem('adminUsername') || 'admin',
+          currentPassword,
+          newPassword,
+          masterKey
+        })
       });
       const data = await res.json();
 
       if (res.ok) {
         msgEl.className = 'modal-msg success';
         msgEl.textContent = '✅ ' + data.message;
-        // Clear fields
         ['cpCurrent','cpNew','cpConfirm','cpMaster'].forEach(id => {
           document.getElementById(id).value = '';
         });
