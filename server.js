@@ -14,12 +14,31 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ── DATABASE ──────────────────────────────────────────────────────────────────
-mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kiltu_kara_db')
+const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kiltu_kara_db';
+
+mongoose.connect(MONGO_URI, {
+  // Connection pool — handles parallel requests on Render without queuing
+  maxPoolSize:        20,   // up to 20 simultaneous DB connections
+  minPoolSize:        2,    // keep 2 warm connections ready
+  serverSelectionTimeoutMS: 8000,  // fail fast if MongoDB Atlas is unreachable
+  socketTimeoutMS:    45000,       // drop idle sockets after 45 s
+  connectTimeoutMS:   10000,       // initial connection timeout
+  heartbeatFrequencyMS: 10000,     // check connection health every 10 s
+  retryWrites:        true,
+})
   .then(() => {
     console.log('Connected to MongoDB successfully');
-    seedAdminIfNone(); // ensure at least one admin exists on first boot
+    seedAdminIfNone();
   })
   .catch(err => console.error('MongoDB connection error:', err));
+
+// Reconnect on unexpected disconnect (important for Render free-tier sleep)
+mongoose.connection.on('disconnected', () => {
+  console.warn('[DB] Mongoose disconnected — will auto-reconnect.');
+});
+mongoose.connection.on('error', (err) => {
+  console.error('[DB] Mongoose error:', err.message);
+});
 
 // ── ADMIN SCHEMA (stored in MongoDB — survives restarts & works on all devices) ─
 const adminSchema = new mongoose.Schema({
@@ -32,16 +51,17 @@ const Admin = mongoose.model('Admin', adminSchema);
 // ── SCHEMAS ───────────────────────────────────────────────────────────────────
 
 const standardStudentSchema = new mongoose.Schema({
-  fullName:        { type: String, default: 'Unnamed Student' },
+  fullName:        { type: String,  default: 'Unnamed Student' },
   firstName:       String,
   lastName:        String,
   gender:          String,
-  age:             Number,
+  age:             { type: Number, min: 0,   max: 100  },
   grade:           String,
   section:         String,
   stream:          String,
-  academicAverage: Number,
-  average:         Number,
+  // Float — explicitly set to Number so 87.5 stores correctly
+  academicAverage: { type: Number, min: 0,   max: 100  },
+  average:         { type: Number, min: 0,   max: 100  },
   nationalId:      String,
   receiptNo:       String,
   previousSchool:  String,
@@ -93,12 +113,13 @@ const officialStudentSchema = new mongoose.Schema({
   educationStream:          String,
   careerTechnical1stField:  String,
   careerTechnical2ndField:  String,
-  numberOfTextbooks:        Number,
+  numberOfTextbooks:        { type: Number, min: 0 },
   mainInstructionalLanguage:String,
   schoolFeedingParticipation:String,
   foodRationHomeTaking:     String,
-  numberOfMealsPerWeek:     Number,
-  average:                  Number,
+  numberOfMealsPerWeek:     { type: Number, min: 0 },
+  // Float — accepts decimal averages like 87.5
+  average:                  { type: Number, min: 0, max: 100 },
   isTrashed:                { type: Boolean, default: false },
   createdAt:                { type: Date,    default: Date.now }
 });
@@ -134,9 +155,15 @@ async function seedAdminIfNone() {
 // ── PUBLIC SUBMISSION ROUTES ──────────────────────────────────────────────────
 
 // Standard registration
+// Accepts concurrent requests safely — async/await + connection pool handles parallelism
 app.post('/api/register', async (req, res) => {
   try {
-    const data = req.body;
+    const data = { ...req.body }; // clone so we don't mutate req.body
+
+    // Require at least a name
+    if (!data.fullName && !data.firstName) {
+      return res.status(400).json({ error: 'Full name is required.' });
+    }
 
     // Build fullName from parts if not supplied directly
     if (!data.fullName && (data.firstName || data.lastName)) {
@@ -146,36 +173,58 @@ app.post('/api/register', async (req, res) => {
       data.fullName = data.studentName || 'Unnamed Student';
     }
 
-    // Coerce numeric fields
+    // Coerce numeric fields — float-safe: Number('87.5') === 87.5
     data.age             = toNum(data.age);
     data.academicAverage = toNum(data.academicAverage);
     data.average         = toNum(data.average);
+
+    // Range guard (schema min/max only warns — this returns a clean 400)
+    if (data.average !== undefined && (data.average < 0 || data.average > 100)) {
+      return res.status(400).json({ error: 'Average must be between 0 and 100.' });
+    }
 
     const student = new StandardStudent(data);
     await student.save();
     res.status(201).json({ message: 'Standard registration successful!' });
   } catch (error) {
-    console.error('STANDARD SUBMISSION ERROR:', error);
-    res.status(500).json({ error: error.message || 'Failed standard submission' });
+    console.error('[/api/register] Error:', error.message);
+    // Return 400 for validation errors, 500 for unexpected failures
+    const status = error.name === 'ValidationError' ? 400 : 500;
+    res.status(status).json({ error: error.message || 'Registration failed.' });
   }
 });
 
 // Official census registration
+// Accepts concurrent requests safely — each save() is independent and non-blocking
 app.post('/api/official-register', async (req, res) => {
   try {
-    const body = req.body;
+    const body = { ...req.body }; // clone
 
-    // Coerce numeric fields
+    // Require first name and grade at minimum
+    if (!body.firstName) {
+      return res.status(400).json({ error: 'First name is required.' });
+    }
+    if (!body.gradeLevel) {
+      return res.status(400).json({ error: 'Grade level is required.' });
+    }
+
+    // Coerce numeric fields — float-safe
     body.numberOfTextbooks    = toNum(body.numberOfTextbooks);
     body.numberOfMealsPerWeek = toNum(body.numberOfMealsPerWeek);
     body.average              = toNum(body.average);
+
+    // Range guard
+    if (body.average !== undefined && (body.average < 0 || body.average > 100)) {
+      return res.status(400).json({ error: 'Average must be between 0 and 100.' });
+    }
 
     const officialStudent = new OfficialStudent(body);
     await officialStudent.save();
     res.status(201).json({ message: 'Official registration successful!' });
   } catch (error) {
-    console.error('OFFICIAL SUBMISSION ERROR:', error);
-    res.status(500).json({ error: error.message || 'Failed official submission' });
+    console.error('[/api/official-register] Error:', error.message);
+    const status = error.name === 'ValidationError' ? 400 : 500;
+    res.status(status).json({ error: error.message || 'Official registration failed.' });
   }
 });
 
@@ -304,11 +353,17 @@ app.get('/api/admin/official-students', async (_req, res) => {
 
 app.put('/api/admin/official-students/:id', async (req, res) => {
   try {
+    // Use $set so every sent field (including empty strings) overwrites the stored value.
+    // runValidators: false — allows clearing optional fields without schema min/max errors.
     const updated = await OfficialStudent.findByIdAndUpdate(
-      req.params.id, req.body, { new: true }
+      req.params.id,
+      { $set: req.body },
+      { new: true, runValidators: false }
     );
+    if (!updated) return res.status(404).json({ error: 'Record not found.' });
     res.json(updated);
   } catch (error) {
+    console.error('[PUT official-student] Error:', error.message);
     res.status(500).json({ error: 'Failed to update official record' });
   }
 });

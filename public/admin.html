@@ -409,21 +409,142 @@
 
 <!-- EDIT OFFICIAL MODAL -->
 <div class="modal" id="editOffModal">
-  <div class="modal-content">
+  <div class="modal-content" style="max-width:860px;">
     <h3>✏️ Edit Official Student Record</h3>
     <input type="hidden" id="editOffId">
+
+    <!-- ── SECTION 1: BASIC DATA ───────────────────────────────────── -->
+    <p style="font-size:0.78rem;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:0.5px;margin:14px 0 8px;">1. Student Basic Data</p>
     <div class="modal-grid">
+      <div><label>Has Student ID?</label>
+        <select id="editOffHasStudentId">
+          <option value="No">No</option><option value="Yes">Yes</option>
+        </select>
+      </div>
       <div><label>Student ID</label><input type="text" id="editOffStudentId"></div>
-      <div><label>First Name</label><input type="text" id="editOffFirstName"></div>
-      <div><label>Father's Name</label><input type="text" id="editOffFathersName"></div>
-      <div><label>Grandfather's Name</label><input type="text" id="editOffGrandfathersName"></div>
-      <div><label>Sex</label><select id="editOffSex"><option>Male</option><option>Female</option></select></div>
-      <div><label>Grade Level</label><input type="text" id="editOffGradeLevel"></div>
-      <div><label>Section</label><input type="text" id="editOffSection"></div>
-      <div><label>Kebele</label><input type="text" id="editOffKebele"></div>
-      <div><label>Parent / Guardian Name</label><input type="text" id="editOffParentFullName"></div>
-      <div><label>Parent Phone</label><input type="text" id="editOffParentPhone"></div>
+
+      <div><label>First Name <span style="color:#ef4444">*</span></label>
+        <input type="text" id="editOffFirstName" required></div>
+      <div><label>Father's Name <span style="color:#ef4444">*</span></label>
+        <input type="text" id="editOffFathersName" required></div>
+      <div><label>Grandfather's Name</label>
+        <input type="text" id="editOffGrandfathersName"></div>
+      <div><label>Admission Type</label>
+        <input type="text" id="editOffAdmissionType" placeholder="e.g. Regular"></div>
+
+      <div><label>Sex <span style="color:#ef4444">*</span></label>
+        <select id="editOffSex" required>
+          <option value="">— Select —</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div><label>Date Of Birth</label>
+        <input type="text" id="editOffDateOfBirth" placeholder="YYYY-MM-DD" maxlength="10"></div>
+
+      <div><label>Disability</label>
+        <select id="editOffDisability">
+          <option value="No">No</option><option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div><label>Disability Type</label>
+        <input type="text" id="editOffDisabilityType"></div>
+
+      <div><label>Country Of Birth</label>
+        <input type="text" id="editOffCountryOfBirth"></div>
+      <div><label>Region Of Birth</label>
+        <input type="text" id="editOffRegionOfBirth"></div>
+      <div><label>Zone Of Birth</label>
+        <input type="text" id="editOffZoneOfBirth"></div>
+      <div><label>Woreda Of Birth</label>
+        <input type="text" id="editOffWoredaOfBirth"></div>
+
+      <div><label>Nationality</label>
+        <input type="text" id="editOffNationality"></div>
+      <div><label>Region</label>
+        <input type="text" id="editOffRegion"></div>
+      <div><label>Zone</label>
+        <input type="text" id="editOffZone"></div>
+      <div><label>Woreda</label>
+        <input type="text" id="editOffWoreda"></div>
+      <div><label>Kebele</label>
+        <input type="text" id="editOffKebele"></div>
+      <div><label>Location Type</label>
+        <select id="editOffLocationType">
+          <option value="Urban">Urban</option><option value="Rural">Rural</option>
+        </select>
+      </div>
+
+      <div><label>Economic Status</label>
+        <input type="text" id="editOffEconomicStatus"></div>
+      <div><label>Parent Status</label>
+        <input type="text" id="editOffParentStatus" placeholder="e.g. Both Alive"></div>
+      <div><label>Father's Education Level</label>
+        <input type="text" id="editOffFatherEdu"></div>
+      <div><label>Mother's Education Level</label>
+        <input type="text" id="editOffMotherEdu"></div>
+
+      <div><label>Parent / Guardian Name</label>
+        <input type="text" id="editOffParentFullName"></div>
+      <div><label>Parent Email</label>
+        <input type="email" id="editOffParentEmail"></div>
+      <div><label>Parent Phone</label>
+        <input type="tel" id="editOffParentPhone"></div>
+      <div><label>Family Head Gender</label>
+        <select id="editOffFamilyHeadGender">
+          <option value="Male">Male</option><option value="Female">Female</option>
+        </select>
+      </div>
+      <div><label>National ID</label>
+        <input type="text" id="editOffNationalId"></div>
     </div>
+
+    <!-- ── SECTION 2: ENROLLMENT ───────────────────────────────────── -->
+    <p style="font-size:0.78rem;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:0.5px;margin:18px 0 8px;">2. Enrollment</p>
+    <div class="modal-grid">
+      <div><label>Admission Category</label>
+        <input type="text" id="editOffAdmissionCategory"></div>
+      <div><label>Admission Modality</label>
+        <input type="text" id="editOffAdmissionModality"></div>
+      <div><label>Grade Level <span style="color:#ef4444">*</span></label>
+        <select id="editOffGradeLevel" required>
+          <option value="">— Select —</option>
+          <option value="Grade 9">Grade 9</option>
+          <option value="Grade 10">Grade 10</option>
+          <option value="Grade 11">Grade 11</option>
+          <option value="Grade 12">Grade 12</option>
+        </select>
+      </div>
+
+      <div><label>Section</label>
+        <input type="text" id="editOffSection"></div>
+      <div><label>Education Stream</label>
+        <input type="text" id="editOffEducationStream"></div>
+      <div><label>Career 1st Field</label>
+        <input type="text" id="editOffCareer1"></div>
+      <div><label>Career 2nd Field</label>
+        <input type="text" id="editOffCareer2"></div>
+
+      <div><label>Textbooks Count</label>
+        <input type="number" id="editOffTextbooks" min="0"></div>
+      <div><label>Instruction Language</label>
+        <input type="text" id="editOffLanguage"></div>
+      <div><label>School Feeding</label>
+        <select id="editOffSchoolFeeding">
+          <option value="No">No</option><option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div><label>Ration Home Taking</label>
+        <select id="editOffRationHome">
+          <option value="No">No</option><option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div><label>Meals Per Week</label>
+        <input type="number" id="editOffMealsPerWeek" min="0"></div>
+      <div><label>Average (%)</label>
+        <input type="number" id="editOffAverage" min="0" max="100" step="0.01"></div>
+    </div>
+
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal('editOffModal')">Cancel</button>
       <button class="btn-save"   onclick="saveOffEdit()">Save Changes</button>
@@ -673,8 +794,6 @@
           onclick="openOffEdit('${s._id}');closeCert()">✏️ Edit</button>
         <button class="btn-icon ic-trash" style="width:auto;padding:0 14px;gap:6px;font-size:0.85rem"
           onclick="trashOff('${s._id}',true);closeCert()">🗑️ Move to Trash</button>
-        <button class="btn-icon ic-delete" style="width:auto;padding:0 14px;gap:6px;font-size:0.85rem"
-          onclick="deleteOffPermanent('${s._id}');closeCert()">❌ Delete Forever</button>
       </div>
     `;
     document.getElementById('certOverlay').classList.add('open');
@@ -982,38 +1101,129 @@
   function openOffEdit(id) {
     const s = offDataStore.find(i => i._id === id);
     if (!s) return;
-    document.getElementById('editOffId').value               = s._id;
-    document.getElementById('editOffStudentId').value        = s.studentId              || '';
-    document.getElementById('editOffFirstName').value        = s.firstName              || '';
-    document.getElementById('editOffFathersName').value      = s.fathersName            || '';
-    document.getElementById('editOffGrandfathersName').value = s.grandfathersName       || '';
-    document.getElementById('editOffSex').value              = s.sex                    || 'Male';
-    document.getElementById('editOffGradeLevel').value       = s.gradeLevel             || '';
-    document.getElementById('editOffSection').value          = s.section                || '';
-    document.getElementById('editOffKebele').value           = s.kebele                 || '';
-    document.getElementById('editOffParentFullName').value   = s.parentGuardianFullName || '';
-    document.getElementById('editOffParentPhone').value      = s.parentGuardianPhone    || '';
+
+    const set = (elId, val) => {
+      const el = document.getElementById(elId);
+      if (el) el.value = (val !== undefined && val !== null) ? val : '';
+    };
+
+    set('editOffId',              s._id);
+    // Basic data
+    set('editOffHasStudentId',    s.hasStudentId);
+    set('editOffStudentId',       s.studentId);
+    set('editOffFirstName',       s.firstName);
+    set('editOffFathersName',     s.fathersName);
+    set('editOffGrandfathersName',s.grandfathersName);
+    set('editOffAdmissionType',   s.admissionType);
+    set('editOffSex',             s.sex);
+    set('editOffDateOfBirth',     s.dateOfBirth);
+    set('editOffDisability',      s.disability);
+    set('editOffDisabilityType',  s.disabilityType);
+    set('editOffCountryOfBirth',  s.countryOfBirth);
+    set('editOffRegionOfBirth',   s.regionOfBirth);
+    set('editOffZoneOfBirth',     s.zoneOfBirth);
+    set('editOffWoredaOfBirth',   s.woredaOfBirth);
+    set('editOffNationality',     s.nationality);
+    set('editOffRegion',          s.region);
+    set('editOffZone',            s.zone);
+    set('editOffWoreda',          s.woreda);
+    set('editOffKebele',          s.kebele);
+    set('editOffLocationType',    s.locationType);
+    set('editOffEconomicStatus',  s.studentEconomicStatus);
+    set('editOffParentStatus',    s.parentStatus);
+    set('editOffFatherEdu',       s.fatherEducationLevel);
+    set('editOffMotherEdu',       s.motherEducationLevel);
+    set('editOffParentFullName',  s.parentGuardianFullName);
+    set('editOffParentEmail',     s.parentGuardianEmail);
+    set('editOffParentPhone',     s.parentGuardianPhone);
+    set('editOffFamilyHeadGender',s.familyHeadGender);
+    set('editOffNationalId',      s.nationalId);
+    // Enrollment
+    set('editOffAdmissionCategory', s.admissionCategory);
+    set('editOffAdmissionModality', s.admissionModality);
+    set('editOffGradeLevel',        s.gradeLevel);
+    set('editOffSection',           s.section);
+    set('editOffEducationStream',   s.educationStream);
+    set('editOffCareer1',           s.careerTechnical1stField);
+    set('editOffCareer2',           s.careerTechnical2ndField);
+    set('editOffTextbooks',         s.numberOfTextbooks);
+    set('editOffLanguage',          s.mainInstructionalLanguage);
+    set('editOffSchoolFeeding',     s.schoolFeedingParticipation);
+    set('editOffRationHome',        s.foodRationHomeTaking);
+    set('editOffMealsPerWeek',      s.numberOfMealsPerWeek);
+    set('editOffAverage',           s.average);
+
     openModal('editOffModal');
   }
+
   async function saveOffEdit() {
-    const id = document.getElementById('editOffId').value;
-    await fetch(`/api/admin/official-students/${id}`, {
-      method: 'PUT', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        studentId:              document.getElementById('editOffStudentId').value,
-        firstName:              document.getElementById('editOffFirstName').value,
-        fathersName:            document.getElementById('editOffFathersName').value,
-        grandfathersName:       document.getElementById('editOffGrandfathersName').value,
-        sex:                    document.getElementById('editOffSex').value,
-        gradeLevel:             document.getElementById('editOffGradeLevel').value,
-        section:                document.getElementById('editOffSection').value,
-        kebele:                 document.getElementById('editOffKebele').value,
-        parentGuardianFullName: document.getElementById('editOffParentFullName').value,
-        parentGuardianPhone:    document.getElementById('editOffParentPhone').value
-      })
-    });
-    closeModal('editOffModal');
-    fetchAllData();
+    const id  = document.getElementById('editOffId').value;
+    const g   = (elId) => document.getElementById(elId)?.value ?? '';
+    const num = (elId) => { const v = g(elId); return v === '' ? undefined : Number(v); };
+
+    const payload = {
+      // Basic data
+      hasStudentId:              g('editOffHasStudentId'),
+      studentId:                 g('editOffStudentId'),
+      firstName:                 g('editOffFirstName'),
+      fathersName:               g('editOffFathersName'),
+      grandfathersName:          g('editOffGrandfathersName'),
+      admissionType:             g('editOffAdmissionType'),
+      sex:                       g('editOffSex'),
+      dateOfBirth:               g('editOffDateOfBirth'),
+      disability:                g('editOffDisability'),
+      disabilityType:            g('editOffDisabilityType'),
+      countryOfBirth:            g('editOffCountryOfBirth'),
+      regionOfBirth:             g('editOffRegionOfBirth'),
+      zoneOfBirth:               g('editOffZoneOfBirth'),
+      woredaOfBirth:             g('editOffWoredaOfBirth'),
+      nationality:               g('editOffNationality'),
+      region:                    g('editOffRegion'),
+      zone:                      g('editOffZone'),
+      woreda:                    g('editOffWoreda'),
+      kebele:                    g('editOffKebele'),
+      locationType:              g('editOffLocationType'),
+      studentEconomicStatus:     g('editOffEconomicStatus'),
+      parentStatus:              g('editOffParentStatus'),
+      fatherEducationLevel:      g('editOffFatherEdu'),
+      motherEducationLevel:      g('editOffMotherEdu'),
+      parentGuardianFullName:    g('editOffParentFullName'),
+      parentGuardianEmail:       g('editOffParentEmail'),
+      parentGuardianPhone:       g('editOffParentPhone'),
+      familyHeadGender:          g('editOffFamilyHeadGender'),
+      nationalId:                g('editOffNationalId'),
+      // Enrollment
+      admissionCategory:         g('editOffAdmissionCategory'),
+      admissionModality:         g('editOffAdmissionModality'),
+      gradeLevel:                g('editOffGradeLevel'),
+      section:                   g('editOffSection'),
+      educationStream:           g('editOffEducationStream'),
+      careerTechnical1stField:   g('editOffCareer1'),
+      careerTechnical2ndField:   g('editOffCareer2'),
+      numberOfTextbooks:         num('editOffTextbooks'),
+      mainInstructionalLanguage: g('editOffLanguage'),
+      schoolFeedingParticipation:g('editOffSchoolFeeding'),
+      foodRationHomeTaking:      g('editOffRationHome'),
+      numberOfMealsPerWeek:      num('editOffMealsPerWeek'),
+      average:                   num('editOffAverage'),
+    };
+
+    try {
+      const res = await fetch(`/api/admin/official-students/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        alert('Save failed: ' + (err.error || 'Unknown error'));
+        return;
+      }
+      closeModal('editOffModal');
+      fetchAllData();
+    } catch (err) {
+      alert('Server connection error while saving.');
+    }
   }
 
   /* ── BOOT ──────────────────────────────────────────────────────────── */
