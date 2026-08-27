@@ -48,8 +48,19 @@
     .search-bar { width: 100%; max-width: 360px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.87rem; outline: none; }
 
     /* FILTER ROW */
-    .filter-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
-    .grade-filter { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.87rem; outline: none; background: white; min-width: 140px; cursor: pointer; }
+    .filter-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+    .grade-filter {
+      padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;
+      font-size: 0.85rem; outline: none; background: white; cursor: pointer;
+      min-width: 130px;
+    }
+    .grade-filter:focus { border-color: #2563eb; }
+    .sort-btn {
+      padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 6px;
+      font-size: 0.85rem; background: white; cursor: pointer; font-weight: 600;
+      color: #475569; white-space: nowrap;
+    }
+    .sort-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
 
     /* TABLE */
     .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px; }
@@ -225,7 +236,8 @@
       </div>
     </div>
     <div class="filter-row">
-      <input class="search-bar" type="text" id="stdSearch" placeholder="Search by name, receipt, phone…" oninput="renderTables()">
+      <input class="search-bar" type="text" id="stdSearch" placeholder="🔍 Search name, receipt, phone…" oninput="renderTables()">
+
       <select class="grade-filter" id="stdGradeFilter" onchange="renderTables()">
         <option value="">All Grades</option>
         <option value="Grade 9">Grade 9</option>
@@ -233,6 +245,27 @@
         <option value="Grade 11">Grade 11</option>
         <option value="Grade 12">Grade 12</option>
       </select>
+
+      <select class="grade-filter" id="stdGenderFilter" onchange="renderTables()">
+        <option value="">All Genders</option>
+        <option value="M">Male (M)</option>
+        <option value="F">Female (F)</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+
+      <select class="grade-filter" id="stdStreamFilter" onchange="renderTables()">
+        <option value="">All Streams</option>
+        <option value="General">General</option>
+        <option value="NS">Natural Science (NS)</option>
+        <option value="SS">Social Science (SS)</option>
+        <option value="Natural Science">Natural Science</option>
+        <option value="Social Science">Social Science</option>
+      </select>
+
+      <button class="sort-btn" id="stdSortBtn" onclick="toggleStdSort()" title="Sort A–Z / Z–A">
+        🔤 A→Z
+      </button>
     </div>
     <div class="table-wrapper">
       <table>
@@ -271,7 +304,8 @@
       </div>
     </div>
     <div class="filter-row">
-      <input class="search-bar" type="text" id="offSearch" placeholder="Search by name or kebele…" oninput="renderTables()">
+      <input class="search-bar" type="text" id="offSearch" placeholder="🔍 Search by name or kebele…" oninput="renderTables()">
+
       <select class="grade-filter" id="offGradeFilter" onchange="renderTables()">
         <option value="">All Grades</option>
         <option value="Grade 9">Grade 9</option>
@@ -279,6 +313,25 @@
         <option value="Grade 11">Grade 11</option>
         <option value="Grade 12">Grade 12</option>
       </select>
+
+      <select class="grade-filter" id="offGenderFilter" onchange="renderTables()">
+        <option value="">All Genders</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+
+      <select class="grade-filter" id="offStreamFilter" onchange="renderTables()">
+        <option value="">All Streams</option>
+        <option value="General">General</option>
+        <option value="NS">Natural Science (NS)</option>
+        <option value="SS">Social Science (SS)</option>
+        <option value="Natural Science">Natural Science</option>
+        <option value="Social Science">Social Science</option>
+      </select>
+
+      <button class="sort-btn" id="offSortBtn" onclick="toggleOffSort()" title="Sort A–Z / Z–A">
+        🔤 A→Z
+      </button>
     </div>
     <div class="table-wrapper">
       <table>
@@ -624,15 +677,62 @@
   }
 
   /* ── RENDER TABLES ─────────────────────────────────────────────────── */
-  function renderTables() {
-    const stdQ  = (document.getElementById('stdSearch')?.value  || '').toLowerCase();
-    const offQ  = (document.getElementById('offSearch')?.value  || '').toLowerCase();
-    const stdGF = (document.getElementById('stdGradeFilter')?.value || '');
-    const offGF = (document.getElementById('offGradeFilter')?.value || '');
+  let stdSortAsc = true; // default: A → Z
+  let offSortAsc = true; // default: A → Z
 
-    // 1 — STANDARD active (expanded columns)
-    const activeStd = stdDataStore.filter(s => !s.isTrashed
-      && (!stdGF || (s.grade || '') === stdGF)
+  function toggleStdSort() {
+    stdSortAsc = !stdSortAsc;
+    const btn = document.getElementById('stdSortBtn');
+    btn.textContent = stdSortAsc ? '🔤 A→Z' : '🔤 Z→A';
+    btn.classList.toggle('active', !stdSortAsc);
+    renderTables();
+  }
+
+  function toggleOffSort() {
+    offSortAsc = !offSortAsc;
+    const btn = document.getElementById('offSortBtn');
+    btn.textContent = offSortAsc ? '🔤 A→Z' : '🔤 Z→A';
+    btn.classList.toggle('active', !offSortAsc);
+    renderTables();
+  }
+
+  function renderTables() {
+    const stdQ    = (document.getElementById('stdSearch')?.value       || '').toLowerCase();
+    const offQ    = (document.getElementById('offSearch')?.value       || '').toLowerCase();
+    const stdGF   = (document.getElementById('stdGradeFilter')?.value  || '');
+    const offGF   = (document.getElementById('offGradeFilter')?.value  || '');
+    const stdGndF = (document.getElementById('stdGenderFilter')?.value || '');
+    const stdStmF = (document.getElementById('stdStreamFilter')?.value || '');
+    const offGndF = (document.getElementById('offGenderFilter')?.value || '');
+    const offStmF = (document.getElementById('offStreamFilter')?.value || '');
+
+    // Gender normalise helper — M/Male both mean male
+    function genderMatch(stored, filter) {
+      if (!filter) return true;
+      const s = (stored || '').toLowerCase();
+      const f = filter.toLowerCase();
+      // 'm' / 'male' both match male; 'f' / 'female' both match female
+      return s === f || (f === 'm' && s === 'male') || (f === 'male' && s === 'm')
+          || (f === 'f' && s === 'female') || (f === 'female' && s === 'f');
+    }
+
+    // Stream normalise helper — 'NS' matches 'Natural Science' etc.
+    function streamMatch(stored, filter) {
+      if (!filter) return true;
+      const s = (stored || '').toLowerCase();
+      const f = filter.toLowerCase();
+      return s === f
+          || (f === 'ns' && s.includes('natural'))
+          || (f === 'natural science' && (s === 'ns' || s.includes('natural')))
+          || (f === 'ss' && s.includes('social'))
+          || (f === 'social science' && (s === 'ss' || s.includes('social')));
+    }
+
+    // 1 — STANDARD active: filter then sort A–Z (or Z–A)
+    let activeStd = stdDataStore.filter(s => !s.isTrashed
+      && (!stdGF   || (s.grade  || '') === stdGF)
+      && genderMatch(s.gender, stdGndF)
+      && streamMatch(s.stream, stdStmF)
       && (
         !stdQ ||
         (s.fullName  || '').toLowerCase().includes(stdQ) ||
@@ -640,6 +740,13 @@
         (s.phone || s.guardianPhone || '').includes(stdQ)
       )
     );
+
+    // Alphabetical sort by fullName
+    activeStd.sort((a, b) => {
+      const na = (a.fullName || '').toLowerCase();
+      const nb = (b.fullName || '').toLowerCase();
+      return stdSortAsc ? na.localeCompare(nb) : nb.localeCompare(na);
+    });
     document.getElementById('stdTable').innerHTML = activeStd.length === 0
       ? '<tr><td colspan="14" style="text-align:center;color:#94a3b8;padding:20px;">No active records found.</td></tr>'
       : activeStd.map((s, i) => `
@@ -663,15 +770,24 @@
             </td>
           </tr>`).join('');
 
-    // 2 — OFFICIAL active
-    const activeOff = offDataStore.filter(s => !s.isTrashed
-      && (!offGF || (s.gradeLevel || '') === offGF)
+    // 2 — OFFICIAL active: filter + A–Z sort
+    let activeOff = offDataStore.filter(s => !s.isTrashed
+      && (!offGF   || (s.gradeLevel || '') === offGF)
+      && genderMatch(s.sex, offGndF)
+      && streamMatch(s.educationStream, offStmF)
       && (
         !offQ ||
         (`${s.firstName||''} ${s.fathersName||''} ${s.grandfathersName||''}`).toLowerCase().includes(offQ) ||
         (s.kebele || '').toLowerCase().includes(offQ)
       )
     );
+
+    // Alphabetical sort by firstName + fathersName
+    activeOff.sort((a, b) => {
+      const na = (`${a.firstName||''} ${a.fathersName||''}`).trim().toLowerCase();
+      const nb = (`${b.firstName||''} ${b.fathersName||''}`).trim().toLowerCase();
+      return offSortAsc ? na.localeCompare(nb) : nb.localeCompare(na);
+    });
     document.getElementById('offTable').innerHTML = activeOff.length === 0
       ? '<tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:20px;">No active records found.</td></tr>'
       : activeOff.map((s, i) => `
@@ -869,8 +985,32 @@
     triggerDownload(html, 'application/vnd.ms-excel', `Official_${name}.xls`);
   }
 
-  /* ── OFFICIAL TABLE-LEVEL EXPORT (all active records) ─────────────── */
-  function getActiveOff() { return offDataStore.filter(s => !s.isTrashed); }
+  /* ── OFFICIAL TABLE-LEVEL EXPORT (respects active filters) ────────── */
+  function getActiveOff() {
+    const offGF   = (document.getElementById('offGradeFilter')?.value  || '');
+    const offGndF = (document.getElementById('offGenderFilter')?.value || '');
+    const offStmF = (document.getElementById('offStreamFilter')?.value || '');
+    const offQ    = (document.getElementById('offSearch')?.value       || '').toLowerCase();
+
+    const rows = offDataStore.filter(s => !s.isTrashed
+      && (!offGF   || (s.gradeLevel || '') === offGF)
+      && genderMatch(s.sex, offGndF)
+      && streamMatch(s.educationStream, offStmF)
+      && (
+        !offQ ||
+        (`${s.firstName||''} ${s.fathersName||''} ${s.grandfathersName||''}`).toLowerCase().includes(offQ) ||
+        (s.kebele || '').toLowerCase().includes(offQ)
+      )
+    );
+
+    // Sort matches table order
+    rows.sort((a, b) => {
+      const na = (`${a.firstName||''} ${a.fathersName||''}`).trim().toLowerCase();
+      const nb = (`${b.firstName||''} ${b.fathersName||''}`).trim().toLowerCase();
+      return offSortAsc ? na.localeCompare(nb) : nb.localeCompare(na);
+    });
+    return rows;
+  }
 
   function downloadOffCSV() {
     const rows = getActiveOff();
