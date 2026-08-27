@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal Login - Kiltu Kara Secondary School</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    body {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #065f46 0%, #0f766e 50%, #1d4ed8 100%);
+      padding: 20px;
+    }
+    .card {
+      background: white; border-radius: 14px; padding: 38px 36px;
+      width: 100%; max-width: 400px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+    .logo { text-align: center; margin-bottom: 24px; }
+    .logo h1 { font-size: 1rem; color: #065f46; font-weight: 800; text-transform: uppercase; line-height: 1.4; }
+    .logo p  { font-size: 0.82rem; color: #64748b; margin-top: 4px; }
+    .badge {
+      display: inline-block; background: #dcfce7; color: #166534;
+      font-size: 0.75rem; font-weight: 700; padding: 4px 12px;
+      border-radius: 20px; margin-top: 8px;
+    }
+    h2 { font-size: 1.15rem; color: #1e293b; margin-bottom: 20px; text-align: center; }
+    label { display: block; font-size: 0.78rem; font-weight: 700; color: #475569; margin-bottom: 4px; margin-top: 14px; }
+    input {
+      width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1;
+      border-radius: 7px; font-size: 0.9rem; outline: none;
+      transition: border-color 0.15s;
+    }
+    input:focus { border-color: #059669; box-shadow: 0 0 0 3px rgba(5,150,105,0.12); }
+    .btn {
+      width: 100%; margin-top: 22px; padding: 11px;
+      background: #059669; color: white; border: none;
+      border-radius: 7px; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn:hover { background: #047857; }
+    .error {
+      margin-top: 14px; padding: 10px 12px;
+      background: #fee2e2; color: #991b1b;
+      border-radius: 6px; font-size: 0.84rem; font-weight: 600;
+      display: none;
+    }
+    .hint {
+      margin-top: 18px; font-size: 0.78rem; color: #94a3b8;
+      text-align: center; line-height: 1.5;
+    }
+    .back { display: block; text-align: center; margin-top: 18px; font-size: 0.82rem; color: #2563eb; text-decoration: none; }
+    .back:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <h1>Kiltu Kara Secondary School</h1>
+    <p>Student Registration Portal</p>
+    <span class="badge">🎓 Student Login</span>
+  </div>
+
+  <h2>Sign In to Your Portal</h2>
+
+  <form id="loginForm">
+    <label for="username">Username</label>
+    <input type="text" id="username" placeholder="Enter your username" autocomplete="username">
+
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+
+    <button type="submit" class="btn">Login →</button>
+  </form>
+
+  <div class="error" id="errorMsg"></div>
+
+  <p class="hint">
+    First time? Use your default credentials:<br>
+    Username: <b>Daved Zarihun</b> &nbsp;|&nbsp; Password: <b>090128</b>
+  </p>
+
+  <a href="/" class="back">← Back to Registration Hub</a>
+</div>
+
+<script>
+  // Already logged in — go straight to dashboard
+  if (sessionStorage.getItem('studentToken')) {
+    window.location.href = '/student_dashboard.html';
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errEl    = document.getElementById('errorMsg');
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    errEl.style.display = 'none';
+
+    try {
+      const res  = await fetch('/api/student/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        errEl.textContent    = data.message || 'Invalid credentials.';
+        errEl.style.display  = 'block';
+        return;
+      }
+
+      // Store session info (no sensitive data)
+      sessionStorage.setItem('studentToken',    'logged-in');
+      sessionStorage.setItem('studentId',       data.studentId);
+      sessionStorage.setItem('studentCollection', data.collection);
+      sessionStorage.setItem('studentProfile',  JSON.stringify(data.profile));
+      sessionStorage.setItem('credentialsChanged', data.isCredentialsChanged);
+
+      window.location.href = '/student_dashboard.html';
+    } catch (err) {
+      errEl.textContent   = 'Server connection error. Please try again.';
+      errEl.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

@@ -246,6 +246,7 @@
             <th>Stream</th>
             <th>Average (%)</th>
             <th>Receipt No.</th>
+            <th>Admission Type</th>
             <th>Woreda</th>
             <th>Kebele</th>
             <th>Guardian Name</th>
@@ -395,6 +396,9 @@
       <div><label>Stream</label><input type="text" id="editStdStream"></div>
       <div><label>Academic Average (%)</label><input type="number" id="editStdAverage" min="0" max="100"></div>
       <div><label>Receipt No.</label><input type="text" id="editStdReceiptNo"></div>
+      <div><label>Admission Type</label>
+        <input type="text" id="editStdAdmissionType" placeholder="e.g. Regular, Transfer">
+      </div>
       <div><label>Woreda</label><input type="text" id="editStdWoreda"></div>
       <div><label>Kebele</label><input type="text" id="editStdKebele"></div>
       <div><label>Guardian Name</label><input type="text" id="editStdGuardian"></div>
@@ -612,7 +616,7 @@
         `<tr><td colspan="${cols}" style="text-align:center;color:#ef4444;padding:20px;">
           ⚠ Failed to load records. Check server connection.
         </td></tr>`;
-      document.getElementById('stdTable').innerHTML    = errRow(13);
+      document.getElementById('stdTable').innerHTML    = errRow(14);
       document.getElementById('offTable').innerHTML    = errRow(8);
       document.getElementById('trashStdTable').innerHTML = errRow(4);
       document.getElementById('trashOffTable').innerHTML = errRow(4);
@@ -637,7 +641,7 @@
       )
     );
     document.getElementById('stdTable').innerHTML = activeStd.length === 0
-      ? '<tr><td colspan="13" style="text-align:center;color:#94a3b8;padding:20px;">No active records found.</td></tr>'
+      ? '<tr><td colspan="14" style="text-align:center;color:#94a3b8;padding:20px;">No active records found.</td></tr>'
       : activeStd.map((s, i) => `
           <tr>
             <td style="color:#94a3b8;font-size:0.78rem">${i + 1}</td>
@@ -648,6 +652,7 @@
             <td>${s.stream || '—'}</td>
             <td style="text-align:center">${s.academicAverage || s.average || '—'}</td>
             <td style="font-size:0.8rem;color:#475569">${s.receiptNo || '—'}</td>
+            <td>${s.admissionType || '—'}</td>
             <td>${s.woreda || '—'}</td>
             <td>${s.kebele || '—'}</td>
             <td>${s.guardianName || '—'}</td>
@@ -961,7 +966,7 @@
 
     const headers = [
       'Full Name','Sex','Age','Grade','Section','Stream','Average (%)',
-      'Receipt No.','Woreda','Kebele','Guardian Name','Guardian Phone',
+      'Receipt No.','Admission Type','Woreda','Kebele','Guardian Name','Guardian Phone',
       'Previous School','Registered At'
     ];
     const csv = [headers.join(','), ...rows.map(s => [
@@ -973,6 +978,7 @@
       `"${s.stream        || ''}"`,
       s.academicAverage || s.average || '',
       `"${s.receiptNo     || ''}"`,
+      `"${s.admissionType || ''}"`,
       `"${s.woreda        || ''}"`,
       `"${s.kebele        || ''}"`,
       `"${s.guardianName  || ''}"`,
@@ -990,7 +996,7 @@
 
     const headers = [
       'Full Name','Sex','Age','Grade','Section','Stream','Average (%)',
-      'Receipt No.','Woreda','Kebele','Guardian Name','Guardian Phone',
+      'Receipt No.','Admission Type','Woreda','Kebele','Guardian Name','Guardian Phone',
       'Previous School','Registered At'
     ];
     const tHead = `<tr>${headers.map(h =>
@@ -999,7 +1005,7 @@
     const tBody = rows.map(s => `<tr>
       ${etd(s.fullName)} ${etd(s.gender)} ${etd(s.age)} ${etd(s.grade)}
       ${etd(s.section)} ${etd(s.stream)} ${etd(s.academicAverage || s.average)}
-      ${etd(s.receiptNo)} ${etd(s.woreda)} ${etd(s.kebele)}
+      ${etd(s.receiptNo)} ${etd(s.admissionType)} ${etd(s.woreda)} ${etd(s.kebele)}
       ${etd(s.guardianName)} ${etd(s.phone || s.guardianPhone)}
       ${etd(s.previousSchool)}
       ${etd(s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '')}
@@ -1067,6 +1073,7 @@
     document.getElementById('editStdStream').value    = s.stream      || '';
     document.getElementById('editStdAverage').value   = s.academicAverage || s.average || '';
     document.getElementById('editStdReceiptNo').value = s.receiptNo   || '';
+    document.getElementById('editStdAdmissionType').value = s.admissionType || '';
     document.getElementById('editStdWoreda').value    = s.woreda      || '';
     document.getElementById('editStdKebele').value    = s.kebele      || '';
     document.getElementById('editStdGuardian').value  = s.guardianName|| '';
@@ -1087,6 +1094,7 @@
         academicAverage: document.getElementById('editStdAverage').value,
         average:         document.getElementById('editStdAverage').value,
         receiptNo:       document.getElementById('editStdReceiptNo').value,
+        admissionType:   document.getElementById('editStdAdmissionType').value,
         woreda:          document.getElementById('editStdWoreda').value,
         kebele:          document.getElementById('editStdKebele').value,
         guardianName:    document.getElementById('editStdGuardian').value,

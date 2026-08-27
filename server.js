@@ -59,7 +59,6 @@ const standardStudentSchema = new mongoose.Schema({
   grade:           String,
   section:         String,
   stream:          String,
-  // Float — explicitly set to Number so 87.5 stores correctly
   academicAverage: { type: Number, min: 0,   max: 100  },
   average:         { type: Number, min: 0,   max: 100  },
   nationalId:      String,
@@ -68,9 +67,15 @@ const standardStudentSchema = new mongoose.Schema({
   woreda:          String,
   kebele:          String,
   guardianName:    String,
+  admissionType:   { type: String, trim: true },
   phone:           String,
   guardianPhone:   String,
   address:         String,
+  // ── STUDENT PORTAL CREDENTIALS ──────────────────────────────────────
+  portalUsername:        { type: String, default: 'Dawed za', trim: true },
+  portalPasswordHash:    { type: String, default: null },
+  isCredentialsChanged:  { type: Boolean, default: false },
+  // ────────────────────────────────────────────────────────────────────
   isTrashed:       { type: Boolean, default: false },
   createdAt:       { type: Date,    default: Date.now }
 });
@@ -120,6 +125,11 @@ const officialStudentSchema = new mongoose.Schema({
   numberOfMealsPerWeek:     { type: Number, min: 0 },
   // Float — accepts decimal averages like 87.5
   average:                  { type: Number, min: 0, max: 100 },
+  // ── STUDENT PORTAL CREDENTIALS ──────────────────────────────────────
+  portalUsername:        { type: String, default: 'Dawed za', trim: true },
+  portalPasswordHash:    { type: String, default: null },
+  isCredentialsChanged:  { type: Boolean, default: false },
+  // ────────────────────────────────────────────────────────────────────
   isTrashed:                { type: Boolean, default: false },
   createdAt:                { type: Date,    default: Date.now }
 });
@@ -149,6 +159,34 @@ async function seedAdminIfNone() {
     }
   } catch (err) {
     console.error('[SEED] Failed to seed admin:', err.message);
+  }
+  // Always run student seed alongside admin seed
+  await seedDefaultStudentIfNone();
+}
+
+// ── SEED: create default student portal account on first boot ─────────────────
+async function seedDefaultStudentIfNone() {
+  try {
+    const DEFAULT_USERNAME = 'Daved Zarihun';
+    // Check both collections
+    const existsStd = await StandardStudent.findOne({ portalUsername: DEFAULT_USERNAME });
+    const existsOff = await OfficialStudent.findOne({ portalUsername: DEFAULT_USERNAME });
+
+    if (!existsStd && !existsOff) {
+      await StandardStudent.create({
+        fullName:             'Daved Zarihun',
+        firstName:            'Daved',
+        lastName:             'Zarihun',
+        grade:                'Grade 10',   // displayed as "Grade 10" to match app filters
+        portalUsername:       DEFAULT_USERNAME,
+        portalPasswordHash:   null,          // null = still using default plain password 090128
+        isCredentialsChanged: false,
+        isTrashed:            false
+      });
+      console.log('[SEED] Default student "Daved Zarihun" created in MongoDB.');
+    }
+  } catch (err) {
+    console.error('[SEED] Failed to seed default student:', err.message);
   }
 }
 
@@ -301,7 +339,9 @@ app.post('/api/admin/change-password', async (req, res) => {
 
 app.get('/api/admin/standard-students', async (_req, res) => {
   try {
-    const students = await StandardStudent.find().sort({ createdAt: -1 });
+    const students = await StandardStudent.find()
+      .select('-portalPasswordHash')
+      .sort({ createdAt: -1 });
     res.json(students);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch standard records' });
@@ -344,7 +384,9 @@ app.delete('/api/admin/standard-students/:id', async (req, res) => {
 
 app.get('/api/admin/official-students', async (_req, res) => {
   try {
-    const students = await OfficialStudent.find().sort({ createdAt: -1 });
+    const students = await OfficialStudent.find()
+      .select('-portalPasswordHash')
+      .sort({ createdAt: -1 });
     res.json(students);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch official records' });
@@ -390,23 +432,170 @@ app.delete('/api/admin/official-students/:id', async (req, res) => {
 });
 
 // ── ROOT REDIRECT ─────────────────────────────────────────────────────────────
-// Visiting http://localhost:3000/ serves the registration hub (index.html)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ── NAMED PAGE ROUTES (safety fallback if static middleware misses) ────────────
-app.get('/online_reg.html', (req, res) => {
+// ── NAMED PAGE ROUTES ────────────────────────────────────────────────────────
+app.get('/online_reg.html', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'online_reg.html'));
 });
-app.get('/off_reg.html', (req, res) => {
+app.get('/off_reg.html', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'off_reg.html'));
 });
-app.get('/admin.html', (req, res) => {
+app.get('/admin.html', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
-app.get('/login.html', (req, res) => {
+app.get('/login.html', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+app.get('/student_login.html', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'student_login.html'));
+});
+app.get('/student_dashboard.html', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'student_dashboard.html'));
+});
+
+// ── STUDENT PORTAL AUTH ───────────────────────────────────────────────────────
+
+// Default password (plain) used when isCredentialsChanged is false
+const STUDENT_DEFAULT_PASSWORD = process.env.STUDENT_DEFAULT_PASS || '090128';
+
+// Helper — find a student across both collections.
+// Searches by portalUsername first, then falls back to fullName and firstName match.
+// This allows newly registered students (who haven't set a custom username yet)
+// to log in using their full name as the username.
+async function findStudentByUsername(username) {
+  const trimmed = username.trim();
+
+  // 1. Exact portalUsername match (fastest — used after credentials are set)
+  let student = await StandardStudent.findOne({ portalUsername: trimmed });
+  if (student) return { student, collection: 'standard' };
+  student = await OfficialStudent.findOne({ portalUsername: trimmed });
+  if (student) return { student, collection: 'official' };
+
+  // 2. Fallback: match against fullName (case-insensitive) for newly registered students
+  const regex = new RegExp(`^${trimmed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
+  student = await StandardStudent.findOne({ fullName: regex });
+  if (student) return { student, collection: 'standard' };
+
+  // 3. Fallback: match official student by firstName + fathersName combined
+  const parts = trimmed.split(/\s+/);
+  if (parts.length >= 2) {
+    const firstRx  = new RegExp(`^${parts[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
+    const fatherRx = new RegExp(`^${parts.slice(1).join(' ').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
+    student = await OfficialStudent.findOne({ firstName: firstRx, fathersName: fatherRx });
+    if (student) return { student, collection: 'official' };
+  }
+
+  return null;
+}
+
+// POST /api/student/login
+app.post('/api/student/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: 'Username and password are required.' });
+    }
+
+    const found = await findStudentByUsername(username);
+    if (!found) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+    }
+
+    const { student } = found;
+
+    let match = false;
+    if (!student.isCredentialsChanged) {
+      // Still using default password — compare plain text
+      match = (password === STUDENT_DEFAULT_PASSWORD);
+    } else {
+      // Custom password set — compare bcrypt hash
+      match = await bcrypt.compare(password, student.portalPasswordHash);
+    }
+
+    if (!match) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+    }
+
+    // Return only safe profile fields — never send passwordHash
+    res.json({
+      success: true,
+      isCredentialsChanged: student.isCredentialsChanged,
+      studentId: student._id,
+      collection: found.collection,
+      profile: {
+        fullName:    student.fullName || `${student.firstName || ''} ${student.fathersName || ''}`.trim(),
+        grade:       student.grade    || student.gradeLevel || '',
+        section:     student.section  || '',
+        stream:      student.stream   || student.educationStream || '',
+        average:     student.average  || student.academicAverage || null,
+        gender:      student.gender   || student.sex || '',
+        woreda:      student.woreda   || '',
+        kebele:      student.kebele   || '',
+        guardianName:student.guardianName || student.parentGuardianFullName || '',
+        guardianPhone:student.guardianPhone || student.phone || student.parentGuardianPhone || '',
+        portalUsername: student.portalUsername
+      }
+    });
+  } catch (err) {
+    console.error('[STUDENT LOGIN]', err.message);
+    res.status(500).json({ success: false, message: 'Server error during login.' });
+  }
+});
+
+// POST /api/student/change-credentials
+// Body: { studentId, collection, currentPassword, newUsername, newPassword }
+app.post('/api/student/change-credentials', async (req, res) => {
+  try {
+    const { studentId, collection, currentPassword, newUsername, newPassword } = req.body;
+
+    if (!studentId || !collection || !currentPassword || !newUsername || !newPassword) {
+      return res.status(400).json({ success: false, message: 'All fields are required.' });
+    }
+    if (newPassword.length < 4) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 4 characters.' });
+    }
+
+    const Model = collection === 'official' ? OfficialStudent : StandardStudent;
+    const student = await Model.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Student record not found.' });
+    }
+
+    // Verify current password
+    let match = false;
+    if (!student.isCredentialsChanged) {
+      match = (currentPassword === STUDENT_DEFAULT_PASSWORD);
+    } else {
+      match = await bcrypt.compare(currentPassword, student.portalPasswordHash);
+    }
+    if (!match) {
+      return res.status(401).json({ success: false, message: 'Current password is incorrect.' });
+    }
+
+    // Check username uniqueness (skip if same student keeps their own name)
+    const trimmedUsername = newUsername.trim();
+    if (trimmedUsername !== student.portalUsername) {
+      const taken = await findStudentByUsername(trimmedUsername);
+      if (taken && taken.student._id.toString() !== studentId) {
+        return res.status(409).json({ success: false, message: 'That username is already taken.' });
+      }
+    }
+
+    // Hash new password and save
+    const newHash = await bcrypt.hash(newPassword, 10);
+    student.portalUsername       = trimmedUsername;
+    student.portalPasswordHash   = newHash;
+    student.isCredentialsChanged = true;
+    await student.save();
+
+    res.json({ success: true, message: 'Credentials updated successfully.', newUsername: trimmedUsername });
+  } catch (err) {
+    console.error('[STUDENT CHANGE-CREDENTIALS]', err.message);
+    res.status(500).json({ success: false, message: 'Server error while updating credentials.' });
+  }
 });
 
 // ── 404 CATCH-ALL ─────────────────────────────────────────────────────────────

@@ -123,6 +123,14 @@
           </div>
         </div>
 
+        <!-- Admission Type — optional -->
+        <div class="form-row">
+          <div class="input-group">
+            <label for="admissionType">Admission Type</label>
+            <input type="text" id="admissionType" placeholder="Enter admission type (e.g. Regular, Transfer)">
+          </div>
+        </div>
+
         <!-- Guardian Information — optional -->
         <div class="form-row">
           <div class="input-group">
@@ -135,7 +143,8 @@
           </div>
         </div>
 
-        <button type="submit" class="btn-submit">Submit Registration</button>
+        <button type="submit" id="submitBtn" class="btn-submit">Submit Registration</button>
+        <div id="formMsg" style="margin-top:12px;padding:10px 14px;border-radius:6px;font-weight:600;font-size:0.88rem;display:none;"></div>
       </form>
 
       <div class="nav-footer">
@@ -145,13 +154,33 @@
   </div>
 
   <script>
-    document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+    const form      = document.getElementById('registrationForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formMsg   = document.getElementById('formMsg');
+
+    function showMsg(text, isError) {
+      formMsg.textContent    = text;
+      formMsg.style.display  = 'block';
+      formMsg.style.background = isError ? '#fee2e2' : '#dcfce7';
+      formMsg.style.color      = isError ? '#991b1b' : '#166534';
+    }
+    function hideMsg() {
+      formMsg.style.display = 'none';
+      formMsg.textContent   = '';
+    }
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      hideMsg();
+
+      // Disable button to prevent double-submit
+      submitBtn.disabled    = true;
+      submitBtn.textContent = 'Submitting…';
 
       const payload = {
-        fullName:        document.getElementById('fullName').value,
-        nationalId:      document.getElementById('nationalId').value,
-        receiptNo:       document.getElementById('receiptNo').value,
+        fullName:        document.getElementById('fullName').value.trim(),
+        nationalId:      document.getElementById('nationalId').value.trim(),
+        receiptNo:       document.getElementById('receiptNo').value.trim(),
         age:             document.getElementById('age').value,
         gender:          document.getElementById('gender').value,
         grade:           document.getElementById('grade').value,
@@ -159,29 +188,36 @@
         section:         document.getElementById('section').value,
         average:         document.getElementById('average').value,
         academicAverage: document.getElementById('average').value,
-        previousSchool:  document.getElementById('previousSchool').value,
-        woreda:          document.getElementById('woreda').value,
-        kebele:          document.getElementById('kebele').value,
-        guardianName:    document.getElementById('guardianName').value,
-        guardianPhone:   document.getElementById('guardianPhone').value
+        previousSchool:  document.getElementById('previousSchool').value.trim(),
+        woreda:          document.getElementById('woreda').value.trim(),
+        kebele:          document.getElementById('kebele').value.trim(),
+        admissionType:   document.getElementById('admissionType').value.trim(),
+        guardianName:    document.getElementById('guardianName').value.trim(),
+        guardianPhone:   document.getElementById('guardianPhone').value.trim()
       };
 
       try {
-        const res = await fetch('/api/register', {
+        const res  = await fetch('/api/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-
         const data = await res.json();
+
         if (res.ok) {
-          alert('Student registered successfully!');
-          document.getElementById('registrationForm').reset();
+          showMsg('✅ Student registered successfully! You can register another student below.', false);
+          form.reset();
+          // Scroll to top of form so the success message is visible
+          form.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
-          alert('Error: ' + (data.error || 'Registration failed.'));
+          showMsg('❌ Error: ' + (data.error || 'Registration failed.'), true);
         }
       } catch (err) {
-        alert('Server connection failed. Please try again.');
+        showMsg('❌ Server connection failed. Please check your connection and try again.', true);
+      } finally {
+        // Always re-enable the button so subsequent submissions work
+        submitBtn.disabled    = false;
+        submitBtn.textContent = 'Submit Registration';
       }
     });
   </script>

@@ -322,7 +322,8 @@
 
     </div>
 
-    <button type="submit" class="btn-submit">Submit Official Registration</button>
+    <button type="submit" id="offSubmitBtn" class="btn-submit">Submit Official Registration</button>
+    <div id="offFormMsg" style="margin-top:12px;padding:10px 14px;border-radius:6px;font-weight:600;font-size:0.88rem;display:none;"></div>
   </form>
 
   <a href="/" class="nav-link">← Back to Main Registration Hub</a>
@@ -344,13 +345,33 @@
     reader.readAsDataURL(file);
   }
 
-  document.getElementById('officialForm').addEventListener('submit', async (e) => {
+  const offForm      = document.getElementById('officialForm');
+  const offSubmitBtn = document.getElementById('offSubmitBtn');
+  const offFormMsg   = document.getElementById('offFormMsg');
+
+  function showOffMsg(text, isError) {
+    offFormMsg.textContent     = text;
+    offFormMsg.style.display   = 'block';
+    offFormMsg.style.background = isError ? '#fee2e2' : '#dcfce7';
+    offFormMsg.style.color      = isError ? '#991b1b' : '#166534';
+  }
+  function hideOffMsg() {
+    offFormMsg.style.display  = 'none';
+    offFormMsg.textContent    = '';
+  }
+
+  offForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    hideOffMsg();
+
+    // Disable button to prevent double-submit
+    offSubmitBtn.disabled    = true;
+    offSubmitBtn.textContent = 'Submitting…';
 
     const g = (id) => document.getElementById(id)?.value || '';
 
     const payload = {
-      photo: photoBase64,
+      photo:                     photoBase64,
       hasStudentId:              g('hasStudentId'),
       studentId:                 g('studentId'),
       firstName:                 g('firstName'),
@@ -402,17 +423,24 @@
         body: JSON.stringify(payload)
       });
       const data = await res.json();
+
       if (res.ok) {
-        alert('Official registration submitted successfully!');
-        document.getElementById('officialForm').reset();
+        showOffMsg('✅ Official registration submitted successfully! You can register another student below.', false);
+        offForm.reset();
+        // Reset photo state cleanly for the next entry
         document.getElementById('photoPreview').style.display = 'none';
         document.getElementById('photoPlaceholder').style.display = 'block';
         photoBase64 = '';
+        offForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {
-        alert('Error: ' + (data.error || 'Submission failed.'));
+        showOffMsg('❌ Error: ' + (data.error || 'Submission failed.'), true);
       }
     } catch (err) {
-      alert('Server connection error.');
+      showOffMsg('❌ Server connection error. Please check your connection and try again.', true);
+    } finally {
+      // Always re-enable the button so subsequent submissions work
+      offSubmitBtn.disabled    = false;
+      offSubmitBtn.textContent = 'Submit Official Registration';
     }
   });
 </script>
