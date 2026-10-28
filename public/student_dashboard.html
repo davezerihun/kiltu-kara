@@ -3,76 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Student Dashboard - Kiltu Kara Secondary School</title>
+  <title>My Dashboard - Kiltu Kara Secondary School</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background: #f1f5f9; min-height: 100vh; padding: 20px; color: #1e293b; }
 
-    /* ── HEADER ── */
-    .header {
+    /* ── TOP HEADER ─────────────────────────────────────── */
+    .top-header {
       background: linear-gradient(135deg, #065f46, #0f766e);
-      color: white; padding: 18px 24px; border-radius: 12px;
+      color: white; padding: 16px 24px; border-radius: 12px;
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+      margin-bottom: 22px; flex-wrap: wrap; gap: 12px;
     }
-    .header h1 { font-size: 1.1rem; font-weight: 800; }
-    .header p  { font-size: 0.8rem; opacity: 0.85; margin-top: 2px; }
-    .header-btns { display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn-settings { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 8px 16px; border-radius: 7px; cursor: pointer; font-weight: 700; font-size: 0.82rem; }
-    .btn-settings:hover { background: rgba(255,255,255,0.3); }
-    .btn-logout { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 7px; cursor: pointer; font-weight: 700; font-size: 0.82rem; }
+    .top-header h1 { font-size: 1.05rem; font-weight: 800; }
+    .top-header p  { font-size: 0.78rem; opacity: 0.85; margin-top: 2px; }
+    .header-btns   { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-hdr {
+      padding: 8px 15px; border-radius: 7px; cursor: pointer;
+      font-weight: 700; font-size: 0.8rem; border: none;
+    }
+    .btn-admin   { background: #2563eb; color: white; }
+    .btn-admin:hover { background: #1d4ed8; }
+    .btn-settings{ background: rgba(255,255,255,0.18); color: white; border: 1px solid rgba(255,255,255,0.4); }
+    .btn-settings:hover { background: rgba(255,255,255,0.28); }
+    .btn-logout  { background: #ef4444; color: white; }
     .btn-logout:hover { background: #dc2626; }
 
-    /* ── PROFILE CARD ── */
+    /* ── PROFILE CARD ────────────────────────────────────── */
     .profile-card {
-      background: white; border-radius: 12px; padding: 28px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.07); margin-bottom: 20px;
+      background: white; border-radius: 14px; padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 22px;
+      display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;
     }
-    .profile-name { font-size: 1.4rem; font-weight: 800; color: #065f46; margin-bottom: 6px; }
-    .profile-badge {
+    .avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg, #059669, #0f766e);
+      color: white; font-size: 1.6rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; letter-spacing: -1px;
+    }
+    .profile-info { flex: 1; min-width: 200px; }
+    .profile-name { font-size: 1.35rem; font-weight: 800; color: #065f46; }
+    .profile-sub  { font-size: 0.82rem; color: #64748b; margin-top: 3px; }
+    .status-badge {
       display: inline-block; background: #dcfce7; color: #166534;
-      font-size: 0.78rem; font-weight: 700; padding: 4px 12px;
-      border-radius: 20px; margin-bottom: 20px;
+      font-size: 0.72rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; margin-top: 8px;
     }
     .info-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(170px,1fr)); gap: 10px;
+      margin-top: 18px; width: 100%;
     }
-    .info-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px 14px; border-radius: 8px; }
-    .info-label { font-size: 0.68rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
-    .info-val   { font-size: 0.92rem; font-weight: 600; color: #1e293b; margin-top: 3px; }
+    .info-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 9px 13px; border-radius: 8px; }
+    .info-label { font-size: 0.65rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+    .info-val   { font-size: 0.88rem; font-weight: 600; color: #1e293b; margin-top: 3px; }
 
-    /* ── FORCE CHANGE OVERLAY ── */
+    /* ── FORCE PASSWORD CHANGE OVERLAY ──────────────────── */
     .overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.7); z-index: 500;
-      align-items: center; justify-content: center; padding: 20px;
+      display: none; position: fixed; inset: 0; z-index: 600;
+      background: rgba(0,0,0,0.75); align-items: center; justify-content: center; padding: 20px;
     }
     .overlay.open { display: flex; }
     .overlay-card {
-      background: white; border-radius: 14px; padding: 32px 28px;
-      width: 100%; max-width: 420px;
+      background: white; border-radius: 16px; padding: 36px 30px;
+      width: 100%; max-width: 430px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
     }
-    .overlay-card h2 { font-size: 1.1rem; color: #1e293b; margin-bottom: 6px; }
-    .overlay-card p  { font-size: 0.83rem; color: #64748b; margin-bottom: 18px; line-height: 1.5; }
+    .overlay-card .ov-icon { font-size: 2.4rem; text-align: center; display: block; margin-bottom: 10px; }
+    .overlay-card h2 { font-size: 1.15rem; font-weight: 800; color: #1e293b; margin-bottom: 6px; text-align: center; }
+    .overlay-card p  { font-size: 0.82rem; color: #64748b; margin-bottom: 20px; line-height: 1.6; text-align: center; }
 
-    /* ── MODAL (account settings) ── */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
+    /* ── ACCOUNT SETTINGS MODAL ─────────────────────────── */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
     .modal.open { display: flex; }
     .modal-card { background: white; border-radius: 12px; padding: 28px; width: 100%; max-width: 420px; }
-    .modal-card h3 { margin-bottom: 16px; color: #1e293b; }
+    .modal-card h3 { margin-bottom: 16px; color: #1e293b; font-size: 1rem; }
 
-    /* ── SHARED FORM STYLES ── */
+    /* ── SHARED FORM ─────────────────────────────────────── */
     .field { margin-bottom: 14px; }
-    .field label { display: block; font-size: 0.76rem; font-weight: 700; color: #475569; margin-bottom: 4px; }
-    .field input {
-      width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1;
+    .field label { display: block; font-size: 0.75rem; font-weight: 700; color: #475569; margin-bottom: 4px; }
+    .field input  {
+      width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1;
       border-radius: 7px; font-size: 0.88rem; outline: none;
     }
     .field input:focus { border-color: #059669; box-shadow: 0 0 0 2px rgba(5,150,105,0.12); }
     .btn-primary {
-      width: 100%; padding: 10px; background: #059669; color: white;
-      border: none; border-radius: 7px; font-weight: 700; font-size: 0.9rem;
-      cursor: pointer; margin-top: 6px;
+      width: 100%; padding: 11px; background: #059669; color: white;
+      border: none; border-radius: 7px; font-weight: 700; font-size: 0.92rem;
+      cursor: pointer; margin-top: 4px;
     }
     .btn-primary:hover { background: #047857; }
     .btn-secondary {
@@ -81,69 +99,79 @@
       cursor: pointer; margin-top: 8px;
     }
     .btn-secondary:hover { background: #475569; }
-    .msg { margin-top: 10px; padding: 9px 12px; border-radius: 6px; font-size: 0.83rem; font-weight: 600; display: none; }
+    .msg { margin-top: 12px; padding: 9px 12px; border-radius: 6px; font-size: 0.83rem; font-weight: 600; display: none; }
     .msg.success { background: #dcfce7; color: #166534; display: block; }
     .msg.error   { background: #fee2e2; color: #991b1b; display: block; }
 
     @media (max-width: 600px) {
       .info-grid { grid-template-columns: 1fr 1fr; }
+      .profile-card { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
+<!-- TOP HEADER -->
+<div class="top-header">
   <div>
     <h1>🎓 Student Dashboard</h1>
     <p id="headerName">Kiltu Kara Secondary School</p>
   </div>
   <div class="header-btns">
-    <button class="btn-settings" onclick="openSettings()">⚙️ Account Settings</button>
-    <button class="btn-logout"   onclick="logout()">⏻ Logout</button>
+    <button class="btn-hdr btn-admin"    onclick="goToAdmin()">🏛 Admin Dashboard</button>
+    <button class="btn-hdr btn-settings" onclick="openSettings()">⚙️ Settings</button>
+    <button class="btn-hdr btn-logout"   onclick="logout()">⏻ Logout</button>
   </div>
 </div>
 
 <!-- PROFILE CARD -->
 <div class="profile-card">
-  <div class="profile-name" id="profileName">—</div>
-  <div class="profile-badge" id="profileBadge">Student</div>
-  <div class="info-grid" id="infoGrid"></div>
+  <div class="avatar" id="profileAvatar">?</div>
+  <div class="profile-info">
+    <div class="profile-name" id="profileName">—</div>
+    <div class="profile-sub"  id="profileSub">Kiltu Kara Secondary School</div>
+    <span class="status-badge">✅ Registered</span>
+    <div class="info-grid" id="infoGrid"></div>
+  </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════
-     FORCE CHANGE OVERLAY (shown when isCredentialsChanged = false)
-══════════════════════════════════════════════════════════════════════ -->
-<div class="overlay" id="forceChangeOverlay">
+<!-- ═══════════════════════════════════════════════════════
+     FORCED PASSWORD CHANGE OVERLAY
+     Shows when mustChangePassword = true
+═══════════════════════════════════════════════════════ -->
+<div class="overlay" id="pwdResetOverlay">
   <div class="overlay-card">
-    <h2>🔐 Set Your Personal Credentials</h2>
+    <span class="ov-icon">🔐</span>
+    <h2>Set Your Personal Password</h2>
     <p>
-      You are using the default login credentials.<br>
-      Please choose a <b>unique username</b> and a <b>personal password</b>
+      You are currently using the <b>default password</b>.<br>
+      You must set a new personal password (min. 6 characters)<br>
       before accessing your dashboard.
     </p>
 
     <div class="field">
-      <label>New Username</label>
-      <input type="text" id="fcUsername" placeholder="Choose a unique username">
+      <label>Current Password (default: 090128)</label>
+      <input type="password" id="prCurrent" placeholder="Enter 090128">
     </div>
     <div class="field">
-      <label>New Password <span style="font-weight:400;color:#94a3b8">(min 4 characters)</span></label>
-      <input type="password" id="fcPassword" placeholder="New password">
+      <label>New Password <span style="color:#94a3b8;font-weight:400">(min. 6 characters)</span></label>
+      <input type="password" id="prNew" placeholder="Choose a strong password">
     </div>
     <div class="field">
-      <label>Confirm Password</label>
-      <input type="password" id="fcConfirm" placeholder="Repeat new password">
+      <label>Confirm New Password</label>
+      <input type="password" id="prConfirm" placeholder="Repeat new password">
     </div>
 
-    <div class="msg" id="fcMsg"></div>
-    <button class="btn-primary" onclick="submitForceChange()">✅ Save & Continue</button>
+    <div class="msg" id="prMsg"></div>
+    <button class="btn-primary" id="prSubmitBtn" onclick="submitPasswordReset()">
+      ✅ Save Password &amp; Continue
+    </button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════════════
      ACCOUNT SETTINGS MODAL
-══════════════════════════════════════════════════════════════════════ -->
+═══════════════════════════════════════════════════════ -->
 <div class="modal" id="settingsModal">
   <div class="modal-card">
     <h3>⚙️ Account Settings</h3>
@@ -157,7 +185,7 @@
       <input type="text" id="stUsername" placeholder="New username">
     </div>
     <div class="field">
-      <label>New Password <span style="font-weight:400;color:#94a3b8">(min 4 characters)</span></label>
+      <label>New Password <span style="font-weight:400;color:#94a3b8">(min. 4 characters)</span></label>
       <input type="password" id="stPassword" placeholder="New password">
     </div>
     <div class="field">
@@ -172,107 +200,135 @@
 </div>
 
 <script>
-  /* ── GUARD: redirect if not logged in ─────────────────────────────── */
+  /* ── GUARD ──────────────────────────────────────────────── */
   if (!sessionStorage.getItem('studentToken')) {
     window.location.href = '/student_login.html';
   }
 
-  /* ── LOAD SESSION DATA ─────────────────────────────────────────────── */
-  const studentId         = sessionStorage.getItem('studentId');
-  const collection        = sessionStorage.getItem('studentCollection');
-  const credChanged       = sessionStorage.getItem('credentialsChanged') === 'true';
-  const profile           = JSON.parse(sessionStorage.getItem('studentProfile') || '{}');
+  /* ── SESSION DATA ───────────────────────────────────────── */
+  const studentId    = sessionStorage.getItem('studentId');
+  const collection   = sessionStorage.getItem('studentCollection');
+  const mustChangePwd= sessionStorage.getItem('mustChangePassword') === 'true';
+  const credChanged  = sessionStorage.getItem('credentialsChanged')  === 'true';
+  const profile      = JSON.parse(sessionStorage.getItem('studentProfile') || '{}');
 
-  /* ── POPULATE PROFILE ─────────────────────────────────────────────── */
+  /* ── INITIALS AVATAR ────────────────────────────────────── */
+  function getInitials(name) {
+    const parts = (name || '').trim().split(/\s+/);
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return (name || '?')[0].toUpperCase();
+  }
+
+  /* ── RENDER PROFILE ─────────────────────────────────────── */
   function renderProfile() {
     const name = profile.fullName || 'Student';
-    document.getElementById('profileName').textContent  = name;
-    document.getElementById('headerName').textContent   = name;
-    document.getElementById('profileBadge').textContent =
-      `${profile.grade || ''}${profile.section ? ' – Section ' + profile.section : ''}`.trim() || 'Student';
+    document.getElementById('profileAvatar').textContent  = getInitials(name);
+    document.getElementById('profileName').textContent    = name;
+    document.getElementById('headerName').textContent     = name;
+    document.getElementById('profileSub').textContent     =
+      [profile.grade, profile.section ? 'Section ' + profile.section : ''].filter(Boolean).join(' · ') ||
+      'Kiltu Kara Secondary School';
+
+    const streamFull = profile.stream === 'NS' ? 'Natural Science (NS)'
+                     : profile.stream === 'SS' ? 'Social Science (SS)'
+                     : profile.stream || '—';
+    const genderFull = profile.gender === 'M' ? 'Male'
+                     : profile.gender === 'F' ? 'Female'
+                     : profile.gender || '—';
 
     const fields = [
-      ['Grade',         profile.grade       || '—'],
-      ['Section',       profile.section     || '—'],
-      ['Stream',        profile.stream      || '—'],
-      ['Average (%)',   profile.average !== null && profile.average !== undefined ? profile.average : '—'],
-      ['Gender',        profile.gender      || '—'],
-      ['Woreda',        profile.woreda      || '—'],
-      ['Kebele',        profile.kebele      || '—'],
-      ['Guardian',      profile.guardianName|| '—'],
-      ['Guardian Phone',profile.guardianPhone|| '—'],
-      ['Username',      profile.portalUsername || '—'],
+      ['Grade',          profile.grade       || '—'],
+      ['Section',        profile.section     || '—'],
+      ['Stream',         streamFull],
+      ['Average (%)',    profile.average != null ? profile.average : '—'],
+      ['Gender',         genderFull],
+      ['Woreda',         profile.woreda      || '—'],
+      ['Kebele',         profile.kebele      || '—'],
+      ['Guardian',       profile.guardianName|| '—'],
+      ['Guardian Phone', profile.guardianPhone || '—'],
+      ['Username',       profile.portalUsername || '—'],
     ];
 
     document.getElementById('infoGrid').innerHTML = fields.map(([label, val]) => `
       <div class="info-box">
         <div class="info-label">${label}</div>
         <div class="info-val">${val}</div>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
 
   renderProfile();
 
-  /* ── FORCE CHANGE OVERLAY ─────────────────────────────────────────── */
-  if (!credChanged) {
-    document.getElementById('forceChangeOverlay').classList.add('open');
+  /* ── SHOW FORCED PASSWORD RESET if needed ───────────────── */
+  if (mustChangePwd) {
+    document.getElementById('pwdResetOverlay').classList.add('open');
   }
 
-  async function submitForceChange() {
-    const newUsername = document.getElementById('fcUsername').value.trim();
-    const newPassword = document.getElementById('fcPassword').value;
-    const confirm     = document.getElementById('fcConfirm').value;
-    const msgEl       = document.getElementById('fcMsg');
+  async function submitPasswordReset() {
+    const currentPassword = document.getElementById('prCurrent').value;
+    const newPassword     = document.getElementById('prNew').value;
+    const confirmPassword = document.getElementById('prConfirm').value;
+    const msgEl           = document.getElementById('prMsg');
+    const btn             = document.getElementById('prSubmitBtn');
 
-    msgEl.className = 'msg';
+    msgEl.className   = 'msg';
+    msgEl.textContent = '';
 
-    if (!newUsername) {
-      msgEl.className = 'msg error'; msgEl.textContent = 'Username cannot be empty.'; return;
+    if (!currentPassword) {
+      msgEl.className = 'msg error'; msgEl.textContent = 'Enter your current password.'; return;
     }
-    if (newPassword.length < 4) {
-      msgEl.className = 'msg error'; msgEl.textContent = 'Password must be at least 4 characters.'; return;
+    if (newPassword.length < 6) {
+      msgEl.className = 'msg error'; msgEl.textContent = 'New password must be at least 6 characters.'; return;
     }
-    if (newPassword !== confirm) {
+    if (newPassword !== confirmPassword) {
       msgEl.className = 'msg error'; msgEl.textContent = 'Passwords do not match.'; return;
     }
 
+    btn.disabled    = true;
+    btn.textContent = 'Saving…';
+
     try {
-      const res  = await fetch('/api/student/change-credentials', {
+      const res  = await fetch('/api/student/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          studentId,
-          collection,
-          currentPassword: '090128',   // forced change always from default
-          newUsername,
-          newPassword
-        })
+        body: JSON.stringify({ studentId, collection, currentPassword, newPassword, confirmPassword })
       });
       const data = await res.json();
 
       if (!res.ok) {
-        msgEl.className = 'msg error'; msgEl.textContent = data.message || 'Failed.'; return;
+        msgEl.className = 'msg error'; msgEl.textContent = data.message || 'Failed.';
+        btn.disabled = false; btn.textContent = '✅ Save Password & Continue';
+        return;
       }
 
-      // Update session
-      sessionStorage.setItem('credentialsChanged', 'true');
-      profile.portalUsername = data.newUsername;
-      sessionStorage.setItem('studentProfile', JSON.stringify(profile));
+      msgEl.className   = 'msg success';
+      msgEl.textContent = '✅ ' + data.message;
 
-      document.getElementById('forceChangeOverlay').classList.remove('open');
-      renderProfile();
+      // Update session flags
+      sessionStorage.setItem('mustChangePassword',  'false');
+      sessionStorage.setItem('credentialsChanged',  'true');
+
+      setTimeout(() => {
+        document.getElementById('pwdResetOverlay').classList.remove('open');
+      }, 1200);
     } catch {
       msgEl.className = 'msg error'; msgEl.textContent = 'Server connection error.';
+      btn.disabled = false; btn.textContent = '✅ Save Password & Continue';
     }
   }
 
-  /* ── ACCOUNT SETTINGS MODAL ───────────────────────────────────────── */
+  /* ── ADMIN DASHBOARD ACCESS ─────────────────────────────── */
+  function goToAdmin() {
+    // Store a student token so admin.html recognises a student session
+    localStorage.setItem('adminToken',     'student-access');
+    localStorage.setItem('studentAccess',  'true');
+    localStorage.setItem('studentProfile', sessionStorage.getItem('studentProfile') || '{}');
+    window.location.href = '/admin.html';
+  }
+
+  /* ── ACCOUNT SETTINGS MODAL ─────────────────────────────── */
   function openSettings() {
     document.getElementById('stUsername').value = profile.portalUsername || '';
-    document.getElementById('stCurrent').value  = '';
-    document.getElementById('stPassword').value = '';
-    document.getElementById('stConfirm').value  = '';
+    ['stCurrent','stPassword','stConfirm'].forEach(id => { document.getElementById(id).value = ''; });
     document.getElementById('stMsg').className  = 'msg';
     document.getElementById('settingsModal').classList.add('open');
   }
@@ -289,18 +345,10 @@
 
     msgEl.className = 'msg';
 
-    if (!currentPassword) {
-      msgEl.className = 'msg error'; msgEl.textContent = 'Enter your current password.'; return;
-    }
-    if (!newUsername) {
-      msgEl.className = 'msg error'; msgEl.textContent = 'Username cannot be empty.'; return;
-    }
-    if (newPassword.length < 4) {
-      msgEl.className = 'msg error'; msgEl.textContent = 'New password must be at least 4 characters.'; return;
-    }
-    if (newPassword !== confirm) {
-      msgEl.className = 'msg error'; msgEl.textContent = 'Passwords do not match.'; return;
-    }
+    if (!currentPassword) { msgEl.className = 'msg error'; msgEl.textContent = 'Enter your current password.'; return; }
+    if (!newUsername)      { msgEl.className = 'msg error'; msgEl.textContent = 'Username cannot be empty.'; return; }
+    if (newPassword.length < 4) { msgEl.className = 'msg error'; msgEl.textContent = 'New password must be at least 4 characters.'; return; }
+    if (newPassword !== confirm) { msgEl.className = 'msg error'; msgEl.textContent = 'Passwords do not match.'; return; }
 
     try {
       const res  = await fetch('/api/student/change-credentials', {
@@ -310,16 +358,15 @@
       });
       const data = await res.json();
 
-      if (!res.ok) {
-        msgEl.className = 'msg error'; msgEl.textContent = data.message || 'Failed.'; return;
-      }
+      if (!res.ok) { msgEl.className = 'msg error'; msgEl.textContent = data.message || 'Failed.'; return; }
 
       msgEl.className = 'msg success';
       msgEl.textContent = '✅ Credentials updated successfully!';
 
       profile.portalUsername = data.newUsername;
-      sessionStorage.setItem('studentProfile', JSON.stringify(profile));
-      sessionStorage.setItem('credentialsChanged', 'true');
+      sessionStorage.setItem('studentProfile',   JSON.stringify(profile));
+      sessionStorage.setItem('credentialsChanged','true');
+      sessionStorage.setItem('mustChangePassword','false');
       renderProfile();
 
       setTimeout(closeSettings, 1800);
@@ -328,7 +375,7 @@
     }
   }
 
-  /* ── LOGOUT ───────────────────────────────────────────────────────── */
+  /* ── LOGOUT ─────────────────────────────────────────────── */
   function logout() {
     sessionStorage.clear();
     window.location.href = '/student_login.html';

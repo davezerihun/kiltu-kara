@@ -112,11 +112,12 @@
       }
 
       // Store session info (no sensitive data)
-      sessionStorage.setItem('studentToken',    'logged-in');
-      sessionStorage.setItem('studentId',       data.studentId);
+      sessionStorage.setItem('studentToken',      'logged-in');
+      sessionStorage.setItem('studentId',         data.studentId);
       sessionStorage.setItem('studentCollection', data.collection);
-      sessionStorage.setItem('studentProfile',  JSON.stringify(data.profile));
-      sessionStorage.setItem('credentialsChanged', data.isCredentialsChanged);
+      sessionStorage.setItem('studentProfile',    JSON.stringify(data.profile));
+      sessionStorage.setItem('credentialsChanged',  String(data.isCredentialsChanged));
+      sessionStorage.setItem('mustChangePassword',  String(data.mustChangePassword));
 
       window.location.href = '/student_dashboard.html';
     } catch (err) {

@@ -149,6 +149,131 @@
     .modal-msg.success { background: #dcfce7; color: #166534; display: block; }
     .modal-msg.error   { background: #fee2e2; color: #991b1b; display: block; }
 
+    /* DUPLICATE REVIEW STYLES */
+    .dup-card {
+      background: white; border: 2px solid #e2e8f0; border-radius: 8px;
+      padding: 16px; margin-bottom: 16px; transition: border-color 0.2s;
+    }
+    .dup-card:hover { border-color: #cbd5e1; }
+    .dup-card.strong { border-left: 4px solid #dc2626; }
+    .dup-card.possible { border-left: 4px solid #f59e0b; }
+    .dup-card.insufficient { border-left: 4px solid #94a3b8; }
+    .dup-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;
+    }
+    .dup-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;
+    }
+    .dup-badge.strong { background: #fee2e2; color: #991b1b; }
+    .dup-badge.possible { background: #fef3c7; color: #92400e; }
+    .dup-badge.insufficient { background: #f1f5f9; color: #64748b; }
+    .dup-score {
+      font-size: 1.1rem; font-weight: 700; color: #1e293b;
+    }
+    .dup-comparison {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0;
+    }
+    .dup-student {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px;
+    }
+    .dup-student-header {
+      font-size: 0.75rem; font-weight: 700; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+    }
+    .dup-field {
+      display: flex; justify-content: space-between; padding: 4px 0;
+      font-size: 0.82rem; border-bottom: 1px solid #f1f5f9;
+    }
+    .dup-field:last-child { border-bottom: none; }
+    .dup-field-label { color: #64748b; font-weight: 600; }
+    .dup-field-value { color: #1e293b; font-weight: 600; }
+    .dup-field-value.highlight { color: #dc2626; font-weight: 700; }
+    .dup-reasons {
+      background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 6px;
+      padding: 10px 12px; margin-top: 12px;
+    }
+    .dup-reasons-title {
+      font-size: 0.75rem; font-weight: 700; color: #065f46;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .dup-reason-item {
+      font-size: 0.8rem; color: #047857; padding: 2px 0;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .dup-reason-item::before { content: '✓'; color: #10b981; font-weight: 700; }
+    .dup-differences {
+      background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px;
+      padding: 10px 12px; margin-top: 8px;
+    }
+    .dup-differences-title {
+      font-size: 0.75rem; font-weight: 700; color: #991b1b;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .dup-diff-item {
+      font-size: 0.8rem; color: #b91c1c; padding: 2px 0;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .dup-diff-item::before { content: '⚠'; color: #ef4444; font-weight: 700; }
+
+    /* NID TRANSFER STYLES */
+    .nid-card {
+      background: white; border: 2px solid #e2e8f0; border-radius: 8px;
+      padding: 16px; margin-bottom: 16px; transition: all 0.2s;
+    }
+    .nid-card:hover { border-color: #cbd5e1; }
+    .nid-card.selected { border-color: #2563eb; background: #eff6ff; }
+    .nid-card.auto_transfer { border-left: 4px solid #16a34a; }
+    .nid-card.review_required { border-left: 4px solid #f59e0b; }
+    .nid-card.weak_match { border-left: 4px solid #94a3b8; }
+    .nid-card.no_match { border-left: 4px solid #64748b; }
+    .nid-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;
+    }
+    .nid-checkbox {
+      width: 20px; height: 20px; cursor: pointer;
+    }
+    .nid-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;
+    }
+    .nid-badge.auto_transfer { background: #dcfce7; color: #166534; }
+    .nid-badge.review_required { background: #fef3c7; color: #92400e; }
+    .nid-badge.weak_match { background: #f1f5f9; color: #64748b; }
+    .nid-badge.no_match { background: #f1f5f9; color: #475569; }
+    .nid-confidence {
+      font-size: 1.05rem; font-weight: 700; color: #1e293b;
+    }
+    .nid-comparison {
+      display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; margin: 12px 0;
+      align-items: start;
+    }
+    .nid-student {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px;
+    }
+    .nid-student-header {
+      font-size: 0.75rem; font-weight: 700; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+    }
+    .nid-arrow {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; color: #16a34a; padding-top: 30px;
+    }
+    .nid-field {
+      display: flex; justify-content: space-between; padding: 4px 0;
+      font-size: 0.82rem; border-bottom: 1px solid #f1f5f9;
+    }
+    .nid-field:last-child { border-bottom: none; }
+    .nid-field-label { color: #64748b; font-weight: 600; }
+    .nid-field-value { color: #1e293b; font-weight: 600; }
+    .nid-field-value.highlight { color: #16a34a; font-weight: 700; }
+    .nid-field-value.nid-value {
+      background: #dcfce7; color: #166534; padding: 2px 8px;
+      border-radius: 4px; font-family: monospace; font-size: 0.85rem;
+    }
+
     /* ── PRINT: Full multi-page modal output ─────────────────────────── */
     @media print {
       /* Hide all dashboard chrome */
@@ -272,6 +397,7 @@
         <thead>
           <tr>
             <th>#</th>
+            <th>National / Student ID</th>
             <th>Full Name</th>
             <th>Sex</th>
             <th>Grade</th>
@@ -299,8 +425,10 @@
     <div class="card-header">
       <span class="card-title">Official 2019 Census Submissions</span>
       <div class="dl-group">
-        <button class="btn-dl btn-csv"   onclick="downloadOffCSV()">⬇ CSV</button>
-        <button class="btn-dl btn-excel" onclick="downloadOffExcel()">⬇ Excel</button>
+        <button class="btn-dl btn-csv"   onclick="downloadOffTableCSV()" title="Export visible table columns">⬇ Table CSV</button>
+        <button class="btn-dl btn-excel" onclick="downloadOffTableExcel()" title="Export visible table columns">⬇ Table Excel</button>
+        <button class="btn-dl btn-csv"   onclick="downloadOffFullCSV()" title="Export all student data fields" style="background:#059669;">⬇ Full CSV</button>
+        <button class="btn-dl btn-excel" onclick="downloadOffFullExcel()" title="Export all student data fields" style="background:#0d8f80;">⬇ Full Excel</button>
       </div>
     </div>
     <div class="filter-row">
@@ -340,6 +468,7 @@
             <th>#</th>
             <th>Photo</th>
             <th>Full Name</th>
+            <th>National ID</th>
             <th>Sex</th>
             <th>Grade / Section</th>
             <th>Kebele</th>
@@ -380,6 +509,69 @@
   </div>
 
 </div><!-- /.admin-container -->
+
+<!-- ════════════════════════════════════════════════════════════════════
+     EXAM ADD / EDIT MODAL
+════════════════════════════════════════════════════════════════════════ -->
+<div class="modal" id="examEditModal">
+  <div class="modal-content" style="max-width:700px;">
+    <h3 id="examModalTitle">➕ Add Exam Student</h3>
+    <input type="hidden" id="examEditId">
+    <div class="modal-grid">
+      <div><label>ID No</label><input type="text" id="examIdNo" placeholder="e.g. 001234"></div>
+      <div><label>Gender (M / F)</label>
+        <select id="examGender">
+          <option value="M">M — Male</option>
+          <option value="F">F — Female</option>
+        </select>
+      </div>
+      <div><label>First Name <span style="color:#ef4444">*</span></label>
+        <input type="text" id="examFirstName"></div>
+      <div><label>Father's Name</label>
+        <input type="text" id="examFathersName"></div>
+      <div><label>Grandfather's Name</label>
+        <input type="text" id="examGrandfathersName"></div>
+      <div><label>Stream (NS / SS)</label>
+        <select id="examStream">
+          <option value="NS">NS — Natural Science</option>
+          <option value="SS">SS — Social Science</option>
+        </select>
+      </div>
+      <div><label>Aptitude</label>
+        <input type="number" id="examAptitude" min="0" max="100" step="0.5" placeholder="0–100"></div>
+      <div><label>English</label>
+        <input type="number" id="examEnglish" min="0" max="100" step="0.5" placeholder="0–100"></div>
+      <div><label>Maths</label>
+        <input type="number" id="examMaths" min="0" max="100" step="0.5" placeholder="0–100"></div>
+      <div><label id="examLbl4">Phys / Hist</label>
+        <input type="number" id="examSubject4" min="0" max="100" step="0.5" placeholder="0–100"></div>
+      <div><label id="examLbl5">Chem / Geo</label>
+        <input type="number" id="examSubject5" min="0" max="100" step="0.5" placeholder="0–100"></div>
+      <div><label id="examLbl6">Bio / Civ</label>
+        <input type="number" id="examSubject6" min="0" max="100" step="0.5" placeholder="0–100"></div>
+      <div><label>Status</label>
+        <select id="examStatus">
+          <option value="Pending">Pending</option>
+          <option value="Qualified">Qualified</option>
+          <option value="Eligible">Eligible</option>
+          <option value="Review">Review</option>
+          <option value="Pass">Pass</option>
+          <option value="Fail">Fail</option>
+        </select>
+      </div>
+      <div style="grid-column:span 1;display:flex;flex-direction:column;justify-content:flex-end;">
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:10px;border-radius:6px;font-size:0.82rem;">
+          <span style="color:#64748b;font-weight:700;">Calculated:</span><br>
+          Total: <b id="examCalcTotal">—</b> &nbsp;|&nbsp; Avg: <b id="examCalcAvg">—</b>%
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('examEditModal')">Cancel</button>
+      <button class="btn-save"   onclick="saveExamStudent()">💾 Save Record</button>
+    </div>
+  </div>
+</div>
 
 <!-- ════════════════════════════════════════════════════════════════════
      CERTIFICATE OVERLAY
@@ -433,6 +625,7 @@
     <input type="hidden" id="editStdId">
     <div class="modal-grid">
       <div><label>Full Name</label><input type="text" id="editStdFullName"></div>
+      <div><label>National / Student ID</label><input type="text" id="editStdNationalId"></div>
       <div><label>Gender</label>
         <select id="editStdGender">
           <option>Male</option><option>Female</option><option>M</option><option>F</option>
@@ -619,21 +812,17 @@
     console.log('Tab switched to:', tab);
 
     ['std','off','trash'].forEach(t => {
-      document.getElementById(t + 'Section').style.display = (t === tab) ? 'block' : 'none';
+      const panel = document.getElementById(t + 'Section');
+      if (panel) panel.style.display = (t === tab) ? 'block' : 'none';
     });
+
     document.getElementById('tabStdBtn').classList.toggle('active',   tab === 'std');
     document.getElementById('tabOffBtn').classList.toggle('active',   tab === 'off');
     document.getElementById('tabTrashBtn').classList.toggle('active', tab === 'trash');
 
-    // If data hasn't loaded yet (e.g. initial fetch failed), retry on tab switch
-    if (tab === 'off') {
+    if (tab === 'off' && !offDataStore.length) {
       console.log('Switched to Official Census tab');
-      if (!offDataStore.length) {
-        console.log('offDataStore empty — fetching official data...');
-        fetchAllData();
-      } else {
-        renderTables();
-      }
+      fetchAllData();
     }
   }
 
@@ -677,8 +866,8 @@
   }
 
   /* ── RENDER TABLES ─────────────────────────────────────────────────── */
-  let stdSortAsc = true; // default: A → Z
-  let offSortAsc = true; // default: A → Z
+  let stdSortAsc = true;
+  let offSortAsc = true;
 
   function toggleStdSort() {
     stdSortAsc = !stdSortAsc;
@@ -696,82 +885,92 @@
     renderTables();
   }
 
+  function genderMatch(recordGender, filterValue) {
+    if (!filterValue) return true;
+    const rg = (recordGender || '').toLowerCase();
+    const fv = filterValue.toLowerCase();
+    return rg === fv || (fv === 'm' && rg === 'male') || (fv === 'male' && rg === 'm') 
+        || (fv === 'f' && rg === 'female') || (fv === 'female' && rg === 'f');
+  }
+
+  function streamMatch(recordStream, filterValue) {
+    if (!filterValue) return true;
+    const rs = (recordStream || '').toLowerCase();
+    const fv = filterValue.toLowerCase();
+    return rs.includes(fv) || fv.includes(rs);
+  }
+
   function renderTables() {
-    const stdQ    = (document.getElementById('stdSearch')?.value       || '').toLowerCase();
-    const offQ    = (document.getElementById('offSearch')?.value       || '').toLowerCase();
+    renderStdTable();
+    renderOffTable();
+    renderTrashTables();
+  }
+
+  function renderStdTable() {
     const stdGF   = (document.getElementById('stdGradeFilter')?.value  || '');
-    const offGF   = (document.getElementById('offGradeFilter')?.value  || '');
     const stdGndF = (document.getElementById('stdGenderFilter')?.value || '');
     const stdStmF = (document.getElementById('stdStreamFilter')?.value || '');
-    const offGndF = (document.getElementById('offGenderFilter')?.value || '');
-    const offStmF = (document.getElementById('offStreamFilter')?.value || '');
+    const stdQ    = (document.getElementById('stdSearch')?.value       || '').toLowerCase();
 
-    // Gender normalise helper — M/Male both mean male
-    function genderMatch(stored, filter) {
-      if (!filter) return true;
-      const s = (stored || '').toLowerCase();
-      const f = filter.toLowerCase();
-      // 'm' / 'male' both match male; 'f' / 'female' both match female
-      return s === f || (f === 'm' && s === 'male') || (f === 'male' && s === 'm')
-          || (f === 'f' && s === 'female') || (f === 'female' && s === 'f');
-    }
-
-    // Stream normalise helper — 'NS' matches 'Natural Science' etc.
-    function streamMatch(stored, filter) {
-      if (!filter) return true;
-      const s = (stored || '').toLowerCase();
-      const f = filter.toLowerCase();
-      return s === f
-          || (f === 'ns' && s.includes('natural'))
-          || (f === 'natural science' && (s === 'ns' || s.includes('natural')))
-          || (f === 'ss' && s.includes('social'))
-          || (f === 'social science' && (s === 'ss' || s.includes('social')));
-    }
-
-    // 1 — STANDARD active: filter then sort A–Z (or Z–A)
-    let activeStd = stdDataStore.filter(s => !s.isTrashed
-      && (!stdGF   || (s.grade  || '') === stdGF)
+    let rows = stdDataStore.filter(s => !s.isTrashed
+      && (!stdGF   || (s.grade || '') === stdGF)
       && genderMatch(s.gender, stdGndF)
       && streamMatch(s.stream, stdStmF)
       && (
         !stdQ ||
-        (s.fullName  || '').toLowerCase().includes(stdQ) ||
+        (s.fullName || '').toLowerCase().includes(stdQ) ||
         (s.receiptNo || '').toLowerCase().includes(stdQ) ||
-        (s.phone || s.guardianPhone || '').includes(stdQ)
+        (s.nationalId || '').toLowerCase().includes(stdQ) ||
+        ((s.phone || s.guardianPhone) || '').includes(stdQ)
       )
     );
 
-    // Alphabetical sort by fullName
-    activeStd.sort((a, b) => {
-      const na = (a.fullName || '').toLowerCase();
-      const nb = (b.fullName || '').toLowerCase();
+    // Sort by name
+    rows.sort((a, b) => {
+      const na = (a.fullName || '').trim().toLowerCase();
+      const nb = (b.fullName || '').trim().toLowerCase();
       return stdSortAsc ? na.localeCompare(nb) : nb.localeCompare(na);
     });
-    document.getElementById('stdTable').innerHTML = activeStd.length === 0
-      ? '<tr><td colspan="14" style="text-align:center;color:#94a3b8;padding:20px;">No active records found.</td></tr>'
-      : activeStd.map((s, i) => `
-          <tr>
-            <td style="color:#94a3b8;font-size:0.78rem">${i + 1}</td>
-            <td><b>${s.fullName || '—'}</b></td>
-            <td>${s.gender || '—'}</td>
-            <td>${s.grade  || '—'}</td>
-            <td>${s.section || '—'}</td>
-            <td>${s.stream || '—'}</td>
-            <td style="text-align:center">${s.academicAverage || s.average || '—'}</td>
-            <td style="font-size:0.8rem;color:#475569">${s.receiptNo || '—'}</td>
-            <td>${s.admissionType || '—'}</td>
-            <td>${s.woreda || '—'}</td>
-            <td>${s.kebele || '—'}</td>
-            <td>${s.guardianName || '—'}</td>
-            <td>${s.phone || s.guardianPhone || '—'}</td>
-            <td style="white-space:nowrap">
-              <button class="btn-icon ic-edit"  onclick="openStdEdit('${s._id}')"  title="✏️ Edit">✏️</button>
-              <button class="btn-icon ic-trash" onclick="trashStd('${s._id}',true)" title="🗑 Move to Trash">🗑️</button>
-            </td>
-          </tr>`).join('');
 
-    // 2 — OFFICIAL active: filter + A–Z sort
-    let activeOff = offDataStore.filter(s => !s.isTrashed
+    const tbody = document.getElementById('stdTable');
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="15" style="text-align:center;color:#94a3b8;padding:20px;">
+        No standard submissions match your filters.
+      </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = rows.map((s, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${s.nationalId || '—'}</td>
+        <td><b>${s.fullName || '—'}</b></td>
+        <td>${s.gender || '—'}</td>
+        <td>${s.grade || '—'}</td>
+        <td>${s.section || '—'}</td>
+        <td>${s.stream || '—'}</td>
+        <td>${s.academicAverage ?? (s.average ?? '—')}</td>
+        <td>${s.receiptNo || '—'}</td>
+        <td>${s.admissionType || '—'}</td>
+        <td>${s.woreda || '—'}</td>
+        <td>${s.kebele || '—'}</td>
+        <td>${s.guardianName || '—'}</td>
+        <td>${(s.phone || s.guardianPhone) || '—'}</td>
+        <td style="white-space:nowrap;">
+          <button class="btn-icon ic-edit"  onclick="openStdEdit('${s._id}')" title="Edit">✏️</button>
+          <button class="btn-icon ic-trash" onclick="trashStd('${s._id}',true)" title="Move to Trash">🗑️</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function renderOffTable() {
+    const offGF   = (document.getElementById('offGradeFilter')?.value  || '');
+    const offGndF = (document.getElementById('offGenderFilter')?.value || '');
+    const offStmF = (document.getElementById('offStreamFilter')?.value || '');
+    const offQ    = (document.getElementById('offSearch')?.value       || '').toLowerCase();
+
+    let rows = offDataStore.filter(s => !s.isTrashed
       && (!offGF   || (s.gradeLevel || '') === offGF)
       && genderMatch(s.sex, offGndF)
       && streamMatch(s.educationStream, offStmF)
@@ -782,59 +981,225 @@
       )
     );
 
-    // Alphabetical sort by firstName + fathersName
-    activeOff.sort((a, b) => {
+    // Sort by name
+    rows.sort((a, b) => {
       const na = (`${a.firstName||''} ${a.fathersName||''}`).trim().toLowerCase();
       const nb = (`${b.firstName||''} ${b.fathersName||''}`).trim().toLowerCase();
       return offSortAsc ? na.localeCompare(nb) : nb.localeCompare(na);
     });
-    document.getElementById('offTable').innerHTML = activeOff.length === 0
-      ? '<tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:20px;">No active records found.</td></tr>'
-      : activeOff.map((s, i) => `
-          <tr>
-            <td style="color:#94a3b8;font-size:0.78rem">${i + 1}</td>
-            <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : '<span style="font-size:0.72rem;color:#94a3b8">No photo</span>'}</td>
-            <td><b>${s.firstName||''} ${s.fathersName||''} ${s.grandfathersName||''}</b></td>
-            <td>${s.sex || '—'}</td>
-            <td>${s.gradeLevel||'—'} / ${s.section||'—'}</td>
-            <td>${s.kebele || '—'}</td>
-            <td>${s.parentGuardianPhone || '—'}</td>
-            <td style="white-space:nowrap">
-              <button class="btn-icon ic-view"  onclick="openCert('${s._id}')"         title="👁️ View Full Record">👁️</button>
-              <button class="btn-icon ic-edit"  onclick="openOffEdit('${s._id}')"       title="✏️ Edit">✏️</button>
-              <button class="btn-icon ic-trash" onclick="trashOff('${s._id}',true)"    title="🗑 Move to Trash">🗑️</button>
-            </td>
-          </tr>`).join('');
 
-    // 3 — TRASH standard
-    const trStd = stdDataStore.filter(s => s.isTrashed);
-    document.getElementById('trashStdTable').innerHTML = trStd.length === 0
-      ? '<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:16px;">Empty</td></tr>'
-      : trStd.map(s => `
-          <tr>
-            <td>${s.fullName || '—'}</td>
-            <td>${s.grade   || '—'}</td>
-            <td>${s.phone || s.guardianPhone || '—'}</td>
-            <td style="white-space:nowrap">
-              <button class="btn-icon ic-restore" onclick="trashStd('${s._id}',false)"      title="♻️ Restore">♻️</button>
-              <button class="btn-icon ic-delete"  onclick="deleteStdPermanent('${s._id}')"  title="❌ Delete Forever">❌</button>
-            </td>
-          </tr>`).join('');
+    const tbody = document.getElementById('offTable');
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#94a3b8;padding:20px;">
+        No official census records match your filters.
+      </td></tr>`;
+      return;
+    }
 
-    // 4 — TRASH official
-    const trOff = offDataStore.filter(s => s.isTrashed);
-    document.getElementById('trashOffTable').innerHTML = trOff.length === 0
-      ? '<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:16px;">Empty</td></tr>'
-      : trOff.map(s => `
-          <tr>
-            <td>${s.photo ? `<img src="${s.photo}" class="img-thumb">` : '—'}</td>
-            <td>${s.firstName||''} ${s.fathersName||''} ${s.grandfathersName||''}</td>
-            <td>${s.gradeLevel||'—'} / ${s.section||'—'}</td>
-            <td style="white-space:nowrap">
-              <button class="btn-icon ic-restore" onclick="trashOff('${s._id}',false)"      title="♻️ Restore">♻️</button>
-              <button class="btn-icon ic-delete"  onclick="deleteOffPermanent('${s._id}')"  title="❌ Delete Forever">❌</button>
-            </td>
-          </tr>`).join('');
+    tbody.innerHTML = rows.map((s, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${s.photo ? `<img src="${s.photo}" class="img-thumb" alt="Photo">` : '<span style="color:#94a3b8;font-size:0.75rem;">No Photo</span>'}</td>
+        <td><b>${s.firstName || '—'} ${s.fathersName || ''} ${s.grandfathersName || ''}</b></td>
+        <td>${s.nationalId || '—'}</td>
+        <td>${s.sex || '—'}</td>
+        <td>${s.gradeLevel || '—'} ${s.section ? '/ ' + s.section : ''}</td>
+        <td>${s.kebele || '—'}</td>
+        <td>${s.parentGuardianPhone || '—'}</td>
+        <td style="white-space:nowrap;">
+          <button class="btn-icon ic-view"  onclick="openCert('${s._id}')" title="View Certificate">👁</button>
+          <button class="btn-icon ic-edit"  onclick="openOffEdit('${s._id}')" title="Edit">✏️</button>
+          <button class="btn-icon ic-trash" onclick="trashOff('${s._id}',true)" title="Move to Trash">🗑️</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function renderTrashTables() {
+    const stdTrash = stdDataStore.filter(s => s.isTrashed);
+    const offTrash = offDataStore.filter(s => s.isTrashed);
+
+    const stdBody = document.getElementById('trashStdTable');
+    if (!stdTrash.length) {
+      stdBody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:20px;">No standard records in trash.</td></tr>`;
+    } else {
+      stdBody.innerHTML = stdTrash.map(s => `
+        <tr>
+          <td><b>${s.fullName || '—'}</b></td>
+          <td>${s.grade || '—'}</td>
+          <td>${(s.phone || s.guardianPhone) || '—'}</td>
+          <td style="white-space:nowrap;">
+            <button class="btn-icon ic-restore" onclick="trashStd('${s._id}',false)" title="Restore">♻️</button>
+            <button class="btn-icon ic-delete" onclick="deleteStdPermanent('${s._id}')" title="Delete Forever">🗑️</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    const offBody = document.getElementById('trashOffTable');
+    if (!offTrash.length) {
+      offBody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:20px;">No official records in trash.</td></tr>`;
+    } else {
+      offBody.innerHTML = offTrash.map(s => `
+        <tr>
+          <td>${s.photo ? `<img src="${s.photo}" class="img-thumb" alt="Photo">` : '<span style="color:#94a3b8;font-size:0.75rem;">No Photo</span>'}</td>
+          <td><b>${s.firstName || '—'} ${s.fathersName || ''}</b></td>
+          <td>${s.gradeLevel || '—'} ${s.section ? '/ ' + s.section : ''}</td>
+          <td style="white-space:nowrap;">
+            <button class="btn-icon ic-restore" onclick="trashOff('${s._id}',false)" title="Restore">♻️</button>
+            <button class="btn-icon ic-delete" onclick="deleteOffPermanent('${s._id}')" title="Delete Forever">🗑️</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  function normalizeExamString(value) {
+    return String(value ?? '').trim();
+  }
+
+  function parseBatchText(rawText) {
+    const rows = [];
+    const lines = String(rawText || '').split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+
+    for (const line of lines) {
+      const cleaned = line.replace(/^\s*['\"]|['\"]\s*$/g, '').trim();
+      if (!cleaned) continue;
+
+      const [idNumber, ...rest] = cleaned.split(',').map(part => part.trim());
+      const firstName = rest.join(',').trim();
+      if (idNumber || firstName) {
+        rows.push({ idNumber, firstName });
+      }
+    }
+
+    return rows;
+  }
+
+  function showBulkStatus(message, type = 'info') {
+    const msg = document.getElementById('bulkMsg');
+    msg.style.display = 'inline-block';
+    msg.textContent = message;
+    msg.style.background = type === 'success' ? '#dcfce7' : type === 'error' ? '#fee2e2' : '#e0f2fe';
+    msg.style.color = type === 'success' ? '#166534' : type === 'error' ? '#991b1b' : '#1d4ed8';
+  }
+
+  function handleCsvUpload(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = String(reader.result || '');
+      const rows = parseBatchText(text.replace(/^[\s\S]*?\r?\n/, ''));
+      currentBatchEntries = rows;
+      document.getElementById('csvFileName').textContent = file.name;
+
+      if (!rows.length) {
+        showBulkStatus('No valid records found in the CSV file.', 'error');
+        return;
+      }
+
+      document.getElementById('bulkPasteArea').value = rows.map(r => `${r.idNumber || ''}, ${r.firstName || ''}`).join('\n');
+      renderBulkPreview(rows);
+    };
+    reader.readAsText(file);
+  }
+
+  function renderBulkPreview(rows) {
+    const preview = rows.slice(0, 200);
+    const tbody = document.getElementById('bulkPreviewTable');
+    document.getElementById('bulkPreviewCount').textContent = String(rows.length);
+    tbody.innerHTML = preview.map((row, index) => `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${row.idNumber || '—'}</td>
+        <td>${row.firstName || '—'}</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>Ready for matching</td>
+      </tr>
+    `).join('');
+    document.getElementById('bulkPreview').style.display = 'block';
+    document.getElementById('processBatchBtn').style.display = 'inline-flex';
+  }
+
+  function parseBulkInput() {
+    const text = document.getElementById('bulkPasteArea').value;
+    const rows = parseBatchText(text);
+
+    if (!rows.length) {
+      showBulkStatus('Enter at least one record in the format ID_NUMBER, FIRST_NAME.', 'error');
+      return;
+    }
+
+    currentBatchEntries = rows;
+    renderBulkPreview(rows);
+    showBulkStatus(`${rows.length} record(s) ready to process.`, 'info');
+  }
+
+  function clearBulkInput() {
+    currentBatchEntries = [];
+    document.getElementById('bulkPasteArea').value = '';
+    document.getElementById('bulkCsvFile').value = '';
+    document.getElementById('csvFileName').textContent = 'No file selected';
+    document.getElementById('bulkPreviewTable').innerHTML = '';
+    document.getElementById('bulkPreview').style.display = 'none';
+    document.getElementById('processBatchBtn').style.display = 'none';
+    const msg = document.getElementById('bulkMsg');
+    msg.style.display = 'none';
+    msg.textContent = '';
+  }
+
+  async function processBatch() {
+    if (!currentBatchEntries.length) {
+      parseBulkInput();
+      return;
+    }
+
+    showBulkStatus('Processing batch list...', 'info');
+
+    try {
+      const res = await fetch('/api/admin/bulk-entrance-scores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entries: currentBatchEntries })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Batch processing failed.');
+      }
+
+      showBulkStatus(`Batch processed successfully: ${data.processed || 0} record(s).`, 'success');
+      clearBulkInput();
+      fetchExamScores();
+      showTab('exam');
+    } catch (err) {
+      showBulkStatus(err.message || 'Unable to process batch list.', 'error');
+    }
+  }
+
+  async function fetchExamScores() {
+    try {
+      const res = await fetch('/api/admin/entrance-exam-results');
+      const raw = await res.json();
+      examDataStore = Array.isArray(raw) ? raw : [];
+      renderExamTable();
+    } catch (err) {
+      console.error('[fetchExamScores] Failed to load entrance exam results:', err);
+      document.getElementById('examTable').innerHTML = '<tr><td colspan="13" style="text-align:center;color:#ef4444;padding:20px;">⚠ Failed to load entrance exam results.</td></tr>';
+    }
+  }
+
+  function toggleExamSort() {
+    examSortAsc = !examSortAsc;
+    const btn = document.getElementById('examSortBtn');
+    btn.textContent = examSortAsc ? '🔤 A→Z' : '🔤 Z→A';
+    btn.classList.toggle('active', !examSortAsc);
+    renderExamTable();
   }
 
   /* ── CERTIFICATE VIEW ──────────────────────────────────────────────── */
@@ -1012,25 +1377,74 @@
     return rows;
   }
 
-  function downloadOffCSV() {
+  /* ── TABLE DATA EXPORT (visible columns only) ──────────────────────── */
+  const OFF_TABLE_HEADERS = [
+    'Photo', 'Full Name', 'National ID', 'Sex', 'Grade / Section', 'Kebele', 'Parent Phone'
+  ];
+
+  function offTableRowToArray(s) {
+    const photoUrl = s.photo || '';
+    const fullName = `${s.firstName || ''} ${s.fathersName || ''} ${s.grandfathersName || ''}`.trim();
+    const nationalId = s.nationalId || '';
+    const sex = s.sex || '';
+    const gradeSection = `${s.gradeLevel || ''} ${s.section ? '/ ' + s.section : ''}`.trim();
+    const kebele = s.kebele || '';
+    const phone = s.parentGuardianPhone || '';
+    
+    return [photoUrl, fullName, nationalId, sex, gradeSection, kebele, phone];
+  }
+
+  function downloadOffTableCSV() {
+    const rows = getActiveOff();
+    if (!rows.length) { alert('No active official records to export.'); return; }
+    const csv = [OFF_TABLE_HEADERS.join(','),
+      ...rows.map(s => offTableRowToArray(s).map(v =>
+        `"${String(v).replace(/"/g,'""')}"`).join(','))
+    ].join('\n');
+    triggerDownload('\uFEFF' + csv, 'text/csv', 'KiltuKara_Official_Table.csv');
+  }
+
+  function downloadOffTableExcel() {
+    const rows = getActiveOff();
+    if (!rows.length) { alert('No active official records to export.'); return; }
+    const tHead = `<tr>${OFF_TABLE_HEADERS.map(h =>
+      `<th style="background:#065f46;color:white;padding:7px;border:1px solid #cbd5e1">${h}</th>`).join('')}</tr>`;
+    const tBody = rows.map(s => `<tr>${offTableRowToArray(s).map(v =>
+      `<td style="padding:6px 9px;border:1px solid #e2e8f0">${v}</td>`).join('')}</tr>`).join('');
+    triggerDownload(buildExcelHtml(tHead + tBody, 'OfficialTable'),
+      'application/vnd.ms-excel', 'KiltuKara_Official_Table.xls');
+  }
+
+  /* ── FULL DATA EXPORT (all fields) ─────────────────────────────────── */
+  function downloadOffFullCSV() {
     const rows = getActiveOff();
     if (!rows.length) { alert('No active official records to export.'); return; }
     const csv = [OFF_HEADERS.join(','),
       ...rows.map(s => offRowToArray(s).map(v =>
         `"${String(v).replace(/"/g,'""')}"`).join(','))
     ].join('\n');
-    triggerDownload('\uFEFF' + csv, 'text/csv', 'KiltuKara_Official_Census.csv');
+    triggerDownload('\uFEFF' + csv, 'text/csv', 'KiltuKara_Official_FullData.csv');
   }
 
-  function downloadOffExcel() {
+  function downloadOffFullExcel() {
     const rows = getActiveOff();
     if (!rows.length) { alert('No active official records to export.'); return; }
     const tHead = `<tr>${OFF_HEADERS.map(h =>
       `<th style="background:#065f46;color:white;padding:7px;border:1px solid #cbd5e1">${h}</th>`).join('')}</tr>`;
     const tBody = rows.map(s => `<tr>${offRowToArray(s).map(v =>
       `<td style="padding:6px 9px;border:1px solid #e2e8f0">${v}</td>`).join('')}</tr>`).join('');
-    triggerDownload(buildExcelHtml(tHead + tBody, 'OfficialCensus'),
-      'application/vnd.ms-excel', 'KiltuKara_Official_Census.xls');
+    triggerDownload(buildExcelHtml(tHead + tBody, 'OfficialFullData'),
+      'application/vnd.ms-excel', 'KiltuKara_Official_FullData.xls');
+  }
+
+  function downloadOffCSV() {
+    // Legacy function - redirects to full data export
+    downloadOffFullCSV();
+  }
+
+  function downloadOffExcel() {
+    // Legacy function - redirects to full data export
+    downloadOffFullExcel();
   }
 
   function buildExcelHtml(tableContent, sheetName) {
@@ -1061,7 +1475,7 @@
       msgEl.textContent = 'New passwords do not match.';
       return;
     }
-    if (newPassword.length < 6) {
+    if ( newPassword.length < 6) {
       msgEl.className = 'modal-msg error';
       msgEl.textContent = 'New password must be at least 6 characters.';
       return;
@@ -1098,6 +1512,7 @@
   }
 
   /* ── CSV / EXCEL EXPORT ────────────────────────────────────────────── */
+  // Returns ALL non-trashed standard records regardless of active filters
   function getActiveStd() { return stdDataStore.filter(s => !s.isTrashed); }
 
   function downloadStdCSV() {
@@ -1105,28 +1520,30 @@
     if (!rows.length) { alert('No active records to export.'); return; }
 
     const headers = [
-      'Full Name','Sex','Age','Grade','Section','Stream','Average (%)',
+      'National / Student ID','Full Name','Sex','Age','Grade','Section','Stream','Average (%)',
       'Receipt No.','Admission Type','Woreda','Kebele','Guardian Name','Guardian Phone',
       'Previous School','Registered At'
     ];
     const csv = [headers.join(','), ...rows.map(s => [
-      `"${s.fullName      || ''}"`,
-      `"${s.gender        || ''}"`,
-      s.age               || '',
-      `"${s.grade         || ''}"`,
-      `"${s.section       || ''}"`,
-      `"${s.stream        || ''}"`,
-      s.academicAverage || s.average || '',
-      `"${s.receiptNo     || ''}"`,
-      `"${s.admissionType || ''}"`,
-      `"${s.woreda        || ''}"`,
-      `"${s.kebele        || ''}"`,
-      `"${s.guardianName  || ''}"`,
-      `"${s.phone || s.guardianPhone || ''}"`,
-      `"${s.previousSchool|| ''}"`,
+      `"${(s.nationalId     || '').replace(/"/g,'""')}"`,
+      `"${(s.fullName       || '').replace(/"/g,'""')}"`,
+      `"${(s.gender         || '').replace(/"/g,'""')}"`,
+      s.age != null ? s.age : '',
+      `"${(s.grade          || '').replace(/"/g,'""')}"`,
+      `"${(s.section        || '').replace(/"/g,'""')}"`,
+      `"${(s.stream         || '').replace(/"/g,'""')}"`,
+      s.academicAverage != null ? s.academicAverage : (s.average != null ? s.average : ''),
+      `"${(s.receiptNo      || '').replace(/"/g,'""')}"`,
+      `"${(s.admissionType  || '').replace(/"/g,'""')}"`,
+      `"${(s.woreda         || '').replace(/"/g,'""')}"`,
+      `"${(s.kebele         || '').replace(/"/g,'""')}"`,
+      `"${(s.guardianName   || '').replace(/"/g,'""')}"`,
+      `"${((s.phone || s.guardianPhone) || '').replace(/"/g,'""')}"`,
+      `"${(s.previousSchool || '').replace(/"/g,'""')}"`,
       `"${s.createdAt ? new Date(s.createdAt).toLocaleDateString() : ''}"`
     ].join(','))].join('\n');
 
+    console.log(`[Export CSV] ${rows.length} standard student records`);
     triggerDownload('\uFEFF' + csv, 'text/csv', 'KiltuKara_Standard_Students.csv');
   }
 
@@ -1135,7 +1552,7 @@
     if (!rows.length) { alert('No active records to export.'); return; }
 
     const headers = [
-      'Full Name','Sex','Age','Grade','Section','Stream','Average (%)',
+      'National / Student ID','Full Name','Sex','Age','Grade','Section','Stream','Average (%)',
       'Receipt No.','Admission Type','Woreda','Kebele','Guardian Name','Guardian Phone',
       'Previous School','Registered At'
     ];
@@ -1143,7 +1560,7 @@
       `<th style="background:#1e293b;color:white;padding:8px;border:1px solid #cbd5e1">${h}</th>`
     ).join('')}</tr>`;
     const tBody = rows.map(s => `<tr>
-      ${etd(s.fullName)} ${etd(s.gender)} ${etd(s.age)} ${etd(s.grade)}
+      ${etd(s.nationalId)} ${etd(s.fullName)} ${etd(s.gender)} ${etd(s.age)} ${etd(s.grade)}
       ${etd(s.section)} ${etd(s.stream)} ${etd(s.academicAverage || s.average)}
       ${etd(s.receiptNo)} ${etd(s.admissionType)} ${etd(s.woreda)} ${etd(s.kebele)}
       ${etd(s.guardianName)} ${etd(s.phone || s.guardianPhone)}
@@ -1172,6 +1589,94 @@
     a.href = url; a.download = filename;
     document.body.appendChild(a); a.click();
     document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  /* ── STANDARD EXPORT (CSV & EXCEL) ────────────────────────────────── */
+  function getActiveStdRows() {
+    const stdGF   = (document.getElementById('stdGradeFilter')?.value  || '');
+    const stdGndF = (document.getElementById('stdGenderFilter')?.value || '');
+    const stdStmF = (document.getElementById('stdStreamFilter')?.value || '');
+    const stdQ    = (document.getElementById('stdSearch')?.value       || '').toLowerCase();
+
+    const rows = stdDataStore.filter(s => !s.isTrashed
+      && (!stdGF   || (s.grade || '') === stdGF)
+      && genderMatch(s.gender, stdGndF)
+      && streamMatch(s.stream, stdStmF)
+      && (
+        !stdQ ||
+        (s.fullName || '').toLowerCase().includes(stdQ) ||
+        (s.receiptNo || '').toLowerCase().includes(stdQ) ||
+        (s.nationalId || '').toLowerCase().includes(stdQ) ||
+        ((s.phone || s.guardianPhone) || '').includes(stdQ)
+      )
+    );
+
+    // Sort by name (matches table order)
+    rows.sort((a, b) => {
+      const na = (a.fullName || '').trim().toLowerCase();
+      const nb = (b.fullName || '').trim().toLowerCase();
+      return stdSortAsc ? na.localeCompare(nb) : nb.localeCompare(na);
+    });
+    return rows;
+  }
+
+  function stdRowToArray(s) {
+    return [
+      s.nationalId || '',
+      s.fullName || '',
+      s.gender || '',
+      s.age || '',
+      s.grade || '',
+      s.section || '',
+      s.stream || '',
+      s.academicAverage ?? (s.average ?? ''),
+      s.receiptNo || '',
+      s.admissionType || '',
+      s.woreda || '',
+      s.kebele || '',
+      s.guardianName || '',
+      (s.phone || s.guardianPhone) || '',
+      s.createdAt ? new Date(s.createdAt).toLocaleDateString() : ''
+    ];
+  }
+
+  const STD_HEADERS = [
+    'National / Student ID',
+    'Full Name',
+    'Gender',
+    'Age',
+    'Grade',
+    'Section',
+    'Stream',
+    'Academic Average (%)',
+    'Receipt No.',
+    'Admission Type',
+    'Woreda',
+    'Kebele',
+    'Guardian Name',
+    'Guardian Phone',
+    'Registered At'
+  ];
+
+  function downloadStdCSV() {
+    const rows = getActiveStdRows();
+    if (!rows.length) { alert('No standard student records to export.'); return; }
+    const csv = [STD_HEADERS.join(','),
+      ...rows.map(s => stdRowToArray(s).map(v =>
+        `"${String(v).replace(/"/g,'""')}"`).join(','))
+    ].join('\n');
+    triggerDownload('\uFEFF' + csv, 'text/csv', 'KiltuKara_Standard_Students.csv');
+  }
+
+  function downloadStdExcel() {
+    const rows = getActiveStdRows();
+    if (!rows.length) { alert('No standard student records to export.'); return; }
+    const tHead = `<tr>${STD_HEADERS.map(h =>
+      `<th style="background:#1e293b;color:white;padding:7px;border:1px solid #cbd5e1">${h}</th>`).join('')}</tr>`;
+    const tBody = rows.map(s => `<tr>${stdRowToArray(s).map(v =>
+      `<td style="padding:6px 9px;border:1px solid #e2e8f0">${v}</td>`).join('')}</tr>`).join('');
+    triggerDownload(buildExcelHtml(tHead + tBody, 'StandardStudents'),
+      'application/vnd.ms-excel', 'KiltuKara_Standard_Students.xls');
   }
 
   /* ── TRASH / DELETE ────────────────────────────────────────────────── */
@@ -1206,6 +1711,7 @@
     if (!s) return;
     document.getElementById('editStdId').value        = s._id;
     document.getElementById('editStdFullName').value  = s.fullName    || '';
+    document.getElementById('editStdNationalId').value = s.nationalId || '';
     document.getElementById('editStdGender').value    = s.gender      || 'Male';
     document.getElementById('editStdAge').value       = s.age         || '';
     document.getElementById('editStdGrade').value     = s.grade       || '';
@@ -1226,6 +1732,7 @@
       method: 'PUT', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         fullName:        document.getElementById('editStdFullName').value,
+        nationalId:      document.getElementById('editStdNationalId').value,
         gender:          document.getElementById('editStdGender').value,
         age:             document.getElementById('editStdAge').value,
         grade:           document.getElementById('editStdGrade').value,
@@ -1374,8 +1881,842 @@
     }
   }
 
+  function renderExamTable() {
+    const q = normalizeExamString(document.getElementById('examSearch')?.value || '').toLowerCase();
+    const streamFilter = normalizeExamString(document.getElementById('examStreamFilter')?.value || '').toUpperCase();
+    const genderFilter = normalizeExamString(document.getElementById('examGenderFilter')?.value || '').toUpperCase();
+
+    let rows = examDataStore.filter(record => {
+      const fullName = `${record.firstName || ''} ${record.fathersName || ''} ${record.grandfathersName || ''}`.trim().toLowerCase();
+      const matchesQuery = !q || fullName.includes(q) || (record.idNumber || '').toLowerCase().includes(q);
+      const matchesStream = !streamFilter || (record.stream || '').toUpperCase() === streamFilter;
+      const matchesGender = !genderFilter || (record.gender || '').toUpperCase() === genderFilter;
+      return matchesQuery && matchesStream && matchesGender;
+    });
+
+    rows.sort((a, b) => {
+      const nameA = `${a.firstName || ''} ${a.fathersName || ''} ${a.grandfathersName || ''}`.trim().toLowerCase();
+      const nameB = `${b.firstName || ''} ${b.fathersName || ''} ${b.grandfathersName || ''}`.trim().toLowerCase();
+      return examSortAsc ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+    });
+
+    const tbody = document.getElementById('examTable');
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="15" style="text-align:center;color:#94a3b8;padding:20px;">No exam results found. Use the Bulk Score Entry tab to import candidates.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = rows.map((row, i) => {
+      const fullName = [row.firstName, row.fathersName, row.grandfathersName].filter(Boolean).join(' ');
+      const total    = Number(row.totalScore ?? 0).toFixed(1);
+      const average  = Number(row.average    ?? 0).toFixed(1);
+      const status   = row.status || 'Pending';
+      const statusColor = status === 'Qualified' || status === 'Pass' ? '#166534'
+                        : status === 'Fail' ? '#991b1b'
+                        : status === 'Review' ? '#92400e' : '#475569';
+      const statusBg = status === 'Qualified' || status === 'Pass' ? '#dcfce7'
+                     : status === 'Fail' ? '#fee2e2'
+                     : status === 'Review' ? '#fef3c7' : '#f1f5f9';
+      const id = row._id || row.idNumber;
+
+      return `
+        <tr>
+          <td style="color:#94a3b8;font-size:0.78rem">${i + 1}</td>
+          <td style="font-size:0.8rem;color:#475569">${row.idNumber || '—'}</td>
+          <td><b>${fullName || '—'}</b></td>
+          <td style="text-align:center">${row.gender || '—'}</td>
+          <td style="text-align:center">${row.stream || '—'}</td>
+          <td style="text-align:center">${Number(row.aptitude ?? 0).toFixed(1)}</td>
+          <td style="text-align:center">${Number(row.english  ?? 0).toFixed(1)}</td>
+          <td style="text-align:center">${Number(row.maths    ?? 0).toFixed(1)}</td>
+          <td style="text-align:center">${Number(row.physHist ?? 0).toFixed(1)}</td>
+          <td style="text-align:center">${Number(row.chemGeo  ?? 0).toFixed(1)}</td>
+          <td style="text-align:center">${Number(row.bioCiv   ?? 0).toFixed(1)}</td>
+          <td style="text-align:center;font-weight:700">${total}</td>
+          <td style="text-align:center;font-weight:700">${average}%</td>
+          <td><span style="background:${statusBg};color:${statusColor};padding:2px 8px;border-radius:12px;font-size:0.75rem;font-weight:700;">${status}</span></td>
+          <td style="white-space:nowrap">
+            <button class="btn-icon ic-edit"  onclick="openExamEdit('${id}')"         title="✏️ Edit">✏️</button>
+            <button class="btn-icon ic-trash" onclick="trashExamRecord('${id}', true)" title="🗑 Trash">🗑️</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function getActiveExamRows() {
+    const q = normalizeExamString(document.getElementById('examSearch')?.value || '').toLowerCase();
+    const streamFilter = normalizeExamString(document.getElementById('examStreamFilter')?.value || '').toUpperCase();
+    const genderFilter = normalizeExamString(document.getElementById('examGenderFilter')?.value || '').toUpperCase();
+
+    return examDataStore.filter(record => {
+      const fullName = `${record.firstName || ''} ${record.fathersName || ''} ${record.grandfathersName || ''}`.trim().toLowerCase();
+      const matchesQuery = !q || fullName.includes(q) || (record.idNumber || '').toLowerCase().includes(q);
+      const matchesStream = !streamFilter || (record.stream || '').toUpperCase() === streamFilter;
+      const matchesGender = !genderFilter || (record.gender || '').toUpperCase() === genderFilter;
+      return matchesQuery && matchesStream && matchesGender;
+    }).sort((a, b) => {
+      const nameA = `${a.firstName || ''} ${a.fathersName || ''} ${a.grandfathersName || ''}`.trim().toLowerCase();
+      const nameB = `${b.firstName || ''} ${b.fathersName || ''} ${b.grandfathersName || ''}`.trim().toLowerCase();
+      return examSortAsc ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+    });
+  }
+
+  function downloadExamCSV() {
+    const rows = getActiveExamRows();
+    if (!rows.length) {
+      alert('No exam results to export.');
+      return;
+    }
+
+    const headers = [
+      'ID No', 'Full Name (First Father Grandfather)', 'Gender (M/F)', 'Stream (NS/SS)',
+      'Aptitude', 'English', 'Maths', 'Phys/Hist', 'Chem/Geo', 'Bio/Civ',
+      'Total Score', 'Average', 'Status'
+    ];
+
+    const csv = [headers.join(','), ...rows.map(r => [
+      `"${(r.idNumber || '').replace(/"/g, '""')}"`,
+      `"${([r.firstName, r.fathersName, r.grandfathersName].filter(Boolean).join(' ')).replace(/"/g, '""')}"`,
+      `"${(r.gender || '').replace(/"/g, '""')}"`,
+      `"${(r.stream || '').replace(/"/g, '""')}"`,
+      Number(r.aptitude ?? 0),
+      Number(r.english ?? 0),
+      Number(r.maths ?? 0),
+      Number(r.physHist ?? 0),
+      Number(r.chemGeo ?? 0),
+      Number(r.bioCiv ?? 0),
+      Number(r.totalScore ?? 0),
+      Number(r.average ?? 0),
+      `"${(r.status || '').replace(/"/g, '""')}"`
+    ].join(','))].join('\n');
+
+    triggerDownload('\uFEFF' + csv, 'text/csv', 'Entrance_Exam_Results.csv');
+  }
+
+  function downloadExamExcel() {
+    const rows = getActiveExamRows();
+    if (!rows.length) {
+      alert('No exam results to export.');
+      return;
+    }
+
+    const headers = [
+      'ID No', 'Full Name (First Father Grandfather)', 'Gender (M/F)', 'Stream (NS/SS)',
+      'Aptitude', 'English', 'Maths', 'Phys/Hist', 'Chem/Geo', 'Bio/Civ',
+      'Total Score', 'Average', 'Status'
+    ];
+
+    const tHead = `<tr>${headers.map(h => `<th style="background:#1e293b;color:white;padding:8px;border:1px solid #cbd5e1">${h}</th>`).join('')}</tr>`;
+    const tBody = rows.map(r => `<tr>${[
+      etd(r.idNumber || ''),
+      etd([r.firstName, r.fathersName, r.grandfathersName].filter(Boolean).join(' ')),
+      etd(r.gender || ''),
+      etd(r.stream || ''),
+      etd(Number(r.aptitude ?? 0).toFixed(1)),
+      etd(Number(r.english ?? 0).toFixed(1)),
+      etd(Number(r.maths ?? 0).toFixed(1)),
+      etd(Number(r.physHist ?? 0).toFixed(1)),
+      etd(Number(r.chemGeo ?? 0).toFixed(1)),
+      etd(Number(r.bioCiv ?? 0).toFixed(1)),
+      etd(Number(r.totalScore ?? 0).toFixed(1)),
+      etd(Number(r.average ?? 0).toFixed(1) + '%'),
+      etd(r.status || 'Pending')
+    ].join('')}</tr>`).join('');
+
+    triggerDownload(buildExcelHtml(tHead + tBody, 'EntranceExamResults'), 'application/vnd.ms-excel', 'Entrance_Exam_Results.xls');
+  }
+
+  /* ── EXAM CRUD ─────────────────────────────────────────────────────── */
+
+  // Live total/avg preview inside the modal
+  function updateExamCalc() {
+    const scores = ['examAptitude','examEnglish','examMaths','examSubject4','examSubject5','examSubject6']
+      .map(id => parseFloat(document.getElementById(id)?.value) || 0);
+    const total = scores.reduce((a,b) => a+b, 0);
+    const avg   = total > 0 ? ((total / 600) * 100).toFixed(1) : '0.0';
+    document.getElementById('examCalcTotal').textContent = total.toFixed(1);
+    document.getElementById('examCalcAvg').textContent  = avg;
+  }
+
+  // Attach live calc to score inputs
+  ['examAptitude','examEnglish','examMaths','examSubject4','examSubject5','examSubject6'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateExamCalc);
+  });
+
+  // Update subject labels based on stream
+  function updateExamLabels() {
+    const stream = document.getElementById('examStream')?.value;
+    if (stream === 'SS') {
+      document.getElementById('examLbl4').textContent = 'History';
+      document.getElementById('examLbl5').textContent = 'Geography';
+      document.getElementById('examLbl6').textContent = 'Civics';
+    } else {
+      document.getElementById('examLbl4').textContent = 'Physics';
+      document.getElementById('examLbl5').textContent = 'Chemistry';
+      document.getElementById('examLbl6').textContent = 'Biology';
+    }
+  }
+  document.getElementById('examStream')?.addEventListener('change', updateExamLabels);
+
+  function openExamAdd() {
+    document.getElementById('examModalTitle').textContent = '➕ Add Exam Student';
+    document.getElementById('examEditId').value       = '';
+    document.getElementById('examIdNo').value         = '';
+    document.getElementById('examFirstName').value    = '';
+    document.getElementById('examFathersName').value  = '';
+    document.getElementById('examGrandfathersName').value = '';
+    document.getElementById('examGender').value       = 'M';
+    document.getElementById('examStream').value       = 'NS';
+    ['examAptitude','examEnglish','examMaths','examSubject4','examSubject5','examSubject6']
+      .forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('examStatus').value = 'Pending';
+    document.getElementById('examCalcTotal').textContent = '—';
+    document.getElementById('examCalcAvg').textContent   = '—';
+    updateExamLabels();
+    openModal('examEditModal');
+  }
+
+  function openExamEdit(id) {
+    const r = examDataStore.find(s => (s._id || s.idNumber) === id);
+    if (!r) return;
+    document.getElementById('examModalTitle').textContent    = '✏️ Edit Exam Record';
+    document.getElementById('examEditId').value              = r._id || '';
+    document.getElementById('examIdNo').value                = r.idNumber       || '';
+    document.getElementById('examFirstName').value           = r.firstName      || '';
+    document.getElementById('examFathersName').value         = r.fathersName    || '';
+    document.getElementById('examGrandfathersName').value    = r.grandfathersName || '';
+    document.getElementById('examGender').value              = r.gender         || 'M';
+    document.getElementById('examStream').value              = r.stream         || 'NS';
+    document.getElementById('examAptitude').value            = r.aptitude       ?? '';
+    document.getElementById('examEnglish').value             = r.english        ?? '';
+    document.getElementById('examMaths').value               = r.maths          ?? '';
+    document.getElementById('examSubject4').value            = r.physHist       ?? '';
+    document.getElementById('examSubject5').value            = r.chemGeo        ?? '';
+    document.getElementById('examSubject6').value            = r.bioCiv         ?? '';
+    document.getElementById('examStatus').value              = r.status         || 'Pending';
+    updateExamCalc();
+    updateExamLabels();
+    openModal('examEditModal');
+  }
+
+  async function saveExamStudent() {
+    const id    = document.getElementById('examEditId').value;
+    const isNew = !id;
+
+    const payload = {
+      idNumber:         document.getElementById('examIdNo').value.trim(),
+      firstName:        document.getElementById('examFirstName').value.trim(),
+      fathersName:      document.getElementById('examFathersName').value.trim(),
+      grandfathersName: document.getElementById('examGrandfathersName').value.trim(),
+      gender:           document.getElementById('examGender').value,
+      stream:           document.getElementById('examStream').value,
+      aptitude:         parseFloat(document.getElementById('examAptitude').value) || 0,
+      english:          parseFloat(document.getElementById('examEnglish').value)  || 0,
+      maths:            parseFloat(document.getElementById('examMaths').value)    || 0,
+      physHist:         parseFloat(document.getElementById('examSubject4').value) || 0,
+      chemGeo:          parseFloat(document.getElementById('examSubject5').value) || 0,
+      bioCiv:           parseFloat(document.getElementById('examSubject6').value) || 0,
+      status:           document.getElementById('examStatus').value
+    };
+
+    if (!payload.firstName) { alert('First name is required.'); return; }
+
+    // Build fullName server needs
+    payload.fullName = [payload.firstName, payload.fathersName, payload.grandfathersName]
+      .filter(Boolean).join(' ');
+
+    try {
+      const url    = isNew ? '/api/admin/entrance-exam-results'
+                           : `/api/admin/entrance-exam-results/${id}`;
+      const method = isNew ? 'POST' : 'PUT';
+      const res    = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        alert('Save failed: ' + (err.error || 'Unknown error'));
+        return;
+      }
+      closeModal('examEditModal');
+      fetchExamScores();
+    } catch {
+      alert('Server connection error while saving exam record.');
+    }
+  }
+
+  async function trashExamRecord(id, isTrashed) {
+    await fetch(`/api/admin/entrance-exam-results/${id}/trash`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isTrashed })
+    });
+    fetchExamScores();
+  }
+
+  /* ── DUPLICATE DETECTION ───────────────────────────────────────────── */
+  
+  async function analyzeDuplicates() {
+    const statusEl = document.getElementById('dupStatus');
+    const container = document.getElementById('dupCandidatesContainer');
+    
+    statusEl.textContent = '⏳ Analyzing...';
+    container.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:40px 20px;font-size:0.9rem;">Analyzing student records for duplicates...</p>';
+    
+    try {
+      const res = await fetch('/api/admin/duplicate-candidates');
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to analyze duplicates');
+      }
+      
+      duplicateCandidates = data.candidates || [];
+      filteredDuplicates = duplicateCandidates;
+      
+      console.log(`[DUPLICATE] Loaded ${duplicateCandidates.length} candidates`);
+      console.log(`[DUPLICATE] Summary:`, data.summary);
+      
+      statusEl.textContent = `Found ${data.total} candidate pairs (${data.summary.strong} strong, ${data.summary.possible} possible)`;
+      renderDuplicates();
+      
+    } catch (error) {
+      console.error('[DUPLICATE] Error:', error);
+      statusEl.textContent = '❌ Analysis failed';
+      container.innerHTML = `<p style="text-align:center;color:#ef4444;padding:40px 20px;">
+        ⚠️ Failed to analyze duplicates: ${error.message}
+      </p>`;
+    }
+  }
+  
+  function renderDuplicates() {
+    const container = document.getElementById('dupCandidatesContainer');
+    const categoryFilter = document.getElementById('dupCategoryFilter')?.value || '';
+    const searchQuery = (document.getElementById('dupSearch')?.value || '').toLowerCase();
+    
+    // Apply filters
+    filteredDuplicates = duplicateCandidates.filter(cand => {
+      // Category filter
+      if (categoryFilter && cand.category !== categoryFilter) return false;
+      
+      // Search filter
+      if (searchQuery) {
+        const s1Name = (cand.student1.fullName || '').toLowerCase();
+        const s2Name = (cand.student2.fullName || '').toLowerCase();
+        if (!s1Name.includes(searchQuery) && !s2Name.includes(searchQuery)) return false;
+      }
+      
+      return true;
+    });
+    
+    if (filteredDuplicates.length === 0) {
+      container.innerHTML = `<p style="text-align:center;color:#94a3b8;padding:40px 20px;font-size:0.9rem;">
+        No duplicate candidates ${categoryFilter || searchQuery ? 'match your filters' : 'found'}. 
+        ${duplicateCandidates.length ? 'Try adjusting your filters.' : ''}
+      </p>`;
+      return;
+    }
+    
+    container.innerHTML = filteredDuplicates.map((cand, idx) => {
+      const s1 = cand.student1;
+      const s2 = cand.student2;
+      
+      const categoryLabel = cand.category === 'strong' ? '🔴 Strong Candidate' :
+                            cand.category === 'possible' ? '🟡 Possible Candidate' :
+                            '⚪ Insufficient Evidence';
+      
+      return `
+        <div class="dup-card ${cand.category}">
+          <div class="dup-header">
+            <span class="dup-badge ${cand.category}">${categoryLabel}</span>
+            <span class="dup-score">Match Score: ${cand.matchScore}%</span>
+          </div>
+          
+          <div class="dup-comparison">
+            <!-- Student 1 -->
+            <div class="dup-student">
+              <div class="dup-student-header">
+                Student 1 (${s1.collection === 'standard' ? 'Standard' : 'Official Census'})
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">ID:</span>
+                <span class="dup-field-value">${s1._id}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Full Name:</span>
+                <span class="dup-field-value">${s1.fullName || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Gender:</span>
+                <span class="dup-field-value">${s1.gender || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Grade:</span>
+                <span class="dup-field-value">${s1.grade || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Section:</span>
+                <span class="dup-field-value">${s1.section || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Stream:</span>
+                <span class="dup-field-value">${s1.stream || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Average:</span>
+                <span class="dup-field-value ${cand.metrics.avg1 ? 'highlight' : ''}">${s1.average !== null && s1.average !== undefined ? s1.average.toFixed(1) + '%' : '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Guardian:</span>
+                <span class="dup-field-value">${s1.guardianName || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Guardian Phone:</span>
+                <span class="dup-field-value ${cand.metrics.phoneMatch ? 'highlight' : ''}">${s1.guardianPhone || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Kebele:</span>
+                <span class="dup-field-value">${s1.kebele || '—'}</span>
+              </div>
+            </div>
+            
+            <!-- Student 2 -->
+            <div class="dup-student">
+              <div class="dup-student-header">
+                Student 2 (${s2.collection === 'standard' ? 'Standard' : 'Official Census'})
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">ID:</span>
+                <span class="dup-field-value">${s2._id}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Full Name:</span>
+                <span class="dup-field-value">${s2.fullName || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Gender:</span>
+                <span class="dup-field-value">${s2.gender || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Grade:</span>
+                <span class="dup-field-value">${s2.grade || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Section:</span>
+                <span class="dup-field-value">${s2.section || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Stream:</span>
+                <span class="dup-field-value">${s2.stream || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Average:</span>
+                <span class="dup-field-value ${cand.metrics.avg2 ? 'highlight' : ''}">${s2.average !== null && s2.average !== undefined ? s2.average.toFixed(1) + '%' : '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Guardian:</span>
+                <span class="dup-field-value">${s2.guardianName || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Guardian Phone:</span>
+                <span class="dup-field-value ${cand.metrics.phoneMatch ? 'highlight' : ''}">${s2.guardianPhone || '—'}</span>
+              </div>
+              <div class="dup-field">
+                <span class="dup-field-label">Kebele:</span>
+                <span class="dup-field-value">${s2.kebele || '—'}</span>
+              </div>
+            </div>
+          </div>
+          
+          ${cand.reasons && cand.reasons.length > 0 ? `
+            <div class="dup-reasons">
+              <div class="dup-reasons-title">Matching Reasons</div>
+              ${cand.reasons.map(reason => `<div class="dup-reason-item">${reason}</div>`).join('')}
+            </div>
+          ` : ''}
+          
+          ${cand.differences && cand.differences.length > 0 ? `
+            <div class="dup-differences">
+              <div class="dup-differences-title">Key Differences</div>
+              ${cand.differences.map(diff => `<div class="dup-diff-item">${diff}</div>`).join('')}
+            </div>
+          ` : ''}
+          
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:0.75rem;color:#64748b;">
+            <strong>Note:</strong> Review carefully before taking action. Similar information does not always mean duplicate records.
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  /* ── NID TRANSFER ──────────────────────────────────────────────────── */
+  
+  async function analyzeNIDTransfers() {
+    const statusEl = document.getElementById('nidStatus');
+    const container = document.getElementById('nidCandidatesContainer');
+    
+    statusEl.textContent = '⏳ Analyzing...';
+    container.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:40px 20px;font-size:0.9rem;">Analyzing Standard students without NIDs...</p>';
+    
+    try {
+      const res = await fetch('/api/admin/nid-transfer-analysis');
+      const data = await res.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Analysis failed');
+      }
+      
+      nidTransferCandidates = data.candidates || [];
+      filteredNIDCandidates = nidTransferCandidates;
+      selectedNIDTransfers.clear();
+      
+      console.log(`[NID TRANSFER] Loaded ${nidTransferCandidates.length} candidates`);
+      console.log(`[NID TRANSFER] Summary:`, data.summary);
+      
+      statusEl.textContent = `Found ${data.summary.total} students: ${data.summary.autoTransfer} auto-transfer, ${data.summary.reviewRequired} review, ${data.summary.noMatch} no match`;
+      renderNIDTransfers();
+      
+    } catch (error) {
+      console.error('[NID TRANSFER] Error:', error);
+      statusEl.textContent = '❌ Analysis failed';
+      container.innerHTML = `<p style="text-align:center;color:#ef4444;padding:40px 20px;">
+        ⚠️ Failed to analyze NID transfers: ${error.message}
+      </p>`;
+    }
+  }
+  
+  function renderNIDTransfers() {
+    const container = document.getElementById('nidCandidatesContainer');
+    const recommendationFilter = document.getElementById('nidRecommendationFilter')?.value || '';
+    const searchQuery = (document.getElementById('nidSearch')?.value || '').toLowerCase();
+    
+    // Apply filters
+    filteredNIDCandidates = nidTransferCandidates.filter(cand => {
+      // Recommendation filter
+      if (recommendationFilter && cand.recommendation !== recommendationFilter) return false;
+      
+      // Search filter
+      if (searchQuery) {
+        const stdName = (cand.standardStudent.fullName || '').toLowerCase();
+        const offName = cand.bestMatch ? (cand.bestMatch.officialStudent.fullName || '').toLowerCase() : '';
+        if (!stdName.includes(searchQuery) && !offName.includes(searchQuery)) return false;
+      }
+      
+      return true;
+    });
+    
+    // Update button
+    updateSelectedCount();
+    
+    if (filteredNIDCandidates.length === 0) {
+      container.innerHTML = `<p style="text-align:center;color:#94a3b8;padding:40px 20px;font-size:0.9rem;">
+        No NID transfer candidates ${recommendationFilter || searchQuery ? 'match your filters' : 'found'}. 
+        ${nidTransferCandidates.length ? 'Try adjusting your filters.' : ''}
+      </p>`;
+      return;
+    }
+    
+    container.innerHTML = filteredNIDCandidates.map((cand, idx) => {
+      const std = cand.standardStudent;
+      const match = cand.bestMatch;
+      const isSelected = selectedNIDTransfers.has(std._id);
+      
+      const recommendationLabel = 
+        cand.recommendation === 'auto_transfer' ? '✅ Auto Transfer (High Confidence)' :
+        cand.recommendation === 'review_required' ? '⚠️ Review Required' :
+        cand.recommendation === 'weak_match' ? '🔸 Weak Match' :
+        '❌ No Reliable Match';
+      
+      const canSelect = cand.recommendation !== 'no_match' && match;
+      
+      return `
+        <div class="nid-card ${cand.recommendation} ${isSelected ? 'selected' : ''}" data-std-id="${std._id}">
+          <div class="nid-header">
+            <div style="display:flex;align-items:center;gap:10px;">
+              ${canSelect ? `
+                <input type="checkbox" class="nid-checkbox" 
+                  data-std-id="${std._id}"
+                  data-off-id="${match.officialStudent._id}"
+                  data-nid="${match.officialStudent.nationalId}"
+                  ${isSelected ? 'checked' : ''}
+                  onchange="toggleNIDSelection(this)">
+              ` : ''}
+              <span class="nid-badge ${cand.recommendation}">${recommendationLabel}</span>
+            </div>
+            ${match ? `<span class="nid-confidence">Confidence: ${match.confidence}%</span>` : ''}
+          </div>
+          
+          ${match ? `
+            <div class="nid-comparison">
+              <!-- Standard Student -->
+              <div class="nid-student">
+                <div class="nid-student-header">
+                  Standard Registration (No NID)
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">ID:</span>
+                  <span class="nid-field-value">${std._id}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Full Name:</span>
+                  <span class="nid-field-value">${std.fullName || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Gender:</span>
+                  <span class="nid-field-value">${std.gender || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Grade:</span>
+                  <span class="nid-field-value">${std.grade || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Section:</span>
+                  <span class="nid-field-value">${std.section || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Average:</span>
+                  <span class="nid-field-value">${std.average ? std.average.toFixed(1) + '%' : '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Guardian:</span>
+                  <span class="nid-field-value">${std.guardianName || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Phone:</span>
+                  <span class="nid-field-value ${match.metrics.phoneMatch ? 'highlight' : ''}">${std.guardianPhone || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Kebele:</span>
+                  <span class="nid-field-value">${std.kebele || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Current NID:</span>
+                  <span class="nid-field-value">${std.currentNationalId || 'NONE'}</span>
+                </div>
+              </div>
+              
+              <!-- Arrow -->
+              <div class="nid-arrow">→</div>
+              
+              <!-- Official Student -->
+              <div class="nid-student">
+                <div class="nid-student-header">
+                  Official Census (Has NID)
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">ID:</span>
+                  <span class="nid-field-value">${match.officialStudent._id}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Full Name:</span>
+                  <span class="nid-field-value">${match.officialStudent.fullName || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Gender:</span>
+                  <span class="nid-field-value">${match.officialStudent.sex || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Grade:</span>
+                  <span class="nid-field-value">${match.officialStudent.gradeLevel || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Section:</span>
+                  <span class="nid-field-value">${match.officialStudent.section || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Average:</span>
+                  <span class="nid-field-value">${match.officialStudent.average ? match.officialStudent.average.toFixed(1) + '%' : '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Guardian:</span>
+                  <span class="nid-field-value">${match.officialStudent.parentGuardianFullName || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Phone:</span>
+                  <span class="nid-field-value ${match.metrics.phoneMatch ? 'highlight' : ''}">${match.officialStudent.parentGuardianPhone || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">Kebele:</span>
+                  <span class="nid-field-value">${match.officialStudent.kebele || '—'}</span>
+                </div>
+                <div class="nid-field">
+                  <span class="nid-field-label">National ID:</span>
+                  <span class="nid-field-value nid-value">${match.officialStudent.nationalId}</span>
+                </div>
+              </div>
+            </div>
+            
+            ${match.reasons && match.reasons.length > 0 ? `
+              <div class="dup-reasons">
+                <div class="dup-reasons-title">Matching Evidence</div>
+                ${match.reasons.map(reason => `<div class="dup-reason-item">${reason}</div>`).join('')}
+              </div>
+            ` : ''}
+            
+            ${match.differences && match.differences.length > 0 ? `
+              <div class="dup-differences">
+                <div class="dup-differences-title">Differences to Review</div>
+                ${match.differences.map(diff => `<div class="dup-diff-item">${diff}</div>`).join('')}
+              </div>
+            ` : ''}
+          ` : `
+            <div style="padding:20px;text-align:center;color:#64748b;">
+              <p><strong>No matching Official Census record found</strong></p>
+              <p style="margin-top:8px;font-size:0.85rem;">Student: ${std.fullName}</p>
+              <p style="font-size:0.82rem;color:#94a3b8;margin-top:4px;">
+                This student will need manual NID entry or verification.
+              </p>
+            </div>
+          `}
+        </div>
+      `;
+    }).join('');
+  }
+  
+  function toggleNIDSelection(checkbox) {
+    const stdId = checkbox.dataset.stdId;
+    if (checkbox.checked) {
+      selectedNIDTransfers.add(stdId);
+    } else {
+      selectedNIDTransfers.delete(stdId);
+    }
+    updateSelectedCount();
+    
+    // Update card styling
+    const card = checkbox.closest('.nid-card');
+    if (card) {
+      card.classList.toggle('selected', checkbox.checked);
+    }
+  }
+  
+  function updateSelectedCount() {
+    const count = selectedNIDTransfers.size;
+    document.getElementById('selectedCount').textContent = count;
+    const btn = document.getElementById('nidTransferSelected');
+    btn.style.display = count > 0 ? 'inline-block' : 'none';
+  }
+  
+  function selectAllAutoTransfer() {
+    // Select all auto_transfer recommendations
+    const autoTransferCandidates = filteredNIDCandidates.filter(c => c.recommendation === 'auto_transfer');
+    autoTransferCandidates.forEach(cand => {
+      selectedNIDTransfers.add(cand.standardStudent._id);
+    });
+    renderNIDTransfers();
+  }
+  
+  function clearNIDSelection() {
+    selectedNIDTransfers.clear();
+    renderNIDTransfers();
+  }
+  
+  async function transferSelectedNIDs() {
+    if (selectedNIDTransfers.size === 0) {
+      alert('No transfers selected');
+      return;
+    }
+    
+    if (!confirm(`Transfer ${selectedNIDTransfers.size} National ID(s)? This will update the Standard Registration records.`)) {
+      return;
+    }
+    
+    const transfers = [];
+    selectedNIDTransfers.forEach(stdId => {
+      const candidate = nidTransferCandidates.find(c => c.standardStudent._id === stdId);
+      if (candidate && candidate.bestMatch) {
+        transfers.push({
+          standardStudentId: stdId,
+          officialStudentId: candidate.bestMatch.officialStudent._id,
+          nationalId: candidate.bestMatch.officialStudent.nationalId,
+          overwriteExisting: false
+        });
+      }
+    });
+    
+    try {
+      const res = await fetch('/api/admin/nid-transfer-execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ transfers })
+      });
+      
+      const data = await res.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Transfer failed');
+      }
+      
+      // Show results
+      const results = data.results;
+      const summaryDiv = document.getElementById('nidResultsSummary');
+      const contentDiv = document.getElementById('nidResultsContent');
+      
+      contentDiv.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+          <div style="background:#dcfce7;padding:12px;border-radius:6px;">
+            <div style="font-size:1.5rem;font-weight:700;color:#166534;">${results.success.length}</div>
+            <div style="font-size:0.85rem;color:#047857;">Transferred</div>
+          </div>
+          <div style="background:#fee2e2;padding:12px;border-radius:6px;">
+            <div style="font-size:1.5rem;font-weight:700;color:#991b1b;">${results.failed.length}</div>
+            <div style="font-size:0.85rem;color:#b91c1c;">Failed</div>
+          </div>
+          <div style="background:#fef3c7;padding:12px;border-radius:6px;">
+            <div style="font-size:1.5rem;font-weight:700;color:#92400e;">${results.skipped.length}</div>
+            <div style="font-size:0.85rem;color:#b45309;">Skipped</div>
+          </div>
+        </div>
+        
+        ${results.success.length > 0 ? `
+          <div style="margin-top:16px;">
+            <h5 style="color:#166534;margin-bottom:8px;">✅ Successfully Transferred:</h5>
+            <ul style="font-size:0.85rem;color:#047857;">
+              ${results.success.map(r => `<li>Student ${r.standardStudentId}: NID ${r.nationalId}</li>`).join('')}
+            </ul>
+          </div>
+        ` : ''}
+        
+        ${results.failed.length > 0 ? `
+          <div style="margin-top:16px;">
+            <h5 style="color:#991b1b;margin-bottom:8px;">❌ Failed Transfers:</h5>
+            <ul style="font-size:0.85rem;color:#b91c1c;">
+              ${results.failed.map(r => `<li>Student ${r.standardStudentId}: ${r.error}</li>`).join('')}
+            </ul>
+          </div>
+        ` : ''}
+        
+        ${results.skipped.length > 0 ? `
+          <div style="margin-top:16px;">
+            <h5 style="color:#92400e;margin-bottom:8px;">⚠️ Skipped (Already has NID):</h5>
+            <ul style="font-size:0.85rem;color:#b45309;">
+              ${results.skipped.map(r => `<li>Student ${r.standardStudentId}: ${r.existingNID}</li>`).join('')}
+            </ul>
+          </div>
+        ` : ''}
+      `;
+      
+      summaryDiv.style.display = 'block';
+      
+      // Refresh analysis
+      selectedNIDTransfers.clear();
+      await analyzeNIDTransfers();
+      
+      // Refresh standard students table
+      fetchAllData();
+      
+    } catch (error) {
+      console.error('[NID TRANSFER] Execute error:', error);
+      alert(`Transfer failed: ${error.message}`);
+    }
+  }
+
   /* ── BOOT ──────────────────────────────────────────────────────────── */
   fetchAllData();
 </script>
+
 </body>
 </html>
